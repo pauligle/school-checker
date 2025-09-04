@@ -70,8 +70,7 @@ export default function RootLayout({
           </div>
         </footer>
         
-        {/* Cache busting script */}
-        <script src={`/cache-bust.js?v=${Date.now()}`} />
+
       </body>
     </html>
   );
