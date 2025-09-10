@@ -1,12 +1,11 @@
 #!/bin/bash
 
-# School Checker - Complete Deployment Script
-# This script sets up the entire automated data pipeline
+# School Checker Deployment Script
+# This script sets up the complete School Checker system
 
 set -e  # Exit on any error
 
-echo "🚀 School Checker - Complete Deployment"
-echo "======================================"
+echo "🚀 Starting School Checker deployment..."
 
 # Colors for output
 RED='\033[0;31m'
@@ -41,112 +40,200 @@ fi
 # Step 1: Install dependencies
 print_status "Installing dependencies..."
 npm install
-print_success "Dependencies installed"
+
+if [ $? -eq 0 ]; then
+    print_success "Dependencies installed successfully"
+else
+    print_error "Failed to install dependencies"
+    exit 1
+fi
 
 # Step 2: Create necessary directories
-print_status "Creating directories..."
-mkdir -p data/raw
-mkdir -p data/processed
-mkdir -p logs
-print_success "Directories created"
+print_status "Creating data and log directories..."
+mkdir -p data/raw data/processed logs
+
+if [ $? -eq 0 ]; then
+    print_success "Directories created successfully"
+else
+    print_error "Failed to create directories"
+    exit 1
+fi
 
 # Step 3: Check environment variables
 print_status "Checking environment variables..."
-if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ]; then
-    print_error "NEXT_PUBLIC_SUPABASE_URL not set"
-    exit 1
+
+if [ ! -f ".env.local" ]; then
+    print_warning ".env.local file not found. Please create it with the following variables:"
+    echo "NEXT_PUBLIC_SUPABASE_URL=your_supabase_url"
+    echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key"
+    echo "SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key"
+    echo ""
+    echo "You can get these from your Supabase project dashboard."
+    echo ""
+    read -p "Press Enter to continue after creating .env.local..."
 fi
 
-if [ -z "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ]; then
-    print_error "NEXT_PUBLIC_SUPABASE_ANON_KEY not set"
-    exit 1
-fi
-
-if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
-    print_error "SUPABASE_SERVICE_ROLE_KEY not set"
-    exit 1
-fi
-
-print_success "Environment variables configured"
-
-# Step 4: Set up database schema
-print_status "Setting up database schema..."
-if command -v psql &> /dev/null; then
-    # If psql is available, we can run the schema directly
-    print_warning "psql found - you can run the schema manually:"
-    echo "psql -h your-host -U your-user -d your-database -f scripts/database-schema.sql"
+# Check if required env vars are set
+if [ -f ".env.local" ]; then
+    source .env.local
+    
+    if [ -z "$NEXT_PUBLIC_SUPABASE_URL" ] || [ -z "$NEXT_PUBLIC_SUPABASE_ANON_KEY" ] || [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+        print_error "Missing required environment variables in .env.local"
+        print_error "Please ensure NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, and SUPABASE_SERVICE_ROLE_KEY are set"
+        exit 1
+    else
+        print_success "Environment variables are properly configured"
+    fi
 else
-    print_warning "psql not found - please run the database schema manually:"
-    echo "Copy the contents of scripts/database-schema.sql to your Supabase SQL editor"
+    print_error ".env.local file not found"
+    exit 1
 fi
 
-# Step 5: Test the data pipeline
-print_status "Testing data pipeline..."
-if npm run data:fetch status &> /dev/null; then
-    print_success "Data fetcher working"
-else
-    print_warning "Data fetcher test failed - this is normal if no data files exist yet"
-fi
+# Step 4: Database setup instructions
+print_status "Database setup required..."
+echo ""
+echo "📋 Please run the following SQL in your Supabase SQL Editor:"
+echo ""
+echo "1. Go to your Supabase project dashboard"
+echo "2. Navigate to SQL Editor"
+echo "3. Copy and paste the contents of scripts/database-schema.sql"
+echo "4. Click 'Run' to execute the schema"
+echo ""
+read -p "Press Enter after you've set up the database schema..."
 
-# Step 6: Build the application
+# Step 5: Build the application
 print_status "Building the application..."
 npm run build
-print_success "Application built successfully"
 
-# Step 7: Set up cron jobs (optional)
-print_status "Setting up automated scheduling..."
-echo ""
-echo "To set up automated data updates, run:"
-echo "  npm run cron:setup start"
-echo ""
-echo "This will schedule:"
-echo "  - Weekly Ofsted updates (Mondays 2 AM)"
-echo "  - Monthly schools updates (1st of month 3 AM)"
-echo "  - Annual performance updates (September 1st 4 AM)"
-echo "  - Daily health checks (6 AM)"
-
-# Step 8: Test the system
-print_status "Running system tests..."
-if npm run cron:test all &> /dev/null; then
-    print_success "System tests passed"
+if [ $? -eq 0 ]; then
+    print_success "Application built successfully"
 else
-    print_warning "Some system tests failed - check the logs for details"
+    print_error "Failed to build application"
+    exit 1
 fi
 
-# Step 9: Deploy to Vercel (if requested)
-if [ "$1" = "--deploy" ]; then
+# Step 6: Test the data pipeline
+print_status "Testing the data pipeline..."
+
+# Test data fetcher
+print_status "Testing data fetcher..."
+node scripts/data-fetcher.js sources
+
+# Test data processor
+print_status "Testing data processor..."
+node scripts/data-processor.js
+
+# Test data importer
+print_status "Testing data importer..."
+node scripts/data-importer.js status
+
+print_success "Data pipeline tests completed"
+
+# Step 7: Set up cron scheduler
+print_status "Setting up automated data pipeline..."
+
+echo ""
+echo "🕐 The automated data pipeline will run on the following schedule:"
+echo "   • Full pipeline: Every Sunday at 1 AM"
+echo "   • Ofsted updates: Every Monday at 2 AM"
+echo "   • Schools updates: 1st of each month at 3 AM"
+echo "   • Performance updates: September 1st at 4 AM"
+echo "   • Health checks: Daily at 6 AM"
+echo ""
+
+read -p "Do you want to start the automated scheduler now? (y/n): " -n 1 -r
+echo ""
+
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    print_status "Starting automated scheduler..."
+    echo "The scheduler will run in the background. Use 'npm run cron:setup stop' to stop it."
+    echo ""
+    echo "To start it manually later, run:"
+    echo "  npm run cron:setup start"
+    echo ""
+    echo "To run a manual update:"
+    echo "  npm run cron:setup run all"
+    echo "  npm run cron:setup run schools"
+    echo "  npm run cron:setup run ofsted"
+    echo "  npm run cron:setup run performance"
+    echo ""
+    
+    # Start the scheduler in the background
+    nohup node scripts/setup-cron.js start > logs/cron-scheduler.log 2>&1 &
+    CRON_PID=$!
+    echo $CRON_PID > .cron-pid
+    print_success "Automated scheduler started (PID: $CRON_PID)"
+else
+    print_status "Skipping automated scheduler setup"
+    echo "You can start it later with: npm run cron:setup start"
+fi
+
+# Step 8: Test the cron setup
+print_status "Testing cron setup..."
+npm run cron:test all
+
+if [ $? -eq 0 ]; then
+    print_success "Cron setup test completed"
+else
+    print_warning "Cron setup test had issues - check logs/cron-scheduler.log"
+fi
+
+# Step 9: Optional Vercel deployment
+echo ""
+read -p "Do you want to deploy to Vercel? (y/n): " -n 1 -r
+echo ""
+
+if [[ $REPLY =~ ^[Yy]$ ]]; then
     print_status "Deploying to Vercel..."
+    
+    # Check if Vercel CLI is installed
+    if ! command -v vercel &> /dev/null; then
+        print_status "Installing Vercel CLI..."
+        npm install -g vercel
+    fi
+    
+    # Deploy to Vercel
     npx vercel --prod
-    print_success "Deployed to Vercel"
+    
+    if [ $? -eq 0 ]; then
+        print_success "Deployed to Vercel successfully"
+    else
+        print_error "Failed to deploy to Vercel"
+    fi
+else
+    print_status "Skipping Vercel deployment"
+    echo "You can deploy later with: npx vercel --prod"
 fi
 
 # Step 10: Final instructions
 echo ""
-echo "🎉 Deployment Complete!"
-echo "======================"
+print_success "🎉 School Checker deployment completed!"
 echo ""
-echo "Next steps:"
-echo "1. Run the database schema in your Supabase SQL editor:"
-echo "   scripts/database-schema.sql"
+echo "📋 Next steps:"
+echo "1. Start the development server: npm run dev"
+echo "2. Visit http://localhost:3000 to test the application"
+echo "3. Check the logs in the logs/ directory"
+echo "4. Monitor the automated pipeline with: npm run cron:setup status"
 echo ""
-echo "2. Test the data pipeline manually:"
-echo "   npm run data:pipeline"
+echo "📁 Important directories:"
+echo "   • data/raw/ - Raw downloaded data"
+echo "   • data/processed/ - Cleaned and processed data"
+echo "   • logs/ - Application and pipeline logs"
 echo ""
-echo "3. Start automated updates:"
-echo "   npm run cron:setup start"
+echo "🔧 Useful commands:"
+echo "   • npm run dev - Start development server"
+echo "   • npm run cron:setup start - Start automated scheduler"
+echo "   • npm run cron:setup stop - Stop automated scheduler"
+echo "   • npm run cron:setup run all - Run manual data update"
+echo "   • npm run data:fetch fetch-all - Download all data"
+echo "   • npm run data:process process-all - Process all data"
+echo "   • npm run data:import import-all - Import all data"
 echo ""
-echo "4. Monitor the system:"
-echo "   npm run cron:setup status"
-echo ""
-echo "5. View logs:"
-echo "   tail -f logs/cron.log"
-echo ""
-echo "Useful commands:"
-echo "  npm run data:fetch all      # Download all data"
-echo "  npm run data:process all    # Process data"
-echo "  npm run data:import all     # Import to database"
-echo "  npm run cron:test all       # Test the system"
-echo "  npm run dev                 # Start development server"
+echo "📊 Monitor your data pipeline:"
+echo "   • Check logs/cron-scheduler-*.log for scheduler logs"
+echo "   • Check logs/data-fetcher-*.log for download logs"
+echo "   • Check logs/data-processor-*.log for processing logs"
+echo "   • Check logs/data-importer-*.log for import logs"
 echo ""
 
-print_success "School Checker is ready to use!"
+print_success "Deployment script completed successfully!"
