@@ -38,15 +38,48 @@ export default function RootLayout({
         <header className="fixed top-0 left-0 right-0 z-[2000] bg-white/90 backdrop-blur-sm shadow-sm">
           <div className="container mx-auto px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
             {/* Logo */}
-            <Link href="/" className="text-lg md:text-xl font-bold text-blue-600">
-              🏫 <span className="hidden sm:inline">SchoolChecker.io</span><span className="sm:hidden">SchoolChecker</span>
-            </Link>
+            <div className="flex flex-col">
+              <Link href="/" className="text-lg md:text-xl font-bold text-blue-600">
+                🏫 <span className="hidden sm:inline">SchoolChecker.io</span><span className="sm:hidden">SchoolChecker</span>
+              </Link>
+              <span className="text-xs text-gray-600 font-medium">The Only 100% Free School Checker in the UK</span>
+            </div>
 
             {/* Menu */}
             <nav className="flex gap-2 md:gap-6">
               <Link href="/" className="text-sm md:text-base hover:text-blue-600">
                 Home
               </Link>
+              <Link href="/schools-near-me" className="text-sm md:text-base hover:text-blue-600">
+                Schools Near Me
+              </Link>
+              <div className="relative group">
+                <button className="text-sm md:text-base hover:text-blue-600 flex items-center">
+                  Cities
+                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <div className="py-1">
+                    <Link href="/schools-in-london" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Schools in London
+                    </Link>
+                    <Link href="/schools-in-manchester" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Schools in Manchester
+                    </Link>
+                    <Link href="/schools-in-birmingham" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Schools in Birmingham
+                    </Link>
+                    <Link href="/schools-in-leeds" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Schools in Leeds
+                    </Link>
+                    <Link href="/schools-in-liverpool" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Schools in Liverpool
+                    </Link>
+                  </div>
+                </div>
+              </div>
               <Link href="/blog" className="text-sm md:text-base hover:text-blue-600 hidden sm:block">
                 Blog
               </Link>
