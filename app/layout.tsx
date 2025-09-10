@@ -19,6 +19,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QNLTY9W21L"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-QNLTY9W21L');
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-screen bg-gray-100">
         {/* Floating Navigation Bar */}
         <header className="fixed top-0 left-0 right-0 z-[2000] bg-white/90 backdrop-blur-sm shadow-sm">
