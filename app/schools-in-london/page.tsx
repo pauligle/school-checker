@@ -59,9 +59,9 @@ export default function SchoolsInLondon() {
             </h2>
             <div className="prose text-gray-700">
               <p className="mb-4">
-                London is home to some of the UK's most prestigious schools, from outstanding primary schools 
+                London is home to some of the UK&apos;s most prestigious schools, from outstanding primary schools 
                 to world-renowned secondary institutions. Our comprehensive database covers all schools across 
-                London's 32 boroughs, helping parents find the perfect educational environment for their children.
+                London&apos;s 32 boroughs, helping parents find the perfect educational environment for their children.
               </p>
               <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">
                 London School Types
@@ -81,7 +81,7 @@ export default function SchoolsInLondon() {
                 for families include:
               </p>
               <ul className="list-disc pl-6 space-y-2">
-                <li><strong>Kensington & Chelsea:</strong> Home to some of London's most prestigious schools</li>
+                <li><strong>Kensington & Chelsea:</strong> Home to some of London&apos;s most prestigious schools</li>
                 <li><strong>Westminster:</strong> Central London with excellent transport links</li>
                 <li><strong>Camden:</strong> Diverse community with strong educational options</li>
                 <li><strong>Islington:</strong> Popular with families, good school choices</li>

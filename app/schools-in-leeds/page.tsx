@@ -97,7 +97,7 @@ export default function SchoolsInLeeds() {
                 <li><strong>Strong Performance:</strong> Many schools with excellent Ofsted ratings</li>
                 <li><strong>Affordable Living:</strong> Good value compared to London and the South</li>
                 <li><strong>Transport Links:</strong> Excellent public transport and road connections</li>
-                <li><strong>Cultural Diversity:</strong> Schools reflect Leeds' multicultural community</li>
+                <li><strong>Cultural Diversity:</strong> Schools reflect Leeds&apos; multicultural community</li>
               </ul>
             </div>
           </div>

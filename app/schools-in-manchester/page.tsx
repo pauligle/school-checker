@@ -97,7 +97,7 @@ export default function SchoolsInManchester() {
                 <li><strong>Strong Performance:</strong> Many schools with excellent Ofsted ratings</li>
                 <li><strong>Affordable Living:</strong> Good value compared to London and the South</li>
                 <li><strong>Transport Links:</strong> Excellent public transport for school commutes</li>
-                <li><strong>Cultural Diversity:</strong> Schools reflect Manchester's multicultural community</li>
+                <li><strong>Cultural Diversity:</strong> Schools reflect Manchester&apos;s multicultural community</li>
               </ul>
             </div>
           </div>

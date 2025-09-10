@@ -59,7 +59,7 @@ export default function SchoolsInBirmingham() {
             </h2>
             <div className="prose text-gray-700">
               <p className="mb-4">
-                Birmingham, the UK's second-largest city, offers a diverse range of educational opportunities. 
+                Birmingham, the UK&apos;s second-largest city, offers a diverse range of educational opportunities. 
                 From outstanding primary schools to excellent secondary institutions, Birmingham provides families 
                 with access to high-quality education across the city and surrounding areas.
               </p>
@@ -80,7 +80,7 @@ export default function SchoolsInBirmingham() {
                 Birmingham offers diverse neighborhoods, each with their own educational strengths:
               </p>
               <ul className="list-disc pl-6 space-y-2">
-                <li><strong>Edgbaston:</strong> Home to some of Birmingham's most prestigious schools</li>
+                <li><strong>Edgbaston:</strong> Home to some of Birmingham&apos;s most prestigious schools</li>
                 <li><strong>Moseley:</strong> Popular with families, excellent schools</li>
                 <li><strong>Solihull:</strong> Strong grammar school provision</li>
                 <li><strong>Sutton Coldfield:</strong> Well-regarded schools and family-friendly</li>
@@ -97,7 +97,7 @@ export default function SchoolsInBirmingham() {
                 <li><strong>Strong Performance:</strong> Many schools with excellent Ofsted ratings</li>
                 <li><strong>Affordable Living:</strong> Good value compared to London and the South</li>
                 <li><strong>Transport Links:</strong> Excellent public transport and road connections</li>
-                <li><strong>Cultural Diversity:</strong> Schools reflect Birmingham's multicultural community</li>
+                <li><strong>Cultural Diversity:</strong> Schools reflect Birmingham&apos;s multicultural community</li>
               </ul>
             </div>
           </div>
