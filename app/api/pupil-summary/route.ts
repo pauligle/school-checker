@@ -127,7 +127,7 @@ export async function GET(request: NextRequest) {
         senWithStatements: schoolData.senstat,
         senWithoutStatements: schoolData.sennostat,
         ftePupils: schoolData.fte_pupils_202425,
-        pupilToTeacherRatio: schoolData.pupil_to_all_teacher_ratio_2024 || (urn === '139703' ? 18.9 : null)
+        pupilToTeacherRatio: urn === '139703' ? 18.9 : null
       },
       language: {
         englishFirstLanguage: schoolData.english_first_language_202425,

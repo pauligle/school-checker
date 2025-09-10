@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get year group breakdowns
-    const { data: yearGroups, error: yearGroupsError } = await supabase
+    const { data: yearGroups } = await supabase
       .from('pupil_cohorts')
       .select('*')
       .eq('school_urn', urn)
@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
       .order('year_group');
 
     // Get detailed ethnicity data
-    const { data: ethnicities, error: ethnicitiesError } = await supabase
+    const { data: ethnicities } = await supabase
       .from('pupil_ethnicities')
       .select('*')
       .eq('school_urn', urn)
@@ -117,7 +117,7 @@ export async function GET(request: NextRequest) {
       .order('pupil_count', { ascending: false });
 
     // Get class size data
-    const { data: classSizes, error: classSizesError } = await supabase
+    const { data: classSizes } = await supabase
       .from('class_sizes')
       .select('*')
       .eq('school_urn', urn)
