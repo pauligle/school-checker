@@ -25,7 +25,7 @@ export default function RootLayout({
           <div className="container mx-auto px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
             {/* Logo */}
             <Link href="/" className="text-lg md:text-xl font-bold text-blue-600">
-              🏫 <span className="hidden sm:inline">SchoolChecker2.io</span><span className="sm:hidden">SchoolChecker</span>
+              🏫 <span className="hidden sm:inline">SchoolChecker.io</span><span className="sm:hidden">SchoolChecker</span>
             </Link>
 
             {/* Menu */}

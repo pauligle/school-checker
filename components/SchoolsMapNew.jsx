@@ -350,7 +350,7 @@ export default function SchoolsMap() {
     return phases;
   };
 
-  // Generate SVG icon for phase combination with inspection color
+  // Generate simple circle icon with inspection color
   const generatePhaseIcon = (phases, rating, isIndependent = false) => {
     const colors = {
       1: '#00C851', // Green - Outstanding
@@ -362,78 +362,16 @@ export default function SchoolsMap() {
     
     // Use blue for independent schools, otherwise use inspection rating color
     const color = isIndependent ? '#3B82F6' : (colors[rating] || colors.unknown);
-    const boxSize = 16;
     
-    if (phases.length === 0) {
-      // No phases detected - use unknown icon
-      return `data:image/svg+xml;base64,${btoa(`
-        <svg width="${boxSize}" height="${boxSize}" viewBox="0 0 ${boxSize} ${boxSize}" xmlns="http://www.w3.org/2000/svg">
-          <rect x="1" y="1" width="${boxSize-2}" height="${boxSize-2}" fill="${color}" stroke="black" stroke-width="2"/>
-          <text x="${boxSize/2}" y="${boxSize/2 + 2}" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="black">?</text>
-        </svg>
-      `)}`;
-    }
+    // Simple circle - consistent size
+    const size = 24;
+    const radius = size / 2;
     
-    if (phases.length === 1) {
-      // Single phase - one square
-      const phase = phases[0];
-      return `data:image/svg+xml;base64,${btoa(`
-        <svg width="${boxSize}" height="${boxSize}" viewBox="0 0 ${boxSize} ${boxSize}" xmlns="http://www.w3.org/2000/svg">
-          <rect x="1" y="1" width="${boxSize-2}" height="${boxSize-2}" fill="${color}" stroke="black" stroke-width="2"/>
-          <text x="${boxSize/2}" y="${boxSize/2 + 2}" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="black">${phase}</text>
-        </svg>
-      `)}`;
-    }
-    
-    if (phases.length === 2) {
-      // Two phases - two squares stacked vertically (S at top, N at bottom)
-      const [phase1, phase2] = phases;
-      const totalHeight = boxSize * 2;
-      // Sort phases: S first, then P, then N
-      const sortedPhases = phases.sort((a, b) => {
-        const order = { 'S': 0, 'P': 1, 'N': 2, '6': 3 };
-        return order[a] - order[b];
-      });
-      return `data:image/svg+xml;base64,${btoa(`
-        <svg width="${boxSize}" height="${totalHeight}" viewBox="0 0 ${boxSize} ${totalHeight}" xmlns="http://www.w3.org/2000/svg">
-          <rect x="1" y="1" width="${boxSize-2}" height="${boxSize-2}" fill="${color}" stroke="black" stroke-width="2"/>
-          <rect x="1" y="${boxSize}" width="${boxSize-2}" height="${boxSize-2}" fill="${color}" stroke="black" stroke-width="2"/>
-          <text x="${boxSize/2}" y="${boxSize/2 + 2}" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="black">${sortedPhases[0]}</text>
-          <text x="${boxSize/2}" y="${boxSize + boxSize/2 + 2}" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="black">${sortedPhases[1]}</text>
-        </svg>
-      `)}`;
-    }
-    
-    if (phases.length === 3) {
-      // Three phases - three squares stacked vertically (S at top, P in middle, N at bottom)
-      const [phase1, phase2, phase3] = phases;
-      const totalHeight = boxSize * 3;
-      // Sort phases: S first, then P, then N
-      const sortedPhases = phases.sort((a, b) => {
-        const order = { 'S': 0, 'P': 1, 'N': 2, '6': 3 };
-        return order[a] - order[b];
-      });
-      return `data:image/svg+xml;base64,${btoa(`
-        <svg width="${boxSize}" height="${totalHeight}" viewBox="0 0 ${boxSize} ${totalHeight}" xmlns="http://www.w3.org/2000/svg">
-          <rect x="1" y="1" width="${boxSize-2}" height="${boxSize-2}" fill="${color}" stroke="black" stroke-width="2"/>
-          <rect x="1" y="${boxSize}" width="${boxSize-2}" height="${boxSize-2}" fill="${color}" stroke="black" stroke-width="2"/>
-          <rect x="1" y="${boxSize * 2}" width="${boxSize-2}" height="${boxSize-2}" fill="${color}" stroke="black" stroke-width="2"/>
-          <text x="${boxSize/2}" y="${boxSize/2 + 2}" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="black">${sortedPhases[0]}</text>
-          <text x="${boxSize/2}" y="${boxSize + boxSize/2 + 2}" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="black">${sortedPhases[1]}</text>
-          <text x="${boxSize/2}" y="${boxSize * 2 + boxSize/2 + 2}" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="black">${sortedPhases[2]}</text>
-        </svg>
-      `)}`;
-    }
-    
-    if (phases.length === 4) {
-      // Four phases - show as "A" for All-through
-      return `data:image/svg+xml;base64,${btoa(`
-        <svg width="${boxSize}" height="${boxSize}" viewBox="0 0 ${boxSize} ${boxSize}" xmlns="http://www.w3.org/2000/svg">
-          <rect x="1" y="1" width="${boxSize-2}" height="${boxSize-2}" fill="${color}" stroke="black" stroke-width="2"/>
-          <text x="${boxSize/2}" y="${boxSize/2 + 2}" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="black">A</text>
-        </svg>
-      `)}`;
-    }
+    return `data:image/svg+xml;base64,${btoa(`
+      <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="${radius}" cy="${radius}" r="${radius - 1}" fill="${color}" stroke="black" stroke-width="1"/>
+      </svg>
+    `)}`;
   };
 
   // Get icon for school with phase and inspection rating
@@ -456,18 +394,18 @@ export default function SchoolsMap() {
     console.log(`School ${urn}: phases=${phases.join(',')}, rating=${rating}, independent=${isIndependent}`);
     
     // Calculate dynamic size based on number of phases (vertical stacking)
-    const boxSize = 16;
+    const iconSize = 24;
     let iconWidth, iconHeight;
     
     if (phases.length === 0 || phases.length === 1 || phases.length === 4) {
-      iconWidth = boxSize;
-      iconHeight = boxSize;
+      iconWidth = iconSize;
+      iconHeight = iconSize;
     } else if (phases.length === 2) {
-      iconWidth = boxSize;
-      iconHeight = boxSize * 2;
+      iconWidth = iconSize;
+      iconHeight = iconSize * 2;
     } else if (phases.length === 3) {
-      iconWidth = boxSize;
-      iconHeight = boxSize * 3;
+      iconWidth = iconSize;
+      iconHeight = iconSize * 3;
     }
     
     // Generate dynamic icon based on phases, rating, and independence
@@ -740,8 +678,8 @@ export default function SchoolsMap() {
           className="z-0"
         >
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
+            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
           />
           
           {filteredSchools.map((school, index) => {
