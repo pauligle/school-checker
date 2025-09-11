@@ -8,24 +8,10 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// Helper function to get color for rating
-function getRatingColor(rating: string): string {
-  switch (rating?.toLowerCase()) {
-    case 'outstanding':
-      return 'bg-green-100 text-green-800';
-    case 'good':
-      return 'bg-blue-100 text-blue-800';
-    case 'requires improvement':
-      return 'bg-yellow-100 text-yellow-800';
-    case 'inadequate':
-      return 'bg-red-100 text-red-800';
-    default:
-      return 'bg-gray-100 text-gray-800';
-  }
-}
 
 // Helper function to convert numeric Ofsted rating to text
-function getOfstedRatingText(rating: number): string {
+function getOfstedRatingText(rating: number | null | undefined): string {
+  if (!rating) return 'Not Available';
   switch (rating) {
     case 1:
       return 'Outstanding';
@@ -63,7 +49,7 @@ function calculateSchoolCheckerRating(inspection: any) {
 
   let weightedScore = 0;
   let totalWeight = 0;
-  let categoriesUsed: string[] = [];
+  const categoriesUsed: string[] = [];
 
   Object.keys(weights).forEach(category => {
     const rating = inspection[category];
@@ -146,28 +132,59 @@ interface SchoolData {
   gps_higher_percentage_2024: number;
   // Nursery provision
   nurseryprovision__name_: string;
-  // Coordinates
-  lat: number;
-  lon: number;
+  // Additional school details
+  statutorylowage: number;
+  statutoryhighage: number;
+  religiouscharacter__name_: string;
+  street: string;
+  town: string;
+  trusts__code_: string;
+  trusts__name_: string;
+  young_carers_202425: number;
+  young_carers_percentage_202425: number;
+  sen_with_statements_202425: string;
+  sen_without_statements_202425: string;
   // Ethnicity data
   white_british_202425: number;
   white_british_percentage_202425: number;
+  white_irish_202425: number;
+  white_irish_percentage_202425: number;
+  white_other_202425: number;
+  white_other_percentage_202425: number;
   asian_indian_202425: number;
   asian_indian_percentage_202425: number;
   asian_pakistani_202425: number;
   asian_pakistani_percentage_202425: number;
   asian_bangladeshi_202425: number;
   asian_bangladeshi_percentage_202425: number;
+  asian_other_202425: number;
+  asian_other_percentage_202425: number;
   black_african_202425: number;
   black_african_percentage_202425: number;
   black_caribbean_202425: number;
   black_caribbean_percentage_202425: number;
+  black_other_202425: number;
+  black_other_percentage_202425: number;
   mixed_white_black_caribbean_202425: number;
   mixed_white_black_caribbean_percentage_202425: number;
   mixed_white_black_african_202425: number;
   mixed_white_black_african_percentage_202425: number;
   mixed_white_asian_202425: number;
   mixed_white_asian_percentage_202425: number;
+  mixed_other_202425: number;
+  mixed_other_percentage_202425: number;
+  other_ethnic_group_202425: number;
+  other_ethnic_group_percentage_202425: number;
+  chinese_202425: number;
+  chinese_percentage_202425: number;
+  gypsy_roma_202425: number;
+  gypsy_roma_percentage_202425: number;
+  traveller_irish_heritage_202425: number;
+  traveller_irish_heritage_percentage_202425: number;
+  other_202425: number;
+  other_percentage_202425: number;
+  unclassified_202425: number;
+  unclassified_percentage_202425: number;
   // SEN data
   senstat: number;
   sennostat: number;
@@ -262,7 +279,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
             <div className="text-center">
               <h1 className="text-4xl font-bold text-gray-900 mb-4">School Not Found</h1>
               <p className="text-lg text-gray-600">The requested school could not be found.</p>
-              <p className="text-sm text-gray-500 mt-2">Slug: {params.slug}</p>
+              <p className="text-sm text-gray-500 mt-2">Slug: {slug}</p>
             </div>
           </div>
         </div>
@@ -735,21 +752,6 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                         <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Inspection Date:</td>
                         <td className="py-2 pl-1 pr-4 text-gray-800">{new Date(inspection.inspection_date).toLocaleDateString()}</td>
                       </tr>
-                      {inspection.report_url && (
-                        <tr className="border-b border-gray-100">
-                          <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Ofsted Report:</td>
-                          <td className="py-2 pl-1 pr-4 text-gray-800">
-                            <a 
-                              href={inspection.report_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:text-blue-800 underline"
-                            >
-                              View report
-                            </a>
-                          </td>
-                        </tr>
-                      )}
                       <tr className="border-b border-gray-100">
                         <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">All Inspections:</td>
                         <td className="py-2 pl-1 pr-4 text-gray-800">
@@ -763,16 +765,6 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                           </a>
                         </td>
                       </tr>
-                      {inspection.category_of_concern && (
-                        <tr className="border-b border-gray-100 last:border-b-0">
-                          <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Category of Concern:</td>
-                          <td className="py-2 pl-1 pr-4 text-gray-800">
-                            <span className="px-2 py-1 text-sm font-medium rounded bg-red-100 text-red-800 border border-red-200">
-                              {inspection.category_of_concern}
-                            </span>
-                          </td>
-                        </tr>
-                      )}
                     </tbody>
                   </table>
                 </div>
@@ -818,16 +810,6 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                           </span>
                         </td>
                       </tr>
-                      {inspection.sixth_form_provision && (
-                        <tr className="border-b border-gray-100 last:border-b-0">
-                          <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Sixth form provision</td>
-                          <td className="py-2 pl-1 pr-4 text-gray-800">
-                            <span className={`px-3 py-1 text-sm font-medium rounded ${getRatingColor(getOfstedRatingText(inspection.sixth_form_provision))}`}>
-                              {getOfstedRatingText(inspection.sixth_form_provision)}
-                            </span>
-                          </td>
-                        </tr>
-                      )}
                     </tbody>
                   </table>
                 </div>

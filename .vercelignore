@@ -1,0 +1,27 @@
+# Exclude large data files from Vercel deployment
+data/
+logs/
+*.log
+
+# Exclude development files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Exclude build artifacts
+.next/
+out/
+build/
+
+# Exclude OS files
+.DS_Store
+Thumbs.db
+
+# Exclude IDE files
+.vscode/
+.idea/
+
+# Exclude temporary files
+*.tmp
+*.temp

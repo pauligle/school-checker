@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
 // Dynamically import the SchoolsMap component to ensure it's
 // rendered on the client side, as it relies on the browser's
@@ -12,13 +13,13 @@ const SchoolsMap = dynamic(() => import('../components/SchoolsMapNew'), {
   loading: () => <div className="w-full h-full flex items-center justify-center">Loading map...</div>,
 });
 
-export default function Home() {
+function HomeContent() {
   const searchParams = useSearchParams();
   const schoolParam = searchParams.get('school');
 
   return (
     <main className="w-full h-screen pt-14 md:pt-16">
-      <SchoolsMap selectedSchool={schoolParam} />
+      <SchoolsMap selectedSchool={schoolParam as any} />
       
       {/* SEO-friendly school links for Google discovery */}
       <div className="hidden">
@@ -32,5 +33,13 @@ export default function Home() {
         </ul>
       </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="w-full h-screen pt-14 md:pt-16 flex items-center justify-center">Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }

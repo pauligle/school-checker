@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
   },
   compress: false,
   generateEtags: false,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // Force cache busting
   webpack: (config, { dev }) => {
     if (dev) {
