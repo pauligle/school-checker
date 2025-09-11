@@ -1,25 +1,32 @@
+"use client";
 import "./globals.css";
 import Link from "next/link";
-
-export const metadata = {
-  title: "SchoolChecker.io",
-  description: "Find and compare schools in the UK with Ofsted ratings",
-  // Disable caching
-  other: {
-    'Cache-Control': 'no-cache, no-store, must-revalidate',
-    'Pragma': 'no-cache',
-    'Expires': '0',
-  },
-};
+import { useState } from "react";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <html lang="en">
       <head>
+        <title>SchoolChecker.io</title>
+        <meta name="description" content="Find and compare schools in the UK with Ofsted ratings" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta httpEquiv="Pragma" content="no-cache" />
+        <meta httpEquiv="Expires" content="0" />
         {/* Google Analytics */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QNLTY9W21L"></script>
         <script
@@ -45,16 +52,16 @@ export default function RootLayout({
               <span className="text-xs text-gray-600 font-medium">The Only 100% Free School Checker in the UK</span>
             </div>
 
-            {/* Menu */}
-            <nav className="flex gap-2 md:gap-6">
-              <Link href="/" className="text-sm md:text-base hover:text-blue-600">
+            {/* Desktop Menu */}
+            <nav className="hidden md:flex gap-6">
+              <Link href="/" className="text-base hover:text-blue-600">
                 Home
               </Link>
-              <Link href="/schools-near-me" className="text-sm md:text-base hover:text-blue-600">
+              <Link href="/schools-near-me" className="text-base hover:text-blue-600">
                 Schools Near Me
               </Link>
               <div className="relative group">
-                <button className="text-sm md:text-base hover:text-blue-600 flex items-center">
+                <button className="text-base hover:text-blue-600 flex items-center">
                   Cities
                   <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -77,23 +84,138 @@ export default function RootLayout({
                     <Link href="/schools-in-liverpool" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                       Schools in Liverpool
                     </Link>
+                    <Link href="/schools-in-bristol" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Schools in Bristol
+                    </Link>
+                    <Link href="/schools-in-sheffield" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Schools in Sheffield
+                    </Link>
+                    <Link href="/schools-in-newcastle" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Schools in Newcastle
+                    </Link>
+                    <Link href="/schools-in-nottingham" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Schools in Nottingham
+                    </Link>
+                    <Link href="/schools-in-leicester" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Schools in Leicester
+                    </Link>
                   </div>
                 </div>
               </div>
-              <Link href="/blog" className="text-sm md:text-base hover:text-blue-600 hidden sm:block">
+              <Link href="/blog" className="text-base hover:text-blue-600">
                 Blog
               </Link>
-              <Link href="/schoolchecker-rating" className="text-sm md:text-base hover:text-blue-600 hidden md:block">
+              <Link href="/schoolchecker-rating" className="text-base hover:text-blue-600">
                 Our Rating
               </Link>
-              <Link href="/about" className="text-sm md:text-base hover:text-blue-600 hidden md:block">
+              <Link href="/about" className="text-base hover:text-blue-600">
                 About
               </Link>
-              <Link href="/contact" className="text-sm md:text-base hover:text-blue-600 hidden md:block">
+              <Link href="/contact" className="text-base hover:text-blue-600">
                 Contact
               </Link>
             </nav>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={toggleMobileMenu}
+              className="md:hidden p-2 rounded-md text-gray-600 hover:text-blue-600 hover:bg-gray-100"
+              aria-label="Toggle mobile menu"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isMobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
           </div>
+
+          {/* Mobile Menu Overlay */}
+          {isMobileMenuOpen && (
+            <div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t max-h-[80vh] overflow-y-auto">
+              <nav className="px-4 py-4 space-y-4">
+                <Link 
+                  href="/" 
+                  className="block text-base text-gray-700 hover:text-blue-600 py-2"
+                  onClick={closeMobileMenu}
+                >
+                  Home
+                </Link>
+                <Link 
+                  href="/schools-near-me" 
+                  className="block text-base text-gray-700 hover:text-blue-600 py-2"
+                  onClick={closeMobileMenu}
+                >
+                  Schools Near Me
+                </Link>
+                <div className="space-y-2">
+                  <div className="text-base font-medium text-gray-900 py-2">Cities</div>
+                  <div className="pl-4 space-y-2">
+                    <Link href="/schools-in-london" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                      Schools in London
+                    </Link>
+                    <Link href="/schools-in-manchester" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                      Schools in Manchester
+                    </Link>
+                    <Link href="/schools-in-leeds" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                      Schools in Leeds
+                    </Link>
+                    <Link href="/schools-in-birmingham" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                      Schools in Birmingham
+                    </Link>
+                    <Link href="/schools-in-liverpool" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                      Schools in Liverpool
+                    </Link>
+                    <Link href="/schools-in-bristol" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                      Schools in Bristol
+                    </Link>
+                    <Link href="/schools-in-sheffield" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                      Schools in Sheffield
+                    </Link>
+                    <Link href="/schools-in-newcastle" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                      Schools in Newcastle
+                    </Link>
+                    <Link href="/schools-in-nottingham" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                      Schools in Nottingham
+                    </Link>
+                    <Link href="/schools-in-leicester" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                      Schools in Leicester
+                    </Link>
+                  </div>
+                </div>
+                <Link 
+                  href="/blog" 
+                  className="block text-base text-gray-700 hover:text-blue-600 py-2"
+                  onClick={closeMobileMenu}
+                >
+                  Blog
+                </Link>
+                <Link 
+                  href="/schoolchecker-rating" 
+                  className="block text-base text-gray-700 hover:text-blue-600 py-2"
+                  onClick={closeMobileMenu}
+                >
+                  Our Rating
+                </Link>
+                <Link 
+                  href="/about" 
+                  className="block text-base text-gray-700 hover:text-blue-600 py-2"
+                  onClick={closeMobileMenu}
+                >
+                  About
+                </Link>
+                <Link 
+                  href="/contact" 
+                  className="block text-base text-gray-700 hover:text-blue-600 py-2"
+                  onClick={closeMobileMenu}
+                >
+                  Contact
+                </Link>
+              </nav>
+            </div>
+          )}
         </header>
 
         {/* Main Content */}

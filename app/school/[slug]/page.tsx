@@ -292,10 +292,10 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section - Dark Professional */}
       <div className="bg-gray-900 text-white">
-        <div className="container mx-auto px-6 py-16">
+        <div className="container mx-auto px-4 md:px-6 py-6 md:py-16">
           <div className="max-w-6xl">
-            <h1 className="text-6xl font-bold mb-6 leading-tight">{school.establishmentname}</h1>
-            <div className="flex flex-wrap items-center gap-6 text-gray-300 text-lg">
+            <h1 className="text-3xl md:text-6xl font-bold mb-4 md:mb-6 leading-tight">{school.establishmentname}</h1>
+            <div className="flex flex-wrap items-center gap-3 md:gap-6 text-gray-300 text-sm md:text-lg">
               {school.postcode && (
                 <span className="flex items-center gap-2">
                   <span className="text-gray-400">📍</span>
@@ -321,11 +321,11 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                 </span>
               )}
             </div>
-            <div className="mt-8 space-y-4">
-              <div className="flex items-center gap-4">
-                <span className="text-lg font-medium text-gray-200">Ofsted Overall Rating:</span>
-                <div className="flex items-center space-x-2">
-                  <span className={`px-3 py-1 text-sm font-medium rounded ${getRatingColor(getOfstedRatingText(inspection?.outcome))}`}>
+            <div className="mt-4 md:mt-8 space-y-3 md:space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm md:text-lg font-medium text-gray-200">Ofsted Overall Rating:</span>
+                  <span className={`px-2 md:px-3 py-1 text-xs md:text-sm font-medium rounded ${getRatingColor(getOfstedRatingText(inspection?.outcome))}`}>
                     {getOfstedRatingText(inspection?.outcome)}
                   </span>
                   {getOfstedRatingText(inspection?.outcome) === 'Not Available' && (
@@ -343,10 +343,10 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                 if (schoolcheckerRating) {
                   const ratingInfo = getRatingInfo(schoolcheckerRating.rating);
                   return (
-                    <div className="flex items-center gap-4">
-                      <span className="text-lg font-medium text-gray-200">Schoolchecker.io Rating:</span>
-                      <div className="flex items-center space-x-2">
-                        <span className={`px-3 py-1 text-sm font-medium rounded ${ratingInfo.color}`}>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm md:text-lg font-medium text-gray-200">Schoolchecker.io Rating:</span>
+                        <span className={`px-2 md:px-3 py-1 text-xs md:text-sm font-medium rounded ${ratingInfo.color}`}>
                           {ratingInfo.text}
                         </span>
                         <span className="text-xs text-gray-300">
@@ -370,20 +370,20 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
       </div>
 
       {/* School Location Map */}
-      <div className="bg-gray-50 py-12">
-        <div className="container mx-auto px-6">
+      <div className="bg-gray-50 py-6 md:py-12">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-7xl">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-3xl font-bold text-gray-900">School Location</h2>
+            <div className="flex items-center justify-between mb-4 md:mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">School Location</h2>
               <a
                 href={`/?school=${school.urn}`}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-lg"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-lg text-sm md:text-base"
               >
                 <span>🗺️</span>
                 View on Main Map
               </a>
             </div>
-            <div className="h-96 w-full rounded-lg overflow-hidden shadow-lg">
+            <div className="h-64 md:h-96 w-full rounded-lg overflow-hidden shadow-lg">
               <ClientSchoolsMap
                 center={[school.lat, school.lon]}
                 zoom={15}
@@ -394,7 +394,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
         </div>
       </div>
 
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-4 md:px-6 py-4 md:py-8">
         <div className="max-w-7xl space-y-8">
           {/* School Details Section */}
           <div className="bg-white rounded-lg shadow-sm p-8">
