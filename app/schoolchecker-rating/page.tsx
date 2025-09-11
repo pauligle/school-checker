@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Schoolchecker.io Rating Explained | How School Ratings are calculated when there is no Ofsted Report and Why',
@@ -25,7 +26,7 @@ export default function SchoolcheckerRatingPage() {
           <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
               <span className="w-1 h-8 bg-red-600 rounded"></span>
-              The Problem: Ofsted's System Change
+              The Problem: Ofsted&apos;s System Change
             </h2>
             
             <div className="grid md:grid-cols-2 gap-8">
@@ -69,14 +70,14 @@ export default function SchoolcheckerRatingPage() {
             <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
               <p className="text-gray-800">
                 <strong>The Result:</strong> Parents can no longer easily compare schools. Some schools have old overall ratings, 
-                others only have individual category scores. How do you compare a "Good" school with a school that has 
-                "Good" in 3 categories but "Outstanding" in 1?
+                others only have individual category scores.                  How do you compare a &quot;Good&quot; school with a school that has 
+                 &quot;Good&quot; in 3 categories but &quot;Outstanding&quot; in 1?
               </p>
             </div>
             
             <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
               <p className="text-gray-800">
-                <strong>What's Next:</strong> From September 2025, Ofsted will introduce further changes with a new 'Report Card' system 
+                 <strong>What&apos;s Next:</strong> From September 2025, Ofsted will introduce further changes with a new &apos;Report Card&apos; system
                 as part of their inspection process. This will bring additional changes to how school performance is assessed and reported.
                 <a href="https://www.gov.uk/government/news/single-headline-ofsted-grades-scrapped-in-landmark-school-reform" 
                    target="_blank" 
@@ -96,7 +97,7 @@ export default function SchoolcheckerRatingPage() {
             </h2>
             
             <p className="text-lg text-gray-700 mb-6">
-              A <strong>weighted average</strong> is calculated using Ofsted's own historical methodology to create 
+               A <strong>weighted average</strong> is calculated using Ofsted&apos;s own historical methodology to create
               a single, comparable rating for every school. This allows schools to be compared at a glance using 
               data from <a href="https://www.gov.uk/government/collections/ofsted-inspections-of-schools" 
                            target="_blank" 
@@ -132,7 +133,7 @@ export default function SchoolcheckerRatingPage() {
                 <h4 className="text-lg font-semibold text-gray-900 mb-3">For Pre-September 2024 Schools</h4>
                 <p className="text-gray-700">
                   The official Ofsted overall effectiveness rating is used when available, 
-                  as this is the most accurate representation of the school's performance.
+                  as this is the most accurate representation of the school&apos;s performance.
                 </p>
               </div>
               
@@ -144,15 +145,15 @@ export default function SchoolcheckerRatingPage() {
                   using <a href="https://www.gov.uk/government/news/ofsted-publishes-updates-to-school-inspection-handbooks" 
                            target="_blank" 
                            rel="noopener noreferrer" 
-                           className="text-blue-600 hover:text-blue-800 underline">Ofsted's historical weighting system</a>.
+                           className="text-blue-600 hover:text-blue-800 underline">Ofsted&apos;s historical weighting system</a>.
                 </p>
               </div>
             </div>
             
             <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
               <p className="text-gray-800">
-                <strong>Important:</strong> The 'Schoolchecker.io Rating' is not an official Ofsted rating! 
-                It is a calculated rating based on Ofsted's own historical methodology to enable fair comparison 
+                <strong>Important:</strong> The &apos;Schoolchecker.io Rating&apos; is not an official Ofsted rating! 
+                It is a calculated rating based on Ofsted&apos;s own historical methodology to enable fair comparison 
                 between schools when official overall ratings are not available.
               </p>
             </div>
@@ -169,7 +170,7 @@ export default function SchoolcheckerRatingPage() {
               The weighting system is based on <a href="https://www.gov.uk/government/news/ofsted-publishes-updates-to-school-inspection-handbooks" 
                                                   target="_blank" 
                                                   rel="noopener noreferrer" 
-                                                  className="text-blue-600 hover:text-blue-800 underline">Ofsted's own historical approach</a> 
+                                                  className="text-blue-600 hover:text-blue-800 underline">Ofsted&apos;s own historical approach</a> 
               before they changed their system. This ensures consistency and fairness.
             </p>
 
@@ -181,7 +182,7 @@ export default function SchoolcheckerRatingPage() {
                 <div>
                   <h4 className="text-lg font-semibold text-gray-900 mb-2">Quality of Education</h4>
                   <p className="text-gray-700">
-                    The most important factor - what children actually learn and how well they're taught. 
+                    The most important factor - what children actually learn and how well they&apos;re taught. 
                     This directly impacts pupil outcomes and future success.
                   </p>
                 </div>
@@ -220,7 +221,7 @@ export default function SchoolcheckerRatingPage() {
                 <div>
                   <h4 className="text-lg font-semibold text-gray-900 mb-2">Personal Development</h4>
                   <p className="text-gray-700">
-                    Supporting pupils' personal development, wellbeing, and character development 
+                    Supporting pupils&apos; personal development, wellbeing, and character development 
                     helps them become well-rounded individuals ready for life beyond school.
                   </p>
                 </div>
@@ -249,7 +250,7 @@ export default function SchoolcheckerRatingPage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-purple-600 text-xl">✓</span>
-                    <p className="text-gray-700">Make informed decisions about your child's education</p>
+                    <p className="text-gray-700">Make informed decisions about your child&apos;s education</p>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-purple-600 text-xl">✓</span>
@@ -275,7 +276,7 @@ export default function SchoolcheckerRatingPage() {
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="text-purple-600 text-xl">✓</span>
-                    <p className="text-gray-700">Consistent with Ofsted's historical approach</p>
+                    <p className="text-gray-700">Consistent with Ofsted&apos;s historical approach</p>
                   </li>
                 </ul>
               </div>
@@ -313,7 +314,7 @@ export default function SchoolcheckerRatingPage() {
                   <li>• Inspection data from <a href="https://www.gov.uk/government/collections/ofsted-inspections-of-schools" 
                                                 target="_blank" 
                                                 rel="noopener noreferrer" 
-                                                className="text-blue-600 hover:text-blue-800 underline">Ofsted's official database</a></li>
+                                                className="text-blue-600 hover:text-blue-800 underline">Ofsted&apos;s official database</a></li>
                   <li>• Category judgments from latest inspections</li>
                   <li>• Historical overall ratings where available</li>
                   <li>• School data from <a href="https://www.gov.uk/government/collections/statistics-school-and-pupil-numbers" 
@@ -337,7 +338,7 @@ export default function SchoolcheckerRatingPage() {
               <a href="https://www.gov.uk/government/news/single-headline-ofsted-grades-scrapped-in-landmark-school-reform" 
                  target="_blank" 
                  rel="noopener noreferrer" 
-                 className="text-blue-600 hover:text-blue-800 underline">Ofsted's plans for their new "Report Card" system</a> 
+                 className="text-blue-600 hover:text-blue-800 underline">Ofsted&apos;s plans for their new &quot;Report Card&quot; system</a> 
               are being monitored. When this is introduced in September 2025, 
               the approach will be reviewed and adapted to ensure the most helpful and accurate 
               school ratings continue to be provided for parents.
@@ -348,7 +349,7 @@ export default function SchoolcheckerRatingPage() {
               <p className="text-indigo-800">
                 The methodology will always be adapted to provide the most useful, accurate, and fair 
                 school ratings possible, using official data and transparent methods. Once there is clarity 
-                on the new 'Report Card' system, the approach will be further refined to ensure continued 
+                on the new &apos;Report Card&apos; system, the approach will be further refined to ensure continued 
                 accuracy and usefulness.
               </p>
             </div>
@@ -361,12 +362,12 @@ export default function SchoolcheckerRatingPage() {
               <p className="text-gray-300 mb-6">
                 Use the free school finder to discover schools in your area and compare them using the fair, transparent rating system.
               </p>
-              <a 
+              <Link 
                 href="/"
                 className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
               >
                 Find Schools Near Me
-              </a>
+              </Link>
             </div>
           </div>
         </div>
