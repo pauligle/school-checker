@@ -100,3 +100,4 @@ COMMENT ON COLUMN primary_results.maths_average_score IS 'Average scaled score i
 COMMENT ON COLUMN primary_results.gps_expected_percentage IS 'Percentage reaching expected standard in Grammar, Punctuation and Spelling';
 COMMENT ON COLUMN primary_results.gps_higher_percentage IS 'Percentage achieving higher standard in Grammar, Punctuation and Spelling';
 
+

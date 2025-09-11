@@ -43,3 +43,4 @@ CREATE INDEX IF NOT EXISTS idx_england_averages_data_year ON england_averages(da
 COMMENT ON TABLE la_averages IS 'Local Authority averages for Key Stage 2 results';
 COMMENT ON TABLE england_averages IS 'England national averages for Key Stage 2 results';
 
+

@@ -36,3 +36,4 @@ FROM pg_stat_user_indexes
 WHERE schemaname = 'public' 
 ORDER BY idx_scan DESC;
 
+

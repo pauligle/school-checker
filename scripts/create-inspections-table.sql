@@ -77,3 +77,4 @@ GRANT ALL ON inspections TO anon;
 GRANT ALL ON inspections TO authenticated;
 GRANT ALL ON inspections TO service_role;
 
+

@@ -10,3 +10,4 @@ ALTER TABLE la_averages ADD CONSTRAINT la_averages_lea_code_data_year_unique UNI
 -- For england_averages table - one record per year
 ALTER TABLE england_averages ADD CONSTRAINT england_averages_data_year_unique UNIQUE (data_year);
 
+

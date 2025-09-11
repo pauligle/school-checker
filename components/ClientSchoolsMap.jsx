@@ -8,6 +8,6 @@ const SchoolsMapNew = dynamic(() => import('@/components/SchoolsMapNew'), {
   loading: () => <div className="h-screen flex items-center justify-center bg-gray-100">Loading map...</div>
 })
 
-export default function ClientSchoolsMap() {
-  return <SchoolsMapNew />
+export default function ClientSchoolsMap({ city = null, center = null, zoom = null, selectedSchool = null }) {
+  return <SchoolsMapNew city={city} center={center} zoom={zoom} selectedSchool={selectedSchool} />
 }

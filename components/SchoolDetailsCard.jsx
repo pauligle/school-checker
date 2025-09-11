@@ -175,24 +175,24 @@ const SchoolDetailsCard = ({
   if (!selectedSchool) return null;
 
   return (
-    <div className="fixed right-0 top-14 md:top-16 h-[calc(100vh-3.5rem)] md:h-[calc(100vh-4rem)] w-full md:w-96 bg-white shadow-xl border-l border-gray-200 z-[1500] overflow-y-auto">
-      <div className="p-3">
+    <div className="fixed right-0 top-20 md:top-24 h-[calc(100vh-5rem)] md:h-[calc(100vh-6rem)] w-full md:w-[420px] bg-white shadow-xl border-l border-gray-200 z-[1500] overflow-y-auto">
+      <div className="p-6">
         {/* Header */}
-        <div className="flex justify-between items-start mb-3">
-          <h2 className="text-lg font-bold text-gray-800 pr-2 leading-tight">{selectedSchool.establishmentname}</h2>
+        <div className="flex justify-between items-start mb-6">
+          <h2 className="text-xl font-bold text-gray-800 pr-4 leading-tight">{selectedSchool.establishmentname}</h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 text-lg flex-shrink-0"
+            className="text-gray-500 hover:text-gray-700 text-xl flex-shrink-0"
           >
             ×
           </button>
         </div>
         
         {/* Vertical Tab Navigation */}
-        <div className="space-y-1 mb-4">
+        <div className="space-y-2 mb-6">
           <button
             onClick={() => setActiveTab('details')}
-            className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded transition-colors ${
+            className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded transition-colors ${
               activeTab === 'details'
                 ? 'bg-blue-50 text-blue-600 border border-blue-200'
                 : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
@@ -253,7 +253,7 @@ const SchoolDetailsCard = ({
           </button>
           <button
             onClick={() => setActiveTab('pupils')}
-            className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded transition-colors ${
+            className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded transition-colors ${
               activeTab === 'pupils'
                 ? 'bg-blue-50 text-blue-600 border border-blue-200'
                 : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
@@ -276,7 +276,7 @@ const SchoolDetailsCard = ({
           </button>
           <button
             onClick={() => setActiveTab('inspections')}
-            className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded transition-colors ${
+            className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded transition-colors ${
               activeTab === 'inspections'
                 ? 'bg-blue-50 text-blue-600 border border-blue-200'
                 : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
@@ -306,7 +306,7 @@ const SchoolDetailsCard = ({
           {hasPrimaryResults && (
             <button
               onClick={() => setActiveTab('primary-results')}
-              className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded transition-colors ${
+              className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded transition-colors ${
                 activeTab === 'primary-results'
                   ? 'bg-blue-50 text-blue-600 border border-blue-200'
                   : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
@@ -336,7 +336,7 @@ const SchoolDetailsCard = ({
           )}
           <button
             onClick={() => setActiveTab('gcse-results')}
-            className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded transition-colors ${
+            className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded transition-colors ${
               activeTab === 'gcse-results'
                 ? 'bg-blue-50 text-blue-600 border border-blue-200'
                 : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
@@ -350,7 +350,7 @@ const SchoolDetailsCard = ({
           </button>
           <button
             onClick={() => setActiveTab('alevel-results')}
-            className={`w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded transition-colors ${
+            className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded transition-colors ${
               activeTab === 'alevel-results'
                 ? 'bg-blue-50 text-blue-600 border border-blue-200'
                 : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
@@ -368,64 +368,64 @@ const SchoolDetailsCard = ({
         <div className="space-y-1">
           {/* Details Tab Content */}
           <div className={`overflow-hidden transition-all duration-300 ${activeTab === 'details' ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'}`}>
-            <div className="pt-2">
+            <div className="pt-4">
               {/* School Details */}
               <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                <div className="bg-gray-200 px-3 py-2 border-b border-gray-200">
-                  <h3 className="text-sm font-semibold text-gray-800">School Details</h3>
+                <div className="bg-gray-200 px-4 py-3 border-b border-gray-200">
+                  <h3 className="text-base font-semibold text-gray-800">School Details</h3>
               </div>
                 <div className="overflow-visible">
-                  <table className="w-full text-xs">
+                  <table className="w-full text-sm">
                     <thead>
                       <tr className="bg-gray-50 border-b border-gray-200">
-                        <th className="text-left py-1 px-2 font-medium text-gray-700 border-r border-gray-200">Detail</th>
-                        <th className="text-right py-1 px-2 font-medium text-gray-700">Value</th>
+                        <th className="text-left py-2 px-3 font-medium text-gray-700 border-r border-gray-200">Detail</th>
+                        <th className="text-right py-2 px-3 font-medium text-gray-700">Value</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr className="border-b border-gray-100">
-                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Phase</td>
-                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.phaseofeducation__name_ || 'N/A'}</td>
+                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Phase</td>
+                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.phaseofeducation__name_ || 'N/A'}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Type</td>
-                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.typeofestablishment__name_ || 'N/A'}</td>
+                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Type</td>
+                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.typeofestablishment__name_ || 'N/A'}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Age Range</td>
-                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.statutorylowage}-{selectedSchool.statutoryhighage}</td>
+                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Age Range</td>
+                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.statutorylowage}-{selectedSchool.statutoryhighage}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Gender</td>
-                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.gender__name_ || 'Mixed'}</td>
+                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Gender</td>
+                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.gender__name_ || 'Mixed'}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Coeducational Sixth Form</td>
-                        <td className="py-1 px-2 text-right text-gray-800">Yes</td>
+                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Coeducational Sixth Form</td>
+                        <td className="py-2 px-3 text-right text-gray-800">Yes</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Has Nursery</td>
-                        <td className="py-1 px-2 text-right text-gray-800">Yes</td>
+                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Has Nursery</td>
+                        <td className="py-2 px-3 text-right text-gray-800">Yes</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Religious Character</td>
-                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.religiouscharacter__name_ || 'Does not apply'}</td>
+                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Religious Character</td>
+                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.religiouscharacter__name_ || 'Does not apply'}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Principal</td>
-                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.headtitle__name_ || ''} {selectedSchool.headfirstname || ''} {selectedSchool.headlastname || ''}</td>
+                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Principal</td>
+                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.headtitle__name_ || ''} {selectedSchool.headfirstname || ''} {selectedSchool.headlastname || ''}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Address</td>
-                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.street}, {selectedSchool.town}, {selectedSchool.postcode}</td>
+                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Address</td>
+                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.street}, {selectedSchool.town}, {selectedSchool.postcode}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Phone Number</td>
-                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.telephonenum || 'N/A'}</td>
+                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Phone Number</td>
+                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.telephonenum || 'N/A'}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Website</td>
-                        <td className="py-1 px-2 text-right text-gray-800">
+                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Website</td>
+                        <td className="py-2 px-3 text-right text-gray-800">
                 {selectedSchool.schoolwebsite ? (
                   <a 
                     href={selectedSchool.schoolwebsite.startsWith('http') ? selectedSchool.schoolwebsite : `https://${selectedSchool.schoolwebsite}`}
@@ -441,8 +441,8 @@ const SchoolDetailsCard = ({
                         </td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Academy Sponsor</td>
-                        <td className="py-1 px-2 text-right text-gray-800">
+                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Academy Sponsor</td>
+                        <td className="py-2 px-3 text-right text-gray-800">
                 {selectedSchool.trusts__code_ && selectedSchool.trusts__name_ ? (
                   <a 
                     href={`https://www.compare-school-performance.service.gov.uk/multi-academy-trust/${selectedSchool.trusts__code_}/${selectedSchool.trusts__name_.toLowerCase().replace(/\s+/g, '-')}`}
@@ -458,12 +458,12 @@ const SchoolDetailsCard = ({
                         </td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Local Authority</td>
-                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.la__name_ || 'N/A'}</td>
+                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Local Authority</td>
+                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.la__name_ || 'N/A'}</td>
                       </tr>
                       <tr className="border-b border-gray-100 last:border-b-0">
-                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Unique Reference Number</td>
-                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.urn || 'N/A'}</td>
+                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Unique Reference Number</td>
+                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.urn || 'N/A'}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -474,7 +474,7 @@ const SchoolDetailsCard = ({
 
           {/* Pupils Tab Content */}
           <div className={`overflow-hidden transition-all duration-300 ${activeTab === 'pupils' ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'}`}>
-            <div className="pt-2">
+            <div className="pt-4">
               {!pupilDataLoaded ? (
                 <div className="bg-white border border-gray-200 rounded-lg p-4">
                   <div className="flex items-center justify-center">
@@ -505,15 +505,15 @@ const SchoolDetailsCard = ({
 
                   {/* Pupil Summary */}
                   <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                    <div className="bg-gray-200 px-3 py-2 border-b border-gray-200">
-                      <h3 className="text-sm font-semibold text-gray-800">Pupil Summary</h3>
+                    <div className="bg-gray-200 px-4 py-3 border-b border-gray-200">
+                      <h3 className="text-base font-semibold text-gray-800">Pupil Summary</h3>
                   </div>
                     <div className="overflow-visible">
-                      <table className="w-full text-xs">
+                      <table className="w-full text-sm">
                         <tbody>
                           <tr className="border-b border-gray-100">
-                            <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Total Pupils</td>
-                            <td className="py-1 px-2 text-right text-gray-800">
+                            <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Total Pupils</td>
+                            <td className="py-2 px-3 text-right text-gray-800">
                               {pupilData.summary.totalPupils?.toLocaleString() || 'N/A'}
                               {selectedSchool.schoolcapacity && pupilData.summary.totalPupils && (
                                 <span className="text-gray-500 ml-1">
@@ -523,16 +523,16 @@ const SchoolDetailsCard = ({
                             </td>
                           </tr>
                           <tr className="border-b border-gray-100">
-                            <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Age Range</td>
-                            <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.statutorylowage}-{selectedSchool.statutoryhighage}</td>
+                            <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Age Range</td>
+                            <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.statutorylowage}-{selectedSchool.statutoryhighage}</td>
                           </tr>
                           <tr className="border-b border-gray-100">
-                            <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Gender</td>
-                            <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.gender__name_ || 'Mixed'}</td>
+                            <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Gender</td>
+                            <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.gender__name_ || 'Mixed'}</td>
                           </tr>
                           <tr className="border-b border-gray-100">
-                            <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Boy/Girl Ratio</td>
-                            <td className="py-1 px-2 text-right text-gray-800">
+                            <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Boy/Girl Ratio</td>
+                            <td className="py-2 px-3 text-right text-gray-800">
                               {pupilData.summary.boys && pupilData.summary.girls && pupilData.summary.totalPupils ? (
                                 <>
                                   <div>{((pupilData.summary.girls / pupilData.summary.totalPupils) * 100).toFixed(1)}% Girls</div>
@@ -544,14 +544,14 @@ const SchoolDetailsCard = ({
                             </td>
                           </tr>
                           <tr className="border-b border-gray-100">
-                            <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Eligible for Free School Meals</td>
-                            <td className="py-1 px-2 text-right text-gray-800">
+                            <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Eligible for Free School Meals</td>
+                            <td className="py-2 px-3 text-right text-gray-800">
                               {pupilData.summary.fsmCount || 0} pupils ({pupilData.summary.fsmPercentage?.toFixed(1) || 0}%)
                             </td>
                           </tr>
                           <tr className="border-b border-gray-100">
-                            <td className="py-1 px-2 text-gray-800 border-r border-gray-200">First Language is Not English</td>
-                            <td className="py-1 px-2 text-right text-gray-800">
+                            <td className="py-2 px-3 text-gray-800 border-r border-gray-200">First Language is Not English</td>
+                            <td className="py-2 px-3 text-right text-gray-800">
                               {pupilData.language.englishFirstLanguage && pupilData.summary.totalPupils ? (
                                 <>
                                   {pupilData.summary.totalPupils - pupilData.language.englishFirstLanguage} pupils
@@ -566,8 +566,8 @@ const SchoolDetailsCard = ({
                           </tr>
                           {pupilData.summary.youngCarers > 0 && (
                             <tr className="border-b border-gray-100">
-                              <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Young Carers</td>
-                              <td className="py-1 px-2 text-right text-gray-800">
+                              <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Young Carers</td>
+                              <td className="py-2 px-3 text-right text-gray-800">
                                 {pupilData.summary.youngCarers} ({pupilData.summary.youngCarersPercentage?.toFixed(1) || 0}%)
                               </td>
                             </tr>
@@ -601,11 +601,11 @@ const SchoolDetailsCard = ({
 
                   {/* Pupil Ethnicities */}
                   <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                    <div className="bg-gray-200 px-3 py-2 border-b border-gray-200">
-                      <h3 className="text-sm font-semibold text-gray-800">Pupil Ethnicities</h3>
+                    <div className="bg-gray-200 px-4 py-3 border-b border-gray-200">
+                      <h3 className="text-base font-semibold text-gray-800">Pupil Ethnicities</h3>
                     </div>
                     <div className="overflow-visible">
-                      <table className="w-full text-xs">
+                      <table className="w-full text-sm">
                         <thead>
                           <tr className="bg-gray-50 border-b border-gray-200">
                             <th className="text-left py-1 px-2 font-medium text-gray-700 border-r border-gray-200">Ethnicity of Pupils</th>
@@ -649,8 +649,8 @@ const SchoolDetailsCard = ({
                             
                      return ethnicities.map((ethnicity, index) => (
                        <tr key={index} className="border-b border-gray-100 last:border-b-0">
-                         <td className="py-1 px-2 text-gray-800 border-r border-gray-200">{ethnicity.name}</td>
-                         <td className="py-1 px-2 text-right text-gray-800">
+                         <td className="py-2 px-3 text-gray-800 border-r border-gray-200">{ethnicity.name}</td>
+                         <td className="py-2 px-3 text-right text-gray-800">
                            <div className="flex items-center justify-end space-x-2">
                              <div className="w-16 bg-gray-200 rounded-full h-2">
                                <div 
@@ -675,7 +675,7 @@ const SchoolDetailsCard = ({
 
           {/* Inspections Tab Content */}
           <div className={`overflow-hidden transition-all duration-300 ${activeTab === 'inspections' ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
-            <div className="pt-2">
+            <div className="pt-4">
               <SchoolInspectionCard inspections={selectedSchoolInspections} />
             </div>
           </div>
@@ -683,7 +683,7 @@ const SchoolDetailsCard = ({
           {/* Primary Results Tab Content - Only show if school has primary results data */}
           {hasPrimaryResults && (
             <div className={`overflow-hidden transition-all duration-300 ${activeTab === 'primary-results' ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'}`}>
-              <div className="pt-2">
+              <div className="pt-4">
                 <PrimaryResultsCard schoolData={selectedSchool} />
               </div>
             </div>
@@ -691,7 +691,7 @@ const SchoolDetailsCard = ({
 
           {/* GCSE Results Tab Content */}
           <div className={`overflow-hidden transition-all duration-300 ${activeTab === 'gcse-results' ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'}`}>
-            <div className="pt-2">
+            <div className="pt-4">
               <div className="space-y-2">
                 <div className="bg-blue-50 p-3 rounded-lg">
                   <h3 className="text-sm font-bold text-blue-600 mb-2">GCSE Results</h3>
@@ -712,7 +712,7 @@ const SchoolDetailsCard = ({
 
           {/* A-Level Results Tab Content */}
           <div className={`overflow-hidden transition-all duration-300 ${activeTab === 'alevel-results' ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'}`}>
-            <div className="pt-2">
+            <div className="pt-4">
               <div className="space-y-2">
                 <div className="bg-blue-50 p-3 rounded-lg">
                   <h3 className="text-sm font-bold text-blue-600 mb-2">A-Level Results</h3>

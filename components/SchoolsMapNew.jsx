@@ -25,13 +25,26 @@ if (supabaseUrl && supabaseAnonKey) {
 }
 
 // A component that fetches data based on map events
-const MapEventUpdater = ({ onBoundsChange }) => {
+const MapEventUpdater = ({ onBoundsChange, city }) => {
   const map = useMap();
 
   useEffect(() => {
-    // Initial fetch on mount
-    onBoundsChange(map.getBounds(), map.getZoom());
+    // Only do initial fetch if no city is specified (for home page)
+    if (!city) {
+      // Wait for map to be fully initialized before initial fetch
+      const initializeMap = () => {
+        // Small delay to ensure map is fully rendered
+        setTimeout(() => {
+          onBoundsChange(map.getBounds(), map.getZoom());
+        }, 100);
+      };
 
+      // Initial fetch on mount with delay
+      initializeMap();
+    }
+
+    // Listen to map events for both home page and city pages
+    // This allows users to explore and see new schools when moving the map
     const handleMoveEnd = () => onBoundsChange(map.getBounds(), map.getZoom());
     const handleZoomEnd = () => onBoundsChange(map.getBounds(), map.getZoom());
 
@@ -43,13 +56,22 @@ const MapEventUpdater = ({ onBoundsChange }) => {
       map.off('moveend', handleMoveEnd);
       map.off('zoomend', handleZoomEnd);
     };
-  }, [map, onBoundsChange]);
+  }, [map, onBoundsChange, city]);
 
   return null;
 };
 
+// City coordinates for focusing maps
+const CITY_COORDINATES = {
+  london: { lat: 51.5074, lng: -0.1278, zoom: 10 },
+  manchester: { lat: 53.4808, lng: -2.2426, zoom: 11 },
+  leeds: { lat: 53.8008, lng: -1.5491, zoom: 11 },
+  birmingham: { lat: 52.4862, lng: -1.8904, zoom: 11 },
+  liverpool: { lat: 53.4084, lng: -2.9916, zoom: 11 }
+};
+
 // Main SchoolsMap Component
-export default function SchoolsMap() {
+export default function SchoolsMap({ city = null, center = null, zoom = null, selectedSchool: propSelectedSchool = null }) {
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState(null);
@@ -75,6 +97,67 @@ export default function SchoolsMap() {
   
   // Map reference for programmatic control
   const mapRef = useRef(null);
+  
+  // Auto-focus on selected school from URL parameter
+  useEffect(() => {
+    if (propSelectedSchool && !city && !center) {
+      console.log('Auto-focusing on school:', propSelectedSchool);
+      
+      // Fetch school data and auto-open card
+      const fetchAndSelectSchool = async () => {
+        if (!supabase) {
+          console.error('Supabase not available');
+          return;
+        }
+        
+        try {
+          // Fetch school data
+          const { data: schoolData, error: schoolError } = await supabase
+            .from('schools')
+            .select('*')
+            .eq('urn', propSelectedSchool)
+            .single();
+          
+          if (schoolError || !schoolData) {
+            console.error('Error fetching selected school:', schoolError);
+            return;
+          }
+          
+          console.log('Fetched school data:', schoolData.establishmentname);
+          
+          // Set the selected school and open card
+          setSelectedSchool(schoolData);
+          setCardOpen(true);
+          console.log('Set selected school and opened card');
+          
+          // Center map on school with a delay to ensure map is ready
+          setTimeout(() => {
+            if (mapRef.current && schoolData.lat && schoolData.lon) {
+              console.log('Centering map on school:', schoolData.lat, schoolData.lon);
+              mapRef.current.setView([schoolData.lat, schoolData.lon], 15);
+            } else {
+              console.log('Map ref not ready or coordinates missing');
+            }
+          }, 1000);
+          
+          // Fetch inspection data
+          const { data: inspectionData } = await supabase
+            .from('inspections')
+            .select('*')
+            .eq('urn', propSelectedSchool)
+            .order('inspection_date', { ascending: false });
+          
+          setSelectedSchoolInspections(inspectionData || []);
+          console.log('Fetched inspection data:', inspectionData?.length || 0, 'inspections');
+          
+        } catch (error) {
+          console.error('Error fetching selected school data:', error);
+        }
+      };
+      
+      fetchAndSelectSchool();
+    }
+  }, [propSelectedSchool, city, center]);
   
   // Geolocation functions
   const getCurrentLocation = useCallback(() => {
@@ -105,13 +188,15 @@ export default function SchoolsMap() {
         // Center map on user location
         if (mapRef.current) {
           mapRef.current.setView([latitude, longitude], 11); // Lower zoom to show more schools
-          // Trigger school fetching after centering
-          setTimeout(() => {
-            const bounds = mapRef.current.getBounds();
-            const zoom = mapRef.current.getZoom();
-            console.log('Triggering school fetch after location centering:', { bounds, zoom });
-            fetchSchools(bounds, zoom);
-          }, 500); // Small delay to ensure map has finished centering
+          // Only trigger school fetching for home page (not city pages)
+          if (!city) {
+            setTimeout(() => {
+              const bounds = mapRef.current.getBounds();
+              const zoom = mapRef.current.getZoom();
+              console.log('Triggering school fetch after location centering:', { bounds, zoom });
+              fetchSchools(bounds, zoom);
+            }, 500); // Small delay to ensure map has finished centering
+          }
         }
         
         // Hide success message after 2 seconds
@@ -178,9 +263,11 @@ export default function SchoolsMap() {
         window.markerOffsets = null;
       });
     
-    // Try to get user's location automatically
-    getCurrentLocation();
-  }, [getCurrentLocation]);
+    // Try to get user's location automatically only if no city is specified and no specific center/zoom is provided
+    if (!city && !center) {
+      getCurrentLocation();
+    }
+  }, [getCurrentLocation, city, center]);
 
   // Memoize fetchSchools to prevent unnecessary re-creations
   const fetchSchools = useCallback(async (mapBounds, zoomLevel) => {
@@ -192,16 +279,17 @@ export default function SchoolsMap() {
 
     setLoading(true);
 
-    // Increased limits for better school visibility
-    const schoolLimit = zoomLevel >= 12 ? 500 : zoomLevel >= 10 ? 300 : zoomLevel >= 8 ? 200 : 150;
+    // Increased limits for better school visibility, especially for city pages
+    const schoolLimit = zoomLevel >= 12 ? 800 : zoomLevel >= 10 ? 600 : zoomLevel >= 8 ? 400 : 300;
     console.log('School limit for zoom', zoomLevel, ':', schoolLimit);
 
-    const bounds = {
+    // Handle both Leaflet bounds object and plain object
+    const bounds = mapBounds.getSouth ? {
       south: mapBounds.getSouth(),
       north: mapBounds.getNorth(),
       west: mapBounds.getWest(),
       east: mapBounds.getEast()
-    };
+    } : mapBounds; // If it's already a plain object, use it directly
     console.log("Querying with bounds:", bounds, "limit:", schoolLimit);
     console.log("Bounds span - Lat:", bounds.north - bounds.south, "Lon:", bounds.east - bounds.west);
 
@@ -241,7 +329,24 @@ export default function SchoolsMap() {
 
     // Always show schools, even if we exceed the limit
     const allSchools = data || [];
-    setSchools(allSchools);
+    
+    // For city pages, add schools to existing ones instead of replacing
+    if (city) {
+      setSchools(prevSchools => {
+        // Create a map of existing schools by URN for quick lookup
+        const existingSchoolsMap = new Map(prevSchools.map(school => [school.urn, school]));
+        
+        // Add new schools that aren't already in the map
+        const newSchools = allSchools.filter(school => !existingSchoolsMap.has(school.urn));
+        
+        console.log(`City page: Adding ${newSchools.length} new schools to existing ${prevSchools.length}`);
+        return [...prevSchools, ...newSchools];
+      });
+    } else {
+      // For home page, replace schools as before
+      setSchools(allSchools);
+    }
+    
     setTooManySchools(false);
     console.log(`Fetched schools: ${allSchools.length} (zoom: ${zoomLevel}, limit: ${schoolLimit})`);
     
@@ -265,6 +370,8 @@ export default function SchoolsMap() {
       }
     }
   }, []);
+
+
 
   // Filter schools based on active filter
   const filterSchools = useCallback((schoolsList) => {
@@ -351,7 +458,7 @@ export default function SchoolsMap() {
   };
 
   // Generate simple circle icon with inspection color
-  const generatePhaseIcon = (phases, rating, isIndependent = false) => {
+  const generatePhaseIcon = (phases, rating, isIndependent = false, isSelected = false) => {
     const colors = {
       1: '#00C851', // Green - Outstanding
       2: '#FFC107', // Yellow - Good  
@@ -367,6 +474,32 @@ export default function SchoolsMap() {
     const size = 24;
     const radius = size / 2;
     
+    // If this is the selected school, add a highlighter circle overlay
+    if (isSelected) {
+      const highlighterSize = 60; // Size of the highlighter circle
+      const centerX = highlighterSize / 2;
+      const centerY = highlighterSize / 2;
+      const pinSize = 24; // Size of the school pin
+      const pinRadius = pinSize / 2;
+      
+      return `data:image/svg+xml;base64,${btoa(`
+        <svg width="${highlighterSize}" height="${highlighterSize}" viewBox="0 0 ${highlighterSize} ${highlighterSize}" xmlns="http://www.w3.org/2000/svg">
+          <!-- Highlighter circle background -->
+          <circle cx="${centerX}" cy="${centerY}" r="${centerX - 2}" fill="url(#highlighter-gradient)" stroke="#FFD700" stroke-width="3" stroke-dasharray="4,4" opacity="0.8"/>
+          <!-- School pin in the center -->
+          <circle cx="${centerX}" cy="${centerY}" r="${pinRadius - 1}" fill="${color}" stroke="black" stroke-width="1"/>
+          <!-- Gradient definition for highlighter effect -->
+          <defs>
+            <radialGradient id="highlighter-gradient" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" style="stop-color:#FFFF00;stop-opacity:0.3" />
+              <stop offset="70%" style="stop-color:#FFD700;stop-opacity:0.6" />
+              <stop offset="100%" style="stop-color:#FFA500;stop-opacity:0.2" />
+            </radialGradient>
+          </defs>
+        </svg>
+      `)}`;
+    }
+    
     return `data:image/svg+xml;base64,${btoa(`
       <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
         <circle cx="${radius}" cy="${radius}" r="${radius - 1}" fill="${color}" stroke="black" stroke-width="1"/>
@@ -375,7 +508,7 @@ export default function SchoolsMap() {
   };
 
   // Get icon for school with phase and inspection rating
-  const getOfstedIcon = (urn, school) => {
+  const getOfstedIcon = (urn, school, isSelected = false) => {
     // If icons haven't been initialized yet, return undefined to use default icon
     if (!window.ofstedIcons || !window.ofstedIcons.initialized) {
       console.log('Ofsted icons not ready yet for URN:', urn);
@@ -391,25 +524,25 @@ export default function SchoolsMap() {
       (establishmentType.toLowerCase().includes('independent') || 
        establishmentType.toLowerCase().includes('private'));
     
-    console.log(`School ${urn}: phases=${phases.join(',')}, rating=${rating}, independent=${isIndependent}`);
+    console.log(`School ${urn}: phases=${phases.join(',')}, rating=${rating}, independent=${isIndependent}, selected=${isSelected}`);
     
     // Calculate dynamic size based on number of phases (vertical stacking)
     const iconSize = 24;
     let iconWidth, iconHeight;
     
     if (phases.length === 0 || phases.length === 1 || phases.length === 4) {
-      iconWidth = iconSize;
-      iconHeight = iconSize;
+      iconWidth = isSelected ? 60 : iconSize;
+      iconHeight = isSelected ? 60 : iconSize;
     } else if (phases.length === 2) {
-      iconWidth = iconSize;
-      iconHeight = iconSize * 2;
+      iconWidth = isSelected ? 60 : iconSize;
+      iconHeight = isSelected ? 60 : iconSize * 2;
     } else if (phases.length === 3) {
-      iconWidth = iconSize;
-      iconHeight = iconSize * 3;
+      iconWidth = isSelected ? 60 : iconSize;
+      iconHeight = isSelected ? 60 : iconSize * 3;
     }
     
-    // Generate dynamic icon based on phases, rating, and independence
-    const iconUrl = generatePhaseIcon(phases, rating, isIndependent);
+    // Generate dynamic icon based on phases, rating, independence, and selection
+    const iconUrl = generatePhaseIcon(phases, rating, isIndependent, isSelected);
     
     return new L.Icon({
       iconUrl: iconUrl,
@@ -505,14 +638,113 @@ export default function SchoolsMap() {
     }
   }, [supabase]);
 
+  // City-specific initialization effect
+  useEffect(() => {
+    if (city && CITY_COORDINATES[city]) {
+      console.log(`Initializing city-specific schools for: ${city}`);
+      
+      // Fetch schools directly for this city
+      const fetchCitySchools = async () => {
+        if (!supabase || !CITY_COORDINATES[city]) {
+          console.log('Cannot fetch schools for city:', city);
+          return;
+        }
+
+        const cityCoords = CITY_COORDINATES[city];
+        console.log(`Fetching schools directly for ${city}:`, cityCoords);
+
+        setLoading(true);
+
+        try {
+          // Use a generous buffer around the city
+          const buffer = 0.15; // ~17km buffer
+          const bounds = {
+            south: cityCoords.lat - buffer,
+            north: cityCoords.lat + buffer,
+            west: cityCoords.lng - buffer,
+            east: cityCoords.lng + buffer
+          };
+
+          console.log(`Direct city query bounds for ${city}:`, bounds);
+
+          const { data, error } = await supabase
+            .from("schools")
+            .select("urn,establishmentname,lat,lon,phaseofeducation__name_,statutorylowage,statutoryhighage,typeofestablishment__name_")
+            .gte('lat', bounds.south)
+            .lte('lat', bounds.north)
+            .gte('lon', bounds.west)
+            .lte('lon', bounds.east)
+            .not('lat', 'is', null)
+            .not('lon', 'is', null)
+            .order('urn')
+            .limit(1000);
+
+          setLoading(false);
+
+          if (error) {
+            console.error(`Error fetching schools for ${city}:`, error);
+            setSchools([]);
+            return;
+          }
+
+          const allSchools = data || [];
+          setSchools(allSchools);
+          setTooManySchools(false);
+          
+          console.log(`Direct city fetch for ${city}: ${allSchools.length} schools found`);
+          
+          // Fetch Ofsted ratings for the schools
+          fetchSchoolRatings(allSchools);
+          
+        } catch (err) {
+          console.error(`Error in direct city fetch for ${city}:`, err);
+          setLoading(false);
+          setSchools([]);
+        }
+      };
+      
+      fetchCitySchools();
+    }
+  }, [city, supabase, fetchSchoolRatings]);
+
+  // Effect to handle propSelectedSchool changes
+  useEffect(() => {
+    if (propSelectedSchool) {
+      setSelectedSchool(propSelectedSchool);
+      setCardOpen(true);
+    }
+  }, [propSelectedSchool]);
+
+  // Effect to focus map on selected school when center and zoom are provided
+  useEffect(() => {
+    if (center && zoom && mapRef.current) {
+      // Small delay to ensure map is fully initialized
+      setTimeout(() => {
+        if (mapRef.current) {
+          mapRef.current.setView(center, zoom);
+          console.log('Map focused on school at:', center, 'with zoom:', zoom);
+          
+          // Fetch schools around the focused area
+          const bounds = mapRef.current.getBounds();
+          fetchSchools(bounds, zoom);
+        }
+      }, 100);
+    }
+  }, [center, zoom, fetchSchools]);
+
   // Handle filter change
   const handleFilterChange = (filter) => {
     setActiveFilter(filter);
     console.log(`Filter changed to: ${filter}`);
   };
 
-  // Handle school marker click
+  // Handle school marker click - disabled for school pages
   const handleSchoolClick = async (school) => {
+    // Don't show school cards on individual school pages (when center and zoom are provided)
+    if (center && zoom) {
+      return;
+    }
+    
     console.log('School clicked:', school.establishmentname);
     
     // Fetch full school data and inspection data
@@ -561,8 +793,8 @@ export default function SchoolsMap() {
 
   return (
     <div className="relative w-full h-full">
-      {/* School Details Card - Optimized Component */}
-      {cardOpen && selectedSchool && (
+      {/* School Details Card - Only show on home page, not on individual school pages */}
+      {!center && !zoom && cardOpen && selectedSchool && (
         <SchoolDetailsCard
           selectedSchool={selectedSchool}
           selectedSchoolInspections={selectedSchoolInspections}
@@ -572,49 +804,51 @@ export default function SchoolsMap() {
         />
       )}
       
-      {/* Filter Buttons */}
-      <div className="absolute top-4 left-32 z-[1000] flex flex-wrap gap-2 max-w-4xl">
-        <button
-          onClick={() => handleFilterChange('all')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            activeFilter === 'all'
-              ? 'bg-blue-600 text-white shadow-lg'
-              : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
-          }`}
-        >
-          All Schools
-        </button>
-        <button
-          onClick={() => handleFilterChange('nursery')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            activeFilter === 'nursery'
-              ? 'bg-green-600 text-white shadow-lg'
-              : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
-          }`}
-        >
-          Nurseries
-        </button>
-        <button
-          onClick={() => handleFilterChange('primary')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            activeFilter === 'primary'
-              ? 'bg-purple-600 text-white shadow-lg'
-              : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
-          }`}
-        >
-          Primary Schools
-        </button>
-        <button
-          onClick={() => handleFilterChange('secondary')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            activeFilter === 'secondary'
-              ? 'bg-orange-600 text-white shadow-lg'
-              : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
-          }`}
-        >
-          Secondary Schools
-        </button>
-      </div>
+      {/* Filter Buttons - Only show on home page, not on individual school pages */}
+      {!center && !zoom && (
+        <div className="absolute top-4 left-32 z-[1000] flex flex-wrap gap-2 max-w-4xl">
+          <button
+            onClick={() => handleFilterChange('all')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              activeFilter === 'all'
+                ? 'bg-blue-600 text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
+            }`}
+          >
+            All Schools
+          </button>
+          <button
+            onClick={() => handleFilterChange('nursery')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              activeFilter === 'nursery'
+                ? 'bg-green-600 text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
+            }`}
+          >
+            Nurseries
+          </button>
+          <button
+            onClick={() => handleFilterChange('primary')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              activeFilter === 'primary'
+                ? 'bg-purple-600 text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
+            }`}
+          >
+            Primary Schools
+          </button>
+          <button
+            onClick={() => handleFilterChange('secondary')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              activeFilter === 'secondary'
+                ? 'bg-orange-600 text-white shadow-lg'
+                : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
+            }`}
+          >
+            Secondary Schools
+          </button>
+        </div>
+      )}
       
       {/* Map Container - Full Screen */}
       <div className="relative w-full h-full">
@@ -672,10 +906,23 @@ export default function SchoolsMap() {
 
         <MapContainer
           ref={mapRef}
-          center={[52.5, -1.5]}
-          zoom={6}
+          center={center || (city && CITY_COORDINATES[city] ? [CITY_COORDINATES[city].lat, CITY_COORDINATES[city].lng] : [52.5, -1.5])}
+          zoom={zoom || (city && CITY_COORDINATES[city] ? CITY_COORDINATES[city].zoom : 6)}
           style={{ height: "100%", width: "100%" }}
           className="z-0"
+          whenReady={() => {
+            console.log('Map is ready, triggering initial school fetch');
+            // Only fetch schools for home page (not city pages) and when no specific center/zoom is provided
+            if (!city && !center) {
+              setTimeout(() => {
+                if (mapRef.current) {
+                  const bounds = mapRef.current.getBounds();
+                  const zoom = mapRef.current.getZoom();
+                  fetchSchools(bounds, zoom);
+                }
+              }, 200);
+            }
+          }}
         >
           <TileLayer
             attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -700,7 +947,8 @@ export default function SchoolsMap() {
               }
             }
             
-            const icon = getOfstedIcon(school.urn, school);
+            const isSelected = propSelectedSchool === school.urn;
+            const icon = getOfstedIcon(school.urn, school, isSelected);
             
             return (
               <Marker
@@ -710,11 +958,15 @@ export default function SchoolsMap() {
                 eventHandlers={{
                   click: () => handleSchoolClick(school)
                 }}
+                {...(isSelected && { 
+                  zIndexOffset: 1000,
+                  opacity: 1.2
+                })}
               />
             );
           })}
 
-          <MapEventUpdater onBoundsChange={fetchSchools} />
+          <MapEventUpdater onBoundsChange={fetchSchools} city={city} />
         </MapContainer>
       </div>
     </div>

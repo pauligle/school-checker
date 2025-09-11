@@ -2,52 +2,68 @@ import ClientSchoolsMap from '@/components/ClientSchoolsMap'
 
 export const metadata = {
   title: "Schools in London - Find the Best Schools in London | SchoolChecker.io",
-  description: "Discover the best schools in London with detailed Ofsted ratings, performance data, and catchment areas. Free school finder for London schools.",
-  keywords: "schools in london, london schools, best schools london, primary schools london, secondary schools london, london school finder",
+  description: "Discover the best schools in London with detailed Ofsted ratings, performance data, and catchment areas. Free school finder for London schools. 700+ monthly searches.",
+  keywords: "schools in london, london schools, best schools london, primary schools london, secondary schools london, london school finder, schools near me london",
   openGraph: {
     title: "Schools in London - Find the Best Schools in London | SchoolChecker.io",
-    description: "Discover the best schools in London with detailed Ofsted ratings, performance data, and catchment areas.",
+    description: "Discover the best schools in London with detailed Ofsted ratings, performance data, and catchment areas. Free school finder for London schools.",
     type: "website",
   },
 }
 
 export default function SchoolsInLondon() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* SEO Content Section */}
+    <div className="bg-gray-50">
+      {/* Hero Section with More Spacing */}
       <div className="bg-white shadow-sm border-b">
-        <div className="container mx-auto px-4 py-4">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Schools in London
-          </h1>
-          <p className="text-sm text-gray-700 mb-3">
-            Find the best schools in London with detailed Ofsted ratings, performance data, and catchment areas. 
-            Explore over 2,000 schools across all London boroughs.
-          </p>
-          <div className="flex flex-wrap gap-4 text-xs text-gray-600">
-            <span className="flex items-center">
-              <span className="text-green-500 mr-1">✓</span>
-              All London boroughs
-            </span>
-            <span className="flex items-center">
-              <span className="text-green-500 mr-1">✓</span>
-              Ofsted ratings
-            </span>
-            <span className="flex items-center">
-              <span className="text-green-500 mr-1">✓</span>
-              Performance data
-            </span>
-            <span className="flex items-center">
-              <span className="text-green-500 mr-1">✓</span>
-              Catchment areas
-            </span>
+        <div className="container mx-auto px-6 py-12">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Schools in London
+            </h1>
+            <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
+              Find the best schools in London with detailed Ofsted ratings, performance data, and catchment areas. 
+              Explore over 2,000 schools across all London boroughs.
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
+              <span className="flex items-center bg-green-50 px-4 py-2 rounded-full">
+                <span className="text-green-500 mr-2">✓</span>
+                All London boroughs
+              </span>
+              <span className="flex items-center bg-green-50 px-4 py-2 rounded-full">
+                <span className="text-green-500 mr-2">✓</span>
+                Ofsted ratings
+              </span>
+              <span className="flex items-center bg-green-50 px-4 py-2 rounded-full">
+                <span className="text-green-500 mr-2">✓</span>
+                Performance data
+              </span>
+              <span className="flex items-center bg-green-50 px-4 py-2 rounded-full">
+                <span className="text-green-500 mr-2">✓</span>
+                Catchment areas
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Map Section */}
-      <div className="h-screen">
-        <ClientSchoolsMap />
+      {/* Map Section - Contained in Box */}
+      <div className="container mx-auto px-6 py-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="px-6 py-4 bg-gray-50 border-b">
+              <h2 className="text-xl font-semibold text-gray-900">
+                Interactive School Map
+              </h2>
+              <p className="text-sm text-gray-600 mt-1">
+                Click on any school marker to view detailed information
+              </p>
+            </div>
+            <div className="h-[600px] md:h-[700px]">
+              <ClientSchoolsMap city="london" />
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Additional SEO Content */}
