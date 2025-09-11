@@ -71,7 +71,7 @@ export default function SchoolsInLondon() {
                 <li><strong>Secondary Schools:</strong> 400+ secondary schools for ages 11-16/18</li>
                 <li><strong>Nurseries:</strong> Early years provision across all boroughs</li>
                 <li><strong>Special Schools:</strong> Specialist provision for children with additional needs</li>
-                <li><strong>Independent Schools:</strong> Private schools including some of the UK's most prestigious</li>
+                <li><strong>Independent Schools:</strong> Private schools including some of the UK&apos;s most prestigious</li>
               </ul>
               <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">
                 Popular London Boroughs

@@ -71,7 +71,7 @@ export default function SchoolsInManchester() {
                 <li><strong>Secondary Schools:</strong> Strong secondary provision including grammar schools</li>
                 <li><strong>Nurseries:</strong> Early years provision throughout the city</li>
                 <li><strong>Special Schools:</strong> Specialist support for children with additional needs</li>
-                <li><strong>Independent Schools:</strong> Private schools including some of the region's best</li>
+                <li><strong>Independent Schools:</strong> Private schools including some of the region&apos;s best</li>
               </ul>
               <h3 className="text-xl font-semibold text-gray-900 mt-6 mb-3">
                 Popular Manchester Areas
