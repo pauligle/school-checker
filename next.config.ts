@@ -13,17 +13,7 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Simplified webpack config
-  webpack: (config, { dev }) => {
-    if (dev) {
-      config.cache = false;
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: false,
-      };
-    }
-    return config;
-  },
+  // Remove webpack config to avoid conflicts with Turbopack
 };
 
 export default nextConfig;
