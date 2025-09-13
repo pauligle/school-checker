@@ -75,11 +75,14 @@ async function getCityData(): Promise<CityData[]> {
     // Add London overview page
     const londonOverview: CityData = {
       city: 'London',
+      slug: 'london',
       county: 'London',
       region: 'London',
+      country: 'England',
       primarySchools: londonData.reduce((sum: number, london: any) => sum + london.primarySchools, 0),
       secondarySchools: londonData.reduce((sum: number, london: any) => sum + london.secondarySchools, 0),
       totalSchools: londonData.reduce((sum: number, london: any) => sum + london.totalSchools, 0),
+      postcodeCount: londonData.length,
       postcodes: londonData.map((london: any) => london.postcode),
       pagesToCreate: {
         primary: true,
