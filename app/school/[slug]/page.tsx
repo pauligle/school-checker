@@ -418,7 +418,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
               </div>
             </nav>
             
-            <h1 className="text-xl md:text-3xl font-bold mb-3 md:mb-4 leading-tight">{school.establishmentname}</h1>
+            <h1 className="text-2xl md:text-4xl font-bold mb-3 md:mb-4 leading-tight">{school.establishmentname}</h1>
             <div className="flex flex-wrap items-center gap-2 md:gap-4 text-gray-300 text-xs md:text-sm">
               {school.postcode && (
                 <span className="flex items-center gap-2">
@@ -473,7 +473,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                         <span className={`px-2 py-1 text-xs font-medium rounded ${ratingInfo.color}`}>
                           {ratingInfo.text}
                         </span>
-                        <span className="text-xs text-gray-300">
+                        <span className="text-xs text-gray-200">
                           ({schoolcheckerRating.isCalculated ? 'calculated' : 'official'})
                         </span>
                         <a 
