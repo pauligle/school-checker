@@ -1,27 +1,35 @@
-# Exclude large data files from Vercel deployment
-data/
-logs/
-*.log
+# Large data files that shouldn't be deployed
+data/raw/pupil-data/
+data/raw/school-workforce-england/
+data/raw/results/
+data/raw/edubasealldata20250905.csv
+data/raw/Management_information_-_state-funded_schools_-_latest_inspections_as_at_31_July_2025.csv
+data/processed/schools-processed.csv
 
-# Exclude development files
+# Development files
+.next/
+node_modules/
+.turbo/
+.swc/
+*.log
+logs/
+
+# Scripts and data processing files
+scripts/
+*.sh
+
+# Environment files
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# Exclude build artifacts
-.next/
-out/
-build/
-
-# Exclude OS files
-.DS_Store
-Thumbs.db
-
-# Exclude IDE files
+# IDE files
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# Exclude temporary files
-*.tmp
-*.temp
+# OS files
+.DS_Store
+Thumbs.db
