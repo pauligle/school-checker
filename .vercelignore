@@ -1,10 +1,6 @@
 # Large data files that shouldn't be deployed
-data/raw/pupil-data/
-data/raw/school-workforce-england/
-data/raw/results/
-data/raw/edubasealldata20250905.csv
-data/raw/Management_information_-_state-funded_schools_-_latest_inspections_as_at_31_July_2025.csv
-data/processed/schools-processed.csv
+data/raw/
+data/processed/
 
 # Development files
 .next/
