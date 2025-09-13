@@ -56,17 +56,15 @@ async function getCityData(): Promise<CityData[]> {
     // Convert London data to CityData format
     const londonCities: CityData[] = londonData.map((london: any) => ({
       city: london.name,
+      slug: london.name.toLowerCase().replace(/\s+/g, '-'),
       county: 'London',
       region: 'London',
+      country: 'England',
       primarySchools: london.primarySchools,
       secondarySchools: london.secondarySchools,
       totalSchools: london.totalSchools,
-      postcodes: [london.postcode],
-      pagesToCreate: {
-        primary: london.primarySchools >= 10,
-        secondary: london.secondarySchools >= 10,
-        all: true
-      }
+      postcodeCount: 1,
+      postcodes: [london.postcode]
     }))
     
     // Add London overview page
