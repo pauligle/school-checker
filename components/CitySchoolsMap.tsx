@@ -84,32 +84,6 @@ export default function CitySchoolsMap({ schools, city }: CitySchoolsMapProps) {
     'West Kensington': [51.4944, -0.2069],
     'West Ealing': [51.5156, -0.3244],
     'Hanwell': [51.5156, -0.3344],
-    'Chiswick': [51.4944, -0.2544],
-    'Acton': [51.5074, -0.2625],
-    'Ealing': [51.5156, -0.3044],
-    'Hammersmith': [51.4925, -0.2225],
-    'Notting Hill': [51.5156, -0.1969],
-    'Kensington': [51.5074, -0.1875],
-    'Fulham': [51.4744, -0.1944],
-    'Chelsea': [51.4875, -0.1688],
-    'Putney': [51.4619, -0.2169],
-    'Wimbledon': [51.4219, -0.2069],
-    'Battersea': [51.4744, -0.1556],
-    'Clapham': [51.4619, -0.1381],
-    'Woolwich': [51.4994, 0.0644],
-    'Peckham': [51.4744, -0.0694],
-    'Lewisham': [51.4556, -0.0119],
-    'Greenwich': [51.4769, -0.0006],
-    'Willesden': [51.5406, -0.2244],
-    'Kilburn': [51.5472, -0.1944],
-    'Hampstead': [51.5551, -0.1744],
-    'Stoke Newington': [51.5619, -0.0744],
-    'Tottenham': [51.5906, -0.0394],
-    'Walthamstow': [51.5856, -0.0194],
-    'Stratford': [51.5416, -0.0032],
-    'Hackney': [51.5450, -0.0550],
-    'Bethnal Green': [51.5274, -0.0550],
-    'Bow': [51.5274, -0.0207],
     
     // Other Cities
     'Sheffield': [53.3811, -1.4701],
@@ -124,7 +98,6 @@ export default function CitySchoolsMap({ schools, city }: CitySchoolsMapProps) {
     'Harrow': [51.5804, -0.3420],
     'Barnet': [51.6252, -0.1527],
     'Haringey': [51.5906, -0.1100],
-    'Ealing': [51.5154, -0.3045],
     'Hillingdon': [51.5350, -0.4480],
     'Barking and Dagenham': [51.5367, 0.0814],
     'Westminster': [51.4975, -0.1357],
@@ -163,10 +136,10 @@ export default function CitySchoolsMap({ schools, city }: CitySchoolsMapProps) {
   return (
     <div className="h-64 md:h-96 w-full rounded-lg overflow-hidden shadow-lg">
       <SchoolsMapNew
-        center={center}
-        zoom={zoom}
-        schools={schools}
-        city={city}
+        center={center as any}
+        zoom={zoom as any}
+        schools={schools as any}
+        city={city as any}
       />
     </div>
   )

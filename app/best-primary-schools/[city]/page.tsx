@@ -529,11 +529,11 @@ function calculateSchoolCheckerRating(inspection: any) {
   let categoriesUsed = [];
 
   Object.keys(weights).forEach(category => {
-    const rating = inspection[category];
+    const rating = inspection[category as keyof typeof inspection];
     if (rating && rating >= 1 && rating <= 4) {
       // Invert rating so 1=Outstanding=4 points, 4=Inadequate=1 point
-      weightedScore += (5 - rating) * weights[category];
-      totalWeight += weights[category];
+      weightedScore += (5 - rating) * weights[category as keyof typeof weights];
+      totalWeight += weights[category as keyof typeof weights];
       categoriesUsed.push(category);
     }
   });
@@ -697,14 +697,14 @@ export default async function CityPage({
 
     let weightedScore = 0;
     let totalWeight = 0;
-    let categoriesUsed = [];
+    let categoriesUsed: string[] = [];
 
     Object.keys(weights).forEach(category => {
-      const rating = inspection[category];
+      const rating = inspection[category as keyof typeof inspection];
       if (rating && rating >= 1 && rating <= 4) {
         // Invert rating so 1=Outstanding=4 points, 4=Inadequate=1 point
-        weightedScore += (5 - rating) * weights[category];
-        totalWeight += weights[category];
+        weightedScore += (5 - rating) * weights[category as keyof typeof weights];
+        totalWeight += weights[category as keyof typeof weights];
         categoriesUsed.push(category);
       }
     });

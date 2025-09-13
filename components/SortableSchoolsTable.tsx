@@ -57,15 +57,15 @@ function calculateSchoolCheckerRating(inspection: any) {
   let totalWeight = 0;
   let categoriesUsed = [];
 
-  Object.keys(weights).forEach(category => {
-    const rating = inspection[category];
-    if (rating && rating >= 1 && rating <= 4) {
-      // Invert rating so 1=Outstanding=4 points, 4=Inadequate=1 point
-      weightedScore += (5 - rating) * weights[category];
-      totalWeight += weights[category];
-      categoriesUsed.push(category);
-    }
-  });
+    Object.keys(weights).forEach(category => {
+      const rating = inspection[category as keyof typeof inspection];
+      if (rating && rating >= 1 && rating <= 4) {
+        // Invert rating so 1=Outstanding=4 points, 4=Inadequate=1 point
+        weightedScore += (5 - rating) * weights[category as keyof typeof weights];
+        totalWeight += weights[category as keyof typeof weights];
+        categoriesUsed.push(category);
+      }
+    });
 
   if (totalWeight === 0) return null;
 

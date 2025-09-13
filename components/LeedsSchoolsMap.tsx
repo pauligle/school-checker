@@ -27,10 +27,10 @@ export default function LeedsSchoolsMap({ schools }: LeedsSchoolsMapProps) {
   return (
     <div className="h-64 md:h-96 w-full rounded-lg overflow-hidden shadow-lg">
       <SchoolsMapNew
-        center={[53.8008, -1.5491]} // Leeds city center coordinates
-        zoom={10}
-        schools={schools}
-        city="leeds" // This tells SchoolsMapNew to use pre-loaded schools instead of viewport fetching
+        center={[53.8008, -1.5491] as any} // Leeds city center coordinates
+        zoom={10 as any}
+        schools={schools as any}
+        city={"leeds" as any} // This tells SchoolsMapNew to use pre-loaded schools instead of viewport fetching
       />
     </div>
   )
