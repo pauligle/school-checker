@@ -16,3 +16,4 @@ FROM pg_constraint
 WHERE conrelid = 'la_averages'::regclass;
 
 
+

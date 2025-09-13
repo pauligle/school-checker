@@ -1,0 +1,1002 @@
+[
+  {
+    "city": "Birmingham",
+    "slug": "birmingham",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 1718,
+    "primarySchools": 1040,
+    "secondarySchools": 295,
+    "postcodeCount": 50,
+    "postcodes": [
+      "B1",
+      "B2",
+      "B3",
+      "B4",
+      "B5",
+      "B6",
+      "B7",
+      "B8",
+      "B9",
+      "B10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Nottingham",
+    "slug": "nottingham",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 1122,
+    "primarySchools": 755,
+    "secondarySchools": 179,
+    "postcodeCount": 50,
+    "postcodes": [
+      "NG1",
+      "NG2",
+      "NG3",
+      "NG4",
+      "NG5",
+      "NG6",
+      "NG7",
+      "NG8",
+      "NG9",
+      "NG10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Newcastle upon Tyne",
+    "slug": "newcastle-upon-tyne",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 1079,
+    "primarySchools": 680,
+    "secondarySchools": 127,
+    "postcodeCount": 50,
+    "postcodes": [
+      "NE1",
+      "NE2",
+      "NE3",
+      "NE4",
+      "NE5",
+      "NE6",
+      "NE7",
+      "NE8",
+      "NE9",
+      "NE10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Manchester",
+    "slug": "manchester",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 1112,
+    "primarySchools": 625,
+    "secondarySchools": 173,
+    "postcodeCount": 50,
+    "postcodes": [
+      "M1",
+      "M2",
+      "M3",
+      "M4",
+      "M5",
+      "M6",
+      "M7",
+      "M8",
+      "M9",
+      "M10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Bristol",
+    "slug": "bristol",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 869,
+    "primarySchools": 595,
+    "secondarySchools": 118,
+    "postcodeCount": 50,
+    "postcodes": [
+      "BS1",
+      "BS2",
+      "BS3",
+      "BS4",
+      "BS5",
+      "BS6",
+      "BS7",
+      "BS8",
+      "BS9",
+      "BS10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Liverpool",
+    "slug": "liverpool",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 856,
+    "primarySchools": 547,
+    "secondarySchools": 132,
+    "postcodeCount": 50,
+    "postcodes": [
+      "L1",
+      "L2",
+      "L3",
+      "L4",
+      "L5",
+      "L6",
+      "L7",
+      "L8",
+      "L9",
+      "L10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Leicester",
+    "slug": "leicester",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 866,
+    "primarySchools": 545,
+    "secondarySchools": 148,
+    "postcodeCount": 50,
+    "postcodes": [
+      "LE1",
+      "LE2",
+      "LE3",
+      "LE4",
+      "LE5",
+      "LE6",
+      "LE7",
+      "LE8",
+      "LE9",
+      "LE10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Coventry",
+    "slug": "coventry",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 819,
+    "primarySchools": 513,
+    "secondarySchools": 114,
+    "postcodeCount": 50,
+    "postcodes": [
+      "CV1",
+      "CV2",
+      "CV3",
+      "CV4",
+      "CV5",
+      "CV6",
+      "CV7",
+      "CV8",
+      "CV9",
+      "CV10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Leeds",
+    "slug": "leeds",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 804,
+    "primarySchools": 504,
+    "secondarySchools": 126,
+    "postcodeCount": 29,
+    "postcodes": [
+      "LS1",
+      "LS2",
+      "LS3",
+      "LS4",
+      "LS5",
+      "LS6",
+      "LS7",
+      "LS8",
+      "LS9",
+      "LS10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Derby",
+    "slug": "derby",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 706,
+    "primarySchools": 497,
+    "secondarySchools": 87,
+    "postcodeCount": 50,
+    "postcodes": [
+      "DE1",
+      "DE2",
+      "DE3",
+      "DE4",
+      "DE5",
+      "DE6",
+      "DE7",
+      "DE8",
+      "DE9",
+      "DE10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Norwich",
+    "slug": "norwich",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 718,
+    "primarySchools": 475,
+    "secondarySchools": 90,
+    "postcodeCount": 50,
+    "postcodes": [
+      "NR1",
+      "NR2",
+      "NR3",
+      "NR4",
+      "NR5",
+      "NR6",
+      "NR7",
+      "NR8",
+      "NR9",
+      "NR10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Plymouth",
+    "slug": "plymouth",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 590,
+    "primarySchools": 436,
+    "secondarySchools": 81,
+    "postcodeCount": 50,
+    "postcodes": [
+      "PL1",
+      "PL2",
+      "PL3",
+      "PL4",
+      "PL5",
+      "PL6",
+      "PL7",
+      "PL8",
+      "PL9",
+      "PL10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Exeter",
+    "slug": "exeter",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 578,
+    "primarySchools": 397,
+    "secondarySchools": 60,
+    "postcodeCount": 50,
+    "postcodes": [
+      "EX1",
+      "EX2",
+      "EX3",
+      "EX4",
+      "EX5",
+      "EX6",
+      "EX7",
+      "EX8",
+      "EX9",
+      "EX10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Oxford",
+    "slug": "oxford",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 613,
+    "primarySchools": 380,
+    "secondarySchools": 76,
+    "postcodeCount": 50,
+    "postcodes": [
+      "OX1",
+      "OX2",
+      "OX3",
+      "OX4",
+      "OX5",
+      "OX6",
+      "OX7",
+      "OX8",
+      "OX9",
+      "OX10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "York",
+    "slug": "york",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 505,
+    "primarySchools": 361,
+    "secondarySchools": 60,
+    "postcodeCount": 50,
+    "postcodes": [
+      "YO1",
+      "YO2",
+      "YO3",
+      "YO4",
+      "YO5",
+      "YO6",
+      "YO7",
+      "YO8",
+      "YO9",
+      "YO10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Portsmouth",
+    "slug": "portsmouth",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 561,
+    "primarySchools": 351,
+    "secondarySchools": 81,
+    "postcodeCount": 50,
+    "postcodes": [
+      "PO1",
+      "PO2",
+      "PO3",
+      "PO4",
+      "PO5",
+      "PO6",
+      "PO7",
+      "PO8",
+      "PO9",
+      "PO10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Bath",
+    "slug": "bath",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 467,
+    "primarySchools": 305,
+    "secondarySchools": 57,
+    "postcodeCount": 50,
+    "postcodes": [
+      "BA1",
+      "BA2",
+      "BA3",
+      "BA4",
+      "BA5",
+      "BA6",
+      "BA7",
+      "BA8",
+      "BA9",
+      "BA10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Southampton",
+    "slug": "southampton",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 430,
+    "primarySchools": 263,
+    "secondarySchools": 57,
+    "postcodeCount": 50,
+    "postcodes": [
+      "SO1",
+      "SO2",
+      "SO3",
+      "SO4",
+      "SO5",
+      "SO6",
+      "SO7",
+      "SO8",
+      "SO9",
+      "SO10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Sheffield",
+    "slug": "sheffield",
+    "county": "Unknown",
+    "region": "Yorkshire and The Humber",
+    "country": "England",
+    "totalSchools": 325,
+    "primarySchools": 231,
+    "secondarySchools": 52,
+    "postcodeCount": 158,
+    "postcodes": [
+      "S10 2DN",
+      "S2 5QD",
+      "S2 2JQ",
+      "S8 0BN",
+      "S7 1RB",
+      "S5 7QG",
+      "S6 1AZ",
+      "S5 9QN",
+      "S5 8GN",
+      "S9 1AS"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Cambridge",
+    "slug": "cambridge",
+    "county": "Unknown",
+    "region": "Unknown",
+    "country": "England",
+    "totalSchools": 369,
+    "primarySchools": 220,
+    "secondarySchools": 51,
+    "postcodeCount": 50,
+    "postcodes": [
+      "CB1",
+      "CB2",
+      "CB3",
+      "CB4",
+      "CB5",
+      "CB6",
+      "CB7",
+      "CB8",
+      "CB9",
+      "CB10"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Bradford",
+    "slug": "bradford",
+    "county": "Unknown",
+    "region": "Yorkshire and The Humber",
+    "country": "England",
+    "totalSchools": 216,
+    "primarySchools": 167,
+    "secondarySchools": 2,
+    "postcodeCount": 106,
+    "postcodes": [
+      "BD21 4LW",
+      "BD18 4NJ",
+      "BD8 8HT",
+      "BD8 7DJ",
+      "BD8 9QW",
+      "BD5 9HL",
+      "BD5 8DB",
+      "BD18 3JE",
+      "BD5 0HD",
+      "BD15 7HB"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": false,
+      "all": true
+    }
+  },
+  {
+    "city": "Bromley",
+    "slug": "bromley",
+    "county": "Unknown",
+    "region": "London",
+    "country": "England",
+    "totalSchools": 197,
+    "primarySchools": 142,
+    "secondarySchools": 31,
+    "postcodeCount": 82,
+    "postcodes": [
+      "BR6 9BH",
+      "BR4 0HL",
+      "BR5 4LZ",
+      "BR2 9EA",
+      "SE26 5DS",
+      "BR3 1JG",
+      "BR3 4HJ",
+      "BR3 5JG",
+      "BR3 4QY",
+      "BR4 0BA"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Rotherham",
+    "slug": "rotherham",
+    "county": "Unknown",
+    "region": "Yorkshire and The Humber",
+    "country": "England",
+    "totalSchools": 186,
+    "primarySchools": 141,
+    "secondarySchools": 26,
+    "postcodeCount": 83,
+    "postcodes": [
+      "S63 7HG",
+      "S62 5LH",
+      "S61 1TD",
+      "S62 7JD",
+      "S61 4HY",
+      "S61 2PL",
+      "S65 2JW",
+      "S61 3HL",
+      "S60 3LA",
+      "S61 1AP"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Croydon",
+    "slug": "croydon",
+    "county": "Unknown",
+    "region": "London",
+    "country": "England",
+    "totalSchools": 196,
+    "primarySchools": 137,
+    "secondarySchools": 33,
+    "postcodeCount": 79,
+    "postcodes": [
+      "CR0 3NX",
+      "CR0 3JT",
+      "CR5 3BT",
+      "CR0 8HQ",
+      "CR0 1QH",
+      "CR0 4HA",
+      "CR0 2AL",
+      "CR0 7AR",
+      "CR0 8RQ",
+      "CR2 7AR"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Bexley",
+    "slug": "bexley",
+    "county": "Unknown",
+    "region": "London",
+    "country": "England",
+    "totalSchools": 153,
+    "primarySchools": 108,
+    "secondarySchools": 34,
+    "postcodeCount": 57,
+    "postcodes": [
+      "SE2 9TA",
+      "DA8 2HX",
+      "DA7 4SL",
+      "DA16 2ST",
+      "DA16 3BP",
+      "DA6 7QJ",
+      "DA16 1DR",
+      "DA16 2ET",
+      "DA7 4HL",
+      "DA7 4DG"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Enfield",
+    "slug": "enfield",
+    "county": "Unknown",
+    "region": "London",
+    "country": "England",
+    "totalSchools": 89,
+    "primarySchools": 72,
+    "secondarySchools": 12,
+    "postcodeCount": 35,
+    "postcodes": [
+      "N9 9TT",
+      "N18 2JQ",
+      "N18 2ET",
+      "EN3 7NA",
+      "N9 7JR",
+      "EN2 6NS",
+      "EN1 4JY",
+      "EN3 6BG",
+      "N9 8LG",
+      "N9 8DQ"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Havering",
+    "slug": "havering",
+    "county": "Unknown",
+    "region": "London",
+    "country": "England",
+    "totalSchools": 115,
+    "primarySchools": 61,
+    "secondarySchools": 40,
+    "postcodeCount": 45,
+    "postcodes": [
+      "RM11 3UR",
+      "RM1 2PS",
+      "RM14 3NB",
+      "RM14 1SW",
+      "RM11 2SP",
+      "RM12 4QS",
+      "RM14 2LW",
+      "RM12 6AU",
+      "RM11 3SD",
+      "RM13 7PL"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Brent",
+    "slug": "brent",
+    "county": "Unknown",
+    "region": "London",
+    "country": "England",
+    "totalSchools": 88,
+    "primarySchools": 47,
+    "secondarySchools": 23,
+    "postcodeCount": 32,
+    "postcodes": [
+      "NW6 5ST",
+      "NW2 6RJ",
+      "HA0 3SF",
+      "HA0 4HH",
+      "HA0 3EY",
+      "HA9 7NW",
+      "NW10 9BX",
+      "NW6 6HJ",
+      "NW10 5YT",
+      "NW10 1LB"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Harrow",
+    "slug": "harrow",
+    "county": "Unknown",
+    "region": "London",
+    "country": "England",
+    "totalSchools": 83,
+    "primarySchools": 47,
+    "secondarySchools": 20,
+    "postcodeCount": 43,
+    "postcodes": [
+      "HA3 6LS",
+      "HA5 3RA",
+      "HA3 5RQ",
+      "HA2 9QF",
+      "HA5 1TS",
+      "HA3 8LU",
+      "HA5 5TJ",
+      "HA3 8SZ",
+      "HA8 5RU",
+      "HA7 2PJ"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Hillingdon",
+    "slug": "hillingdon",
+    "county": "Unknown",
+    "region": "London",
+    "country": "England",
+    "totalSchools": 53,
+    "primarySchools": 44,
+    "secondarySchools": 4,
+    "postcodeCount": 22,
+    "postcodes": [
+      "UB7 0AQ",
+      "UB7 8HJ",
+      "UB4 9LF",
+      "UB7 9DL",
+      "UB8 3PT",
+      "HA5 2JQ",
+      "UB8 3TH",
+      "HA4 9PQ",
+      "HA4 9SF",
+      "UB7 7TX"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": false,
+      "all": true
+    }
+  },
+  {
+    "city": "Barnet",
+    "slug": "barnet",
+    "county": "Unknown",
+    "region": "London",
+    "country": "England",
+    "totalSchools": 76,
+    "primarySchools": 42,
+    "secondarySchools": 16,
+    "postcodeCount": 35,
+    "postcodes": [
+      "HA8 9AB",
+      "HA8 0DA",
+      "NW4 2AS",
+      "HA8 8RH",
+      "NW2 1SL",
+      "NW2 1AB",
+      "NW7 3ED",
+      "NW7 2BU",
+      "EN5 2BY",
+      "NW9 6LE"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Haringey",
+    "slug": "haringey",
+    "county": "Unknown",
+    "region": "London",
+    "country": "England",
+    "totalSchools": 65,
+    "primarySchools": 41,
+    "secondarySchools": 8,
+    "postcodeCount": 32,
+    "postcodes": [
+      "N22 8LB",
+      "N22 8DZ",
+      "N22 6UH",
+      "N17 9XT",
+      "N15 4AB",
+      "N17 9RB",
+      "N22 6LH",
+      "N17 8NN",
+      "N22 5DD",
+      "N22 5HJ"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": false,
+      "all": true
+    }
+  },
+  {
+    "city": "Barking and Dagenham",
+    "slug": "barking-and-dagenham",
+    "county": "Unknown",
+    "region": "London",
+    "country": "England",
+    "totalSchools": 52,
+    "primarySchools": 41,
+    "secondarySchools": 8,
+    "postcodeCount": 23,
+    "postcodes": [
+      "RM9 6TD",
+      "RM8 2NB",
+      "RM9 4RB",
+      "IG11 8JA",
+      "RM9 6JH",
+      "RM8 3EX",
+      "RM10 8DE",
+      "RM10 8JA",
+      "RM6 5LL",
+      "RM7 0TL"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": false,
+      "all": true
+    }
+  },
+  {
+    "city": "Ealing",
+    "slug": "ealing",
+    "county": "Unknown",
+    "region": "London",
+    "country": "England",
+    "totalSchools": 58,
+    "primarySchools": 25,
+    "secondarySchools": 12,
+    "postcodeCount": 32,
+    "postcodes": [
+      "W7 1PD",
+      "UB2 5JT",
+      "W5 2DH",
+      "W7 2NR",
+      "UB2 5PE",
+      "W3 8SJ",
+      "UB5 4HB",
+      "W5 4HN",
+      "W13 0DH",
+      "W7 1JL"
+    ],
+    "pagesToCreate": {
+      "primary": true,
+      "secondary": true,
+      "all": true
+    }
+  },
+  {
+    "city": "Wigan",
+    "slug": "wigan",
+    "county": "Unknown",
+    "region": "North West",
+    "country": "England",
+    "totalSchools": 6,
+    "primarySchools": 6,
+    "secondarySchools": 0,
+    "postcodeCount": 2,
+    "postcodes": [
+      "WN5 9LW",
+      "M46 0HJ"
+    ],
+    "pagesToCreate": {
+      "primary": false,
+      "secondary": false,
+      "all": false
+    }
+  },
+  {
+    "city": "Westminster",
+    "slug": "westminster",
+    "county": "Unknown",
+    "region": "London",
+    "country": "England",
+    "totalSchools": 18,
+    "primarySchools": 3,
+    "secondarySchools": 9,
+    "postcodeCount": 12,
+    "postcodes": [
+      "SW1V 3SE",
+      "SW1V 3AT",
+      "NW8 0NL",
+      "NW1 6RX",
+      "W9 1RB",
+      "SW1W 8JF",
+      "NW8 0LL",
+      "WC2H 9JJ",
+      "NW8 7NE",
+      "NW6 5ED"
+    ],
+    "pagesToCreate": {
+      "primary": false,
+      "secondary": false,
+      "all": false
+    }
+  }
+]

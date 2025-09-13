@@ -1,19 +1,57 @@
 import ClientSchoolsMap from '@/components/ClientSchoolsMap'
+import { Metadata } from 'next';
+import CityPageStructuredData from '@/components/CityPageStructuredData';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Schools in London - Find the Best Schools in London | SchoolChecker.io",
   description: "Discover the best schools in London with detailed Ofsted ratings, performance data, and catchment areas. Free school finder for London schools. 700+ monthly searches.",
-  keywords: "schools in london, london schools, best schools london, primary schools london, secondary schools london, london school finder, schools near me london",
+  keywords: "schools in london, london schools, best schools london, primary schools london, secondary schools london, london school finder, schools near me london, ofsted london, london education",
+  alternates: {
+    canonical: 'https://schoolchecker.io/schools-in-london',
+  },
   openGraph: {
     title: "Schools in London - Find the Best Schools in London | SchoolChecker.io",
     description: "Discover the best schools in London with detailed Ofsted ratings, performance data, and catchment areas. Free school finder for London schools.",
-    type: "website",
+    url: 'https://schoolchecker.io/schools-in-london',
+    siteName: 'SchoolChecker.io',
+    locale: 'en_GB',
+    type: 'website',
+    images: [
+      {
+        url: 'https://schoolchecker.io/api/og?title=Schools%20in%20London&location=London&rating=Best%20Schools',
+        width: 1200,
+        height: 630,
+        alt: 'Schools in London - Find the Best Schools in London',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Schools in London - Find the Best Schools in London | SchoolChecker.io",
+    description: "Discover the best schools in London with detailed Ofsted ratings, performance data, and catchment areas. Free school finder for London schools.",
+    images: ['https://schoolchecker.io/api/og?title=Schools%20in%20London&location=London&rating=Best%20Schools'],
+    creator: '@schoolcheckerio',
+    site: '@schoolcheckerio',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 }
 
 export default function SchoolsInLondon() {
   return (
     <div className="bg-gray-50">
+      {/* Structured Data */}
+      <CityPageStructuredData cityName="London" citySlug="schools-in-london" />
+      
       {/* Hero Section with More Spacing */}
       <div className="bg-white shadow-sm border-b">
         <div className="container mx-auto px-6 py-12">

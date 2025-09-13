@@ -25,10 +25,16 @@ if (supabaseUrl && supabaseAnonKey) {
 }
 
 // A component that fetches data based on map events
-const MapEventUpdater = ({ onBoundsChange, city }) => {
+const MapEventUpdater = ({ onBoundsChange, city, hasPreloadedSchools = false }) => {
   const map = useMap();
 
   useEffect(() => {
+    // Skip viewport fetching if schools are pre-loaded
+    if (hasPreloadedSchools) {
+      console.log('Skipping viewport fetching - schools are pre-loaded');
+      return;
+    }
+
     // Only do initial fetch if no city is specified (for home page)
     if (!city) {
       // Wait for map to be fully initialized before initial fetch
@@ -56,7 +62,7 @@ const MapEventUpdater = ({ onBoundsChange, city }) => {
       map.off('moveend', handleMoveEnd);
       map.off('zoomend', handleZoomEnd);
     };
-  }, [map, onBoundsChange, city]);
+  }, [map, onBoundsChange, city, hasPreloadedSchools]);
 
   return null;
 };
@@ -67,17 +73,67 @@ const CITY_COORDINATES = {
   manchester: { lat: 53.4808, lng: -2.2426, zoom: 11 },
   leeds: { lat: 53.8008, lng: -1.5491, zoom: 11 },
   birmingham: { lat: 52.4862, lng: -1.8904, zoom: 11 },
-  liverpool: { lat: 53.4084, lng: -2.9916, zoom: 11 }
+  liverpool: { lat: 53.4084, lng: -2.9916, zoom: 11 },
+  
+  // London Postcode Areas
+  'east london': { lat: 51.5388, lng: -0.0598, zoom: 11 },
+  'eastern central london': { lat: 51.5154, lng: -0.0915, zoom: 11 },
+  'north london': { lat: 51.5416, lng: -0.1462, zoom: 11 },
+  'north west london': { lat: 51.5320, lng: -0.1773, zoom: 11 },
+  'south east london': { lat: 51.4756, lng: -0.0523, zoom: 11 },
+  'south west london': { lat: 51.4578, lng: -0.1960, zoom: 11 },
+  'west london': { lat: 51.5074, lng: -0.1958, zoom: 11 },
+  'western central london': { lat: 51.5154, lng: -0.1278, zoom: 11 },
+  
+  // Additional Cities
+  nottingham: { lat: 52.9548, lng: -1.1581, zoom: 11 },
+  'newcastle upon tyne': { lat: 54.9783, lng: -1.6178, zoom: 11 },
+  bristol: { lat: 51.4545, lng: -2.5879, zoom: 11 },
+  leicester: { lat: 52.6369, lng: -1.1398, zoom: 11 },
+  coventry: { lat: 52.4068, lng: -1.5197, zoom: 11 },
+  derby: { lat: 52.9225, lng: -1.4746, zoom: 11 },
+  norwich: { lat: 52.6309, lng: 1.2974, zoom: 11 },
+  plymouth: { lat: 50.3755, lng: -4.1427, zoom: 11 },
+  exeter: { lat: 50.7184, lng: -3.5339, zoom: 11 },
+  oxford: { lat: 51.7520, lng: -1.2577, zoom: 11 },
+  york: { lat: 53.9590, lng: -1.0815, zoom: 11 },
+  portsmouth: { lat: 50.8198, lng: -1.0880, zoom: 11 },
+  bath: { lat: 51.3811, lng: -2.3590, zoom: 11 },
+  southampton: { lat: 50.9097, lng: -1.4044, zoom: 11 },
+  cambridge: { lat: 52.2053, lng: 0.1218, zoom: 11 },
+  sheffield: { lat: 53.3811, lng: -1.4701, zoom: 11 },
+  bradford: { lat: 53.7960, lng: -1.7594, zoom: 11 },
+  bromley: { lat: 51.4058, lng: 0.0144, zoom: 11 },
+  croydon: { lat: 51.3762, lng: -0.0982, zoom: 11 },
+  rotherham: { lat: 53.4302, lng: -1.3568, zoom: 11 },
+  bexley: { lat: 51.4560, lng: 0.1500, zoom: 11 },
+  havering: { lat: 51.5775, lng: 0.1850, zoom: 11 },
+  enfield: { lat: 51.6520, lng: -0.0810, zoom: 11 },
+  brent: { lat: 51.5588, lng: -0.2818, zoom: 11 },
+  harrow: { lat: 51.5804, lng: -0.3420, zoom: 11 },
+  barnet: { lat: 51.6252, lng: -0.1527, zoom: 11 },
+  haringey: { lat: 51.5906, lng: -0.1100, zoom: 11 },
+  ealing: { lat: 51.5154, lng: -0.3045, zoom: 11 },
+  hillingdon: { lat: 51.5350, lng: -0.4480, zoom: 11 },
+  'barking and dagenham': { lat: 51.5367, lng: 0.0814, zoom: 11 },
+  westminster: { lat: 51.4975, lng: -0.1357, zoom: 11 },
+  wigan: { lat: 53.5450, lng: -2.6315, zoom: 11 }
 };
 
 // Main SchoolsMap Component
-export default function SchoolsMap({ city = null, center = null, zoom = null, selectedSchool: propSelectedSchool = null }) {
-  const [schools, setSchools] = useState([]);
+export default function SchoolsMap({ city = null, center = null, zoom = null, selectedSchool: propSelectedSchool = null, schools: preloadedSchools = null }) {
+  const [schools, setSchools] = useState(preloadedSchools || []);
   const [loading, setLoading] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState(null);
   const [selectedSchoolInspections, setSelectedSchoolInspections] = useState([]);
   const [cardOpen, setCardOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('details');
+  
+  // Popup states for school pages
+  const [popupSchool, setPopupSchool] = useState(null);
+  const [popupPosition, setPopupPosition] = useState(null);
+  const [popupScreenPosition, setPopupScreenPosition] = useState(null);
+  const [popupAbovePin, setPopupAbovePin] = useState(true);
   const [tooManySchools, setTooManySchools] = useState(false);
   
   // Geolocation states
@@ -732,16 +788,67 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
     }
   }, [center, zoom, fetchSchools]);
 
+  // Fetch ratings for preloaded schools (for city pages)
+  useEffect(() => {
+    if (preloadedSchools && preloadedSchools.length > 0) {
+      console.log('Fetching ratings for preloaded schools:', preloadedSchools.length);
+      fetchSchoolRatings(preloadedSchools);
+    }
+  }, [preloadedSchools, fetchSchoolRatings]);
+
   // Handle filter change
   const handleFilterChange = (filter) => {
     setActiveFilter(filter);
     console.log(`Filter changed to: ${filter}`);
   };
 
-  // Handle school marker click - disabled for school pages
-  const handleSchoolClick = async (school) => {
-    // Don't show school cards on individual school pages (when center and zoom are provided)
+  // Handle school marker click
+  const handleSchoolClick = async (school, event) => {
+    // On school pages (when center and zoom are provided), show popup instead of card
     if (center && zoom) {
+      console.log('School clicked on school page:', school.establishmentname);
+      console.log('Event latlng:', event?.latlng);
+      
+      // Always set the school first
+      setPopupSchool(school);
+      
+      // Convert lat/lng to screen coordinates
+      if (event && event.latlng && mapRef.current) {
+        const map = mapRef.current;
+        const point = map.latLngToContainerPoint(event.latlng);
+        const mapSize = map.getSize();
+        
+        console.log('Map point:', point);
+        console.log('Map size:', mapSize);
+        
+        // Popup dimensions (approximate)
+        const popupWidth = 192; // max-w-48 = 12rem = 192px
+        const popupHeight = 120; // Approximate height
+        
+        // Calculate optimal position
+        let x = point.x;
+        let y = point.y - 20;
+        
+        // Adjust horizontal position if popup would go off screen
+        if (x - popupWidth / 2 < 0) {
+          x = popupWidth / 2 + 10; // Move right with padding
+        } else if (x + popupWidth / 2 > mapSize.x) {
+          x = mapSize.x - popupWidth / 2 - 10; // Move left with padding
+        }
+        
+        // Adjust vertical position if popup would go off screen
+        const isAbovePin = y - popupHeight >= 0;
+        if (!isAbovePin) {
+          y = point.y + 30; // Position below the pin instead
+        }
+        
+        console.log('Setting popup position:', { x, y, isAbovePin });
+        
+        setPopupAbovePin(isAbovePin);
+        setPopupScreenPosition({ x, y });
+      } else {
+        console.log('Missing event data or map ref:', { event: !!event, latlng: !!event?.latlng, mapRef: !!mapRef.current });
+      }
       return;
     }
     
@@ -910,6 +1017,17 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
           zoom={zoom || (city && CITY_COORDINATES[city] ? CITY_COORDINATES[city].zoom : 6)}
           style={{ height: "100%", width: "100%" }}
           className="z-0"
+          eventHandlers={{
+            click: (e) => {
+              // Close popup when clicking on empty map areas (not on markers)
+              if (center && zoom && popupSchool) {
+                console.log('Map clicked, closing popup');
+                setPopupSchool(null);
+                setPopupScreenPosition(null);
+                setPopupAbovePin(true);
+              }
+            }
+          }}
           whenReady={() => {
             console.log('Map is ready, triggering initial school fetch');
             // Only fetch schools for home page (not city pages) and when no specific center/zoom is provided
@@ -956,7 +1074,7 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
                 position={[offsetLat, offsetLon]}
                 {...(icon && { icon })}
                 eventHandlers={{
-                  click: () => handleSchoolClick(school)
+                  click: (e) => handleSchoolClick(school, e)
                 }}
                 {...(isSelected && { 
                   zIndexOffset: 1000,
@@ -966,8 +1084,68 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
             );
           })}
 
-          <MapEventUpdater onBoundsChange={fetchSchools} city={city} />
+          <MapEventUpdater onBoundsChange={fetchSchools} city={city} hasPreloadedSchools={!!preloadedSchools} />
         </MapContainer>
+        
+        {/* School Popup for school pages */}
+        {center && zoom && popupSchool && popupScreenPosition && (
+          <div 
+            className="absolute z-[1000] bg-white rounded-lg shadow-lg border border-gray-200 p-3 max-w-48"
+            style={{
+              left: `${popupScreenPosition.x}px`,
+              top: `${popupScreenPosition.y}px`,
+              transform: popupAbovePin ? 'translate(-50%, -100%)' : 'translate(-50%, 0%)'
+            }}
+          >
+            {/* Speech bubble triangle - points up or down based on position */}
+            <div 
+              className={`absolute w-0 h-0 border-l-6 border-r-6 border-transparent ${
+                popupAbovePin 
+                  ? 'border-t-6 border-t-white' 
+                  : 'border-b-6 border-b-white'
+              }`}
+              style={{
+                left: '50%',
+                top: popupAbovePin ? '100%' : '-6px',
+                transform: 'translateX(-50%)',
+                filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
+              }}
+            ></div>
+            
+            <div className="flex justify-between items-start mb-2">
+              <h3 className="font-medium text-gray-900 text-xs leading-tight">
+                {popupSchool.establishmentname}
+              </h3>
+         <button
+           onClick={() => {
+             setPopupSchool(null);
+             setPopupScreenPosition(null);
+             setPopupAbovePin(true);
+           }}
+           className="text-gray-400 hover:text-gray-600 ml-1 text-sm leading-none"
+         >
+           ×
+         </button>
+            </div>
+            <div className="text-xs text-gray-600 mb-2">
+              <div className="mb-1">
+                {popupSchool.postcode}
+              </div>
+              <div className="mb-1">
+                {popupSchool.la__name_}
+              </div>
+              <div>
+                {popupSchool.typeofestablishment__name_}
+              </div>
+            </div>
+            <a
+              href={`/school/${popupSchool.establishmentname.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim()}-${popupSchool.urn}`}
+              className="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-1.5 px-2 rounded text-xs font-medium transition-colors"
+            >
+              View School Details
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );

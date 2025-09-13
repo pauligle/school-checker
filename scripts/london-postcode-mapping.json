@@ -1,0 +1,42 @@
+[
+  {
+    "postcode": "E",
+    "name": "East London",
+    "description": "Eastern London postcodes covering Tower Hamlets, Hackney, Waltham Forest, Newham, and Redbridge"
+  },
+  {
+    "postcode": "EC",
+    "name": "Eastern Central London",
+    "description": "Eastern Central London postcodes covering the City of London financial district"
+  },
+  {
+    "postcode": "N",
+    "name": "North London",
+    "description": "Northern London postcodes covering Camden, Islington, Haringey, Enfield, and Barnet"
+  },
+  {
+    "postcode": "NW",
+    "name": "North West London",
+    "description": "North Western London postcodes covering Brent, Camden, Westminster, and Barnet"
+  },
+  {
+    "postcode": "SE",
+    "name": "South East London",
+    "description": "South Eastern London postcodes covering Greenwich, Lewisham, Southwark, and Bexley"
+  },
+  {
+    "postcode": "SW",
+    "name": "South West London",
+    "description": "South Western London postcodes covering Wandsworth, Richmond, Kingston, Merton, and Sutton"
+  },
+  {
+    "postcode": "W",
+    "name": "West London",
+    "description": "Western London postcodes covering Westminster, Kensington and Chelsea, Hammersmith and Fulham, and Ealing"
+  },
+  {
+    "postcode": "WC",
+    "name": "Western Central London",
+    "description": "Western Central London postcodes covering Camden and Westminster"
+  }
+]

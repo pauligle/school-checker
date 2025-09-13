@@ -5,71 +5,75 @@ import PerformanceGauge from './PerformanceGauge';
 
 const PrimaryResultsCard = ({ schoolData }) => {
   const [selectedYear, setSelectedYear] = useState('2024');
-  const [primaryResultsData, setPrimaryResultsData] = useState(null);
+  const [primaryResultsData, setPrimaryResultsData] = useState({}); // Store data for all years
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [availableYears, setAvailableYears] = useState(['2024', '2023', '2020/2022', '2019', '2018']); // Default years
   const [rankings, setRankings] = useState({});
   const [rankingLoading, setRankingLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchPrimaryResults = async () => {
-      console.log('PrimaryResultsCard useEffect triggered, schoolData:', schoolData, 'selectedYear:', selectedYear);
+  // Handle year selection - no loading needed since data is preloaded
+  const handleYearChange = (year) => {
+    setSelectedYear(year);
+  };
 
+  // Preload all years' data on component mount
+  useEffect(() => {
+    const fetchAllYearsData = async () => {
       if (!schoolData?.urn) {
         console.log('No URN found, setting loading to false');
         setLoading(false);
         return;
       }
 
-      // For COVID-19 period, don't fetch data - just show banner
-      if (selectedYear === '2020/2022') {
-        console.log('COVID-19 period selected, showing banner only');
-        setPrimaryResultsData(null);
-        setLoading(false);
-        setError(null);
-        return;
-      }
+      console.log('Preloading primary results for all years for URN:', schoolData.urn);
+      setLoading(true);
+      setError(null);
+
+      const yearsToFetch = ['2024', '2023', '2019', '2018']; // Skip 2020/2022 as it's COVID period
+      const allData = {};
 
       try {
-        console.log('Fetching primary results for URN:', schoolData.urn, 'year:', selectedYear);
-        setLoading(true);
-        setError(null);
-
-        const response = await fetch(`/api/primary-results-year-specific?urn=${schoolData.urn}&year=${selectedYear}`);
-
-        console.log('API response status:', response.status);
-        console.log('Using year-specific API for year:', selectedYear);
-
-        if (!response.ok) {
-          if (response.status === 404) {
-            // School doesn't have primary results data for this year
-            setPrimaryResultsData(null);
-            setLoading(false);
-            return;
+        // Fetch data for all years in parallel
+        const promises = yearsToFetch.map(async (year) => {
+          try {
+            const response = await fetch(`/api/primary-results-year-specific?urn=${schoolData.urn}&year=${year}`);
+            
+            if (response.ok) {
+              const data = await response.json();
+              console.log(`Primary results data received for ${year}:`, data);
+              return { year, data };
+            } else if (response.status === 404) {
+              console.log(`No data available for year ${year}`);
+              return { year, data: null };
+            } else {
+              throw new Error(`Failed to fetch data for ${year}: ${response.status}`);
+            }
+          } catch (err) {
+            console.error(`Error fetching data for year ${year}:`, err);
+            return { year, data: null, error: err.message };
           }
-          throw new Error(`Failed to fetch primary results: ${response.status} ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        console.log('Primary results data received:', data);
-        console.log('School RWM data:', {
-          rwm_expected: data.school?.rwm_expected_percentage,
-          rwm_higher: data.school?.rwm_higher_percentage,
-          reading: data.school?.reading_average_score,
-          maths: data.school?.maths_average_score
         });
-        setPrimaryResultsData(data);
+
+        const results = await Promise.all(promises);
+        
+        // Store all data
+        results.forEach(({ year, data }) => {
+          allData[year] = data;
+        });
+
+        console.log('All primary results data loaded:', allData);
+        setPrimaryResultsData(allData);
       } catch (err) {
-        console.error('Error fetching primary results:', err);
+        console.error('Error preloading primary results:', err);
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPrimaryResults();
-  }, [schoolData?.urn, selectedYear]);
+    fetchAllYearsData();
+  }, [schoolData?.urn]); // Only depend on schoolData.urn, not selectedYear
 
   // Function to fetch available years for this school
   const fetchAvailableYears = async () => {
@@ -172,15 +176,15 @@ const PrimaryResultsCard = ({ schoolData }) => {
       </div>
 
       {/* Year Selection Tabs */}
-      <div className="flex space-x-2 pb-4">
+      <div className="flex space-x-2 pb-4 justify-start">
         {years.map((year) => (
           <button
             key={year}
-            onClick={() => setSelectedYear(year)}
-            className={`px-4 py-2 text-sm font-medium rounded transition-all duration-200 flex-1 ${
+            onClick={() => handleYearChange(year)}
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
               selectedYear === year
-                ? 'bg-indigo-600 text-white shadow-md hover:bg-indigo-700'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-800 border border-gray-200'
+                ? 'bg-gray-100 text-gray-900 border border-gray-300'
+                : 'bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200'
             }`}
           >
             {year}
@@ -232,7 +236,7 @@ const PrimaryResultsCard = ({ schoolData }) => {
             </p>
           </div>
         </div>
-      ) : !primaryResultsData ? (
+      ) : !primaryResultsData[selectedYear] ? (
         <div className="space-y-6">
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <div className="text-base text-blue-800">
@@ -250,7 +254,7 @@ const PrimaryResultsCard = ({ schoolData }) => {
         <div className="space-y-2">
           {/* Data tables will be rendered here */}
           {(() => {
-            const { school, laAverages, englandAverages } = primaryResultsData;
+            const { school, laAverages, englandAverages } = primaryResultsData[selectedYear];
             return (
               <>
 

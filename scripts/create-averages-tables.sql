@@ -44,3 +44,4 @@ COMMENT ON TABLE la_averages IS 'Local Authority averages for Key Stage 2 result
 COMMENT ON TABLE england_averages IS 'England national averages for Key Stage 2 results';
 
 
+

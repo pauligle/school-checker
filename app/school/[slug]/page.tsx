@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
 import ClientSchoolsMap from '@/components/ClientSchoolsMap';
 import PrimaryResultsCard from '@/components/PrimaryResultsCard';
@@ -7,6 +8,35 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
+
+// Helper function to capitalize city names
+function capitalizeCityName(city: string): string {
+  return city
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
+}
+
+// Helper function to get city from postcode
+function getCityFromPostcode(postcode: string): string | null {
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    
+    const mappingPath = path.join(process.cwd(), 'scripts', 'data', 'postcode-city-mapping.json');
+    const mappingData = JSON.parse(fs.readFileSync(mappingPath, 'utf8'));
+    
+    const cityData = mappingData.find((item: any) => 
+      item.postcode === postcode || 
+      item.postcode === postcode.toUpperCase()
+    );
+    
+    return cityData?.city && cityData.city !== 'Unknown' ? cityData.city : null;
+  } catch (error) {
+    console.error('Error loading postcode mapping:', error);
+    return null;
+  }
+}
 
 
 // Helper function to convert numeric Ofsted rating to text
@@ -250,19 +280,66 @@ async function getSchoolData(slug: string): Promise<{
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const { school } = await getSchoolData(slug);
+  const { school, inspection } = await getSchoolData(slug);
   
   if (!school) {
     return {
       title: 'School Not Found | SchoolChecker.io',
-      description: 'The requested school could not be found.'
+      description: 'The requested school could not be found.',
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
+  // Get city from postcode for better SEO
+  const city = school?.postcode ? getCityFromPostcode(school.postcode) : null;
+  const cityDisplayName = city ? capitalizeCityName(city) : school.la__name_;
+  
+  // Get Ofsted rating for enhanced description
+  const ofstedRating = inspection?.outcome ? getOfstedRatingText(inspection.outcome) : 'Not Available';
+  const schoolCheckerRating = calculateSchoolCheckerRating(inspection);
+  
+  // Enhanced SEO content
+  const enhancedTitle = `${school.establishmentname} | ${cityDisplayName} Primary School | SchoolChecker.io`;
+  
+  const enhancedDescription = `${school.establishmentname} is a ${school.phaseofeducation__name_} school in ${cityDisplayName}. ${ofstedRating !== 'Not Available' ? `Ofsted rating: ${ofstedRating}.` : ''} View complete school information including performance data, pupil numbers, and inspection reports.`;
+  
+  const enhancedKeywords = `${school.establishmentname}, ${school.establishmentname} school, ${cityDisplayName} primary school, ${school.la__name_} schools, ${school.phaseofeducation__name_} ${cityDisplayName}, Ofsted ${school.establishmentname}, school performance ${cityDisplayName}, ${school.postcode} schools, school ratings ${cityDisplayName}`;
+
   return {
-    title: `${school.establishmentname} | School Details | SchoolChecker.io`,
-    description: `Complete school information for ${school.establishmentname} including Ofsted ratings, performance data, pupil demographics, and more.`,
-    keywords: `${school.establishmentname}, school, ${school.la__name_}, ${school.phaseofeducation__name_}, Ofsted, performance, pupils, ${school.postcode}`,
+    title: enhancedTitle,
+    description: enhancedDescription,
+    keywords: enhancedKeywords,
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    openGraph: {
+      title: enhancedTitle,
+      description: enhancedDescription,
+      type: 'website',
+      url: `https://schoolchecker.io/school/${slug}`,
+      siteName: 'SchoolChecker.io',
+      locale: 'en_GB',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: enhancedTitle,
+      description: enhancedDescription,
+      site: '@schoolcheckerio',
+    },
+    alternates: {
+      canonical: `https://schoolchecker.io/school/${slug}`,
+    },
   };
 }
 
@@ -271,6 +348,10 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
   
   try {
     const { school, inspection } = await getSchoolData(slug);
+
+    // Get city from postcode for breadcrumbs
+    const city = school?.postcode ? getCityFromPostcode(school.postcode) : null;
+    const cityDisplayName = city ? capitalizeCityName(city) : null;
 
     if (!school) {
       return (
@@ -311,6 +392,32 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
       <div className="bg-gray-900 text-white">
         <div className="container mx-auto px-4 md:px-6 py-6 md:py-16">
           <div className="max-w-6xl">
+            {/* Breadcrumbs */}
+            <nav className="mb-4 md:mb-6">
+              <div className="flex items-center space-x-2 text-sm text-gray-300">
+                <Link href="/" className="hover:text-white transition-colors">
+                  Home
+                </Link>
+                <span className="text-gray-400">/</span>
+                <Link href="/best-primary-schools" className="hover:text-white transition-colors">
+                  Best Primary Schools
+                </Link>
+                {cityDisplayName && (
+                  <>
+                    <span className="text-gray-400">/</span>
+                    <Link 
+                      href={`/best-primary-schools/${cityDisplayName.toLowerCase().replace(/\s+/g, '-')}`} 
+                      className="hover:text-white transition-colors"
+                    >
+                      {cityDisplayName}
+                    </Link>
+                  </>
+                )}
+                <span className="text-gray-400">/</span>
+                <span className="text-white font-medium">{school.establishmentname}</span>
+              </div>
+            </nav>
+            
             <h1 className="text-3xl md:text-6xl font-bold mb-4 md:mb-6 leading-tight">{school.establishmentname}</h1>
             <div className="flex flex-wrap items-center gap-3 md:gap-6 text-gray-300 text-sm md:text-lg">
               {school.postcode && (

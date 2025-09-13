@@ -1,0 +1,842 @@
+[
+  {
+    "postcode": "E1",
+    "name": "Head district",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Head district in East London"
+  },
+  {
+    "postcode": "E2",
+    "name": "Bethnal Green",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Bethnal Green district in East London"
+  },
+  {
+    "postcode": "E3",
+    "name": "Bow",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Bow district in East London"
+  },
+  {
+    "postcode": "E4",
+    "name": "Chingford",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Chingford district in East London"
+  },
+  {
+    "postcode": "E5",
+    "name": "Clapton",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Clapton district in East London"
+  },
+  {
+    "postcode": "E6",
+    "name": "East Ham",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "East Ham district in East London"
+  },
+  {
+    "postcode": "E7",
+    "name": "Forest Gate",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Forest Gate district in East London"
+  },
+  {
+    "postcode": "E8",
+    "name": "Hackney",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Hackney district in East London"
+  },
+  {
+    "postcode": "E9",
+    "name": "Homerton",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Homerton district in East London"
+  },
+  {
+    "postcode": "E10",
+    "name": "Leyton",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Leyton district in East London"
+  },
+  {
+    "postcode": "E11",
+    "name": "Leytonstone",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Leytonstone district in East London"
+  },
+  {
+    "postcode": "E12",
+    "name": "Manor Park",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Manor Park district in East London"
+  },
+  {
+    "postcode": "E13",
+    "name": "Plaistow",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Plaistow district in East London"
+  },
+  {
+    "postcode": "E14",
+    "name": "Poplar",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Poplar district in East London"
+  },
+  {
+    "postcode": "E15",
+    "name": "Stratford",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Stratford district in East London"
+  },
+  {
+    "postcode": "E16",
+    "name": "Victoria Docks and North Woolwich",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Victoria Docks and North Woolwich district in East London"
+  },
+  {
+    "postcode": "E17",
+    "name": "Walthamstow",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Walthamstow district in East London"
+  },
+  {
+    "postcode": "E18",
+    "name": "Woodford and South Woodford",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Woodford and South Woodford district in East London"
+  },
+  {
+    "postcode": "E20",
+    "name": "Olympic Park",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Olympic Park district in East London"
+  },
+  {
+    "postcode": "EC1",
+    "name": "Head district",
+    "area": "Eastern Central London",
+    "areaPostcode": "EC",
+    "description": "Head district in Eastern Central London"
+  },
+  {
+    "postcode": "EC2",
+    "name": "Bishopsgate",
+    "area": "Eastern Central London",
+    "areaPostcode": "EC",
+    "description": "Bishopsgate district in Eastern Central London"
+  },
+  {
+    "postcode": "EC3",
+    "name": "Fenchurch Street",
+    "area": "Eastern Central London",
+    "areaPostcode": "EC",
+    "description": "Fenchurch Street district in Eastern Central London"
+  },
+  {
+    "postcode": "EC4",
+    "name": "Fleet Street",
+    "area": "Eastern Central London",
+    "areaPostcode": "EC",
+    "description": "Fleet Street district in Eastern Central London"
+  },
+  {
+    "postcode": "N1",
+    "name": "Head district",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Head district in North London"
+  },
+  {
+    "postcode": "N2",
+    "name": "East Finchley",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "East Finchley district in North London"
+  },
+  {
+    "postcode": "N3",
+    "name": "Finchley",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Finchley district in North London"
+  },
+  {
+    "postcode": "N4",
+    "name": "Finsbury Park",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Finsbury Park district in North London"
+  },
+  {
+    "postcode": "N5",
+    "name": "Highbury",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Highbury district in North London"
+  },
+  {
+    "postcode": "N6",
+    "name": "Highgate",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Highgate district in North London"
+  },
+  {
+    "postcode": "N7",
+    "name": "Holloway",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Holloway district in North London"
+  },
+  {
+    "postcode": "N8",
+    "name": "Hornsey",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Hornsey district in North London"
+  },
+  {
+    "postcode": "N9",
+    "name": "Lower Edmonton",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Lower Edmonton district in North London"
+  },
+  {
+    "postcode": "N10",
+    "name": "Muswell Hill",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Muswell Hill district in North London"
+  },
+  {
+    "postcode": "N11",
+    "name": "New Southgate",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "New Southgate district in North London"
+  },
+  {
+    "postcode": "N12",
+    "name": "North Finchley",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "North Finchley district in North London"
+  },
+  {
+    "postcode": "N13",
+    "name": "Palmers Green",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Palmers Green district in North London"
+  },
+  {
+    "postcode": "N14",
+    "name": "Southgate",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Southgate district in North London"
+  },
+  {
+    "postcode": "N15",
+    "name": "South Tottenham",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "South Tottenham district in North London"
+  },
+  {
+    "postcode": "N16",
+    "name": "Stoke Newington",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Stoke Newington district in North London"
+  },
+  {
+    "postcode": "N17",
+    "name": "Tottenham",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Tottenham district in North London"
+  },
+  {
+    "postcode": "N18",
+    "name": "Upper Edmonton",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Upper Edmonton district in North London"
+  },
+  {
+    "postcode": "N19",
+    "name": "Upper Holloway",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Upper Holloway district in North London"
+  },
+  {
+    "postcode": "N20",
+    "name": "Whetstone",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Whetstone district in North London"
+  },
+  {
+    "postcode": "N21",
+    "name": "Winchmore Hill",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Winchmore Hill district in North London"
+  },
+  {
+    "postcode": "N22",
+    "name": "Wood Green",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Wood Green district in North London"
+  },
+  {
+    "postcode": "NW1",
+    "name": "Head district",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Head district in North West London"
+  },
+  {
+    "postcode": "NW2",
+    "name": "Cricklewood",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Cricklewood district in North West London"
+  },
+  {
+    "postcode": "NW3",
+    "name": "Hampstead",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Hampstead district in North West London"
+  },
+  {
+    "postcode": "NW4",
+    "name": "Hendon",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Hendon district in North West London"
+  },
+  {
+    "postcode": "NW5",
+    "name": "Kentish Town",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Kentish Town district in North West London"
+  },
+  {
+    "postcode": "NW6",
+    "name": "Kilburn",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Kilburn district in North West London"
+  },
+  {
+    "postcode": "NW7",
+    "name": "Mill Hill",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Mill Hill district in North West London"
+  },
+  {
+    "postcode": "NW8",
+    "name": "St John's Wood",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "St John's Wood district in North West London"
+  },
+  {
+    "postcode": "NW9",
+    "name": "The Hyde",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "The Hyde district in North West London"
+  },
+  {
+    "postcode": "NW10",
+    "name": "Willesden",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Willesden district in North West London"
+  },
+  {
+    "postcode": "NW11",
+    "name": "Golders Green",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Golders Green district in North West London"
+  },
+  {
+    "postcode": "SE1",
+    "name": "Head district",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Head district in South East London"
+  },
+  {
+    "postcode": "SE2",
+    "name": "Abbey Wood",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Abbey Wood district in South East London"
+  },
+  {
+    "postcode": "SE3",
+    "name": "Blackheath",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Blackheath district in South East London"
+  },
+  {
+    "postcode": "SE4",
+    "name": "Brockley",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Brockley district in South East London"
+  },
+  {
+    "postcode": "SE5",
+    "name": "Camberwell",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Camberwell district in South East London"
+  },
+  {
+    "postcode": "SE6",
+    "name": "Catford",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Catford district in South East London"
+  },
+  {
+    "postcode": "SE7",
+    "name": "Charlton",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Charlton district in South East London"
+  },
+  {
+    "postcode": "SE8",
+    "name": "Deptford",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Deptford district in South East London"
+  },
+  {
+    "postcode": "SE9",
+    "name": "Eltham",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Eltham district in South East London"
+  },
+  {
+    "postcode": "SE10",
+    "name": "Greenwich",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Greenwich district in South East London"
+  },
+  {
+    "postcode": "SE11",
+    "name": "Kennington",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Kennington district in South East London"
+  },
+  {
+    "postcode": "SE12",
+    "name": "Lee",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Lee district in South East London"
+  },
+  {
+    "postcode": "SE13",
+    "name": "Lewisham",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Lewisham district in South East London"
+  },
+  {
+    "postcode": "SE14",
+    "name": "New Cross",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "New Cross district in South East London"
+  },
+  {
+    "postcode": "SE15",
+    "name": "Peckham",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Peckham district in South East London"
+  },
+  {
+    "postcode": "SE16",
+    "name": "Rotherhithe",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Rotherhithe district in South East London"
+  },
+  {
+    "postcode": "SE17",
+    "name": "Walworth",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Walworth district in South East London"
+  },
+  {
+    "postcode": "SE18",
+    "name": "Woolwich",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Woolwich district in South East London"
+  },
+  {
+    "postcode": "SE19",
+    "name": "Norwood",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Norwood district in South East London"
+  },
+  {
+    "postcode": "SE20",
+    "name": "Anerley",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Anerley district in South East London"
+  },
+  {
+    "postcode": "SE21",
+    "name": "Dulwich",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Dulwich district in South East London"
+  },
+  {
+    "postcode": "SE22",
+    "name": "East Dulwich",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "East Dulwich district in South East London"
+  },
+  {
+    "postcode": "SE23",
+    "name": "Forest Hill",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Forest Hill district in South East London"
+  },
+  {
+    "postcode": "SE24",
+    "name": "Herne Hill",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Herne Hill district in South East London"
+  },
+  {
+    "postcode": "SE25",
+    "name": "South Norwood",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "South Norwood district in South East London"
+  },
+  {
+    "postcode": "SE26",
+    "name": "Sydenham",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Sydenham district in South East London"
+  },
+  {
+    "postcode": "SE27",
+    "name": "West Norwood",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "West Norwood district in South East London"
+  },
+  {
+    "postcode": "SE28",
+    "name": "Thamesmead",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Thamesmead district in South East London"
+  },
+  {
+    "postcode": "SW1",
+    "name": "Head district",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Head district in South West London"
+  },
+  {
+    "postcode": "SW2",
+    "name": "Brixton",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Brixton district in South West London"
+  },
+  {
+    "postcode": "SW3",
+    "name": "Chelsea",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Chelsea district in South West London"
+  },
+  {
+    "postcode": "SW4",
+    "name": "Clapham",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Clapham district in South West London"
+  },
+  {
+    "postcode": "SW5",
+    "name": "Earls Court",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Earls Court district in South West London"
+  },
+  {
+    "postcode": "SW6",
+    "name": "Fulham",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Fulham district in South West London"
+  },
+  {
+    "postcode": "SW7",
+    "name": "South Kensington",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "South Kensington district in South West London"
+  },
+  {
+    "postcode": "SW8",
+    "name": "South Lambeth",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "South Lambeth district in South West London"
+  },
+  {
+    "postcode": "SW9",
+    "name": "Stockwell",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Stockwell district in South West London"
+  },
+  {
+    "postcode": "SW10",
+    "name": "West Brompton",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "West Brompton district in South West London"
+  },
+  {
+    "postcode": "SW11",
+    "name": "Battersea",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Battersea district in South West London"
+  },
+  {
+    "postcode": "SW12",
+    "name": "Balham",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Balham district in South West London"
+  },
+  {
+    "postcode": "SW13",
+    "name": "Barnes",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Barnes district in South West London"
+  },
+  {
+    "postcode": "SW14",
+    "name": "Mortlake",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Mortlake district in South West London"
+  },
+  {
+    "postcode": "SW15",
+    "name": "Putney",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Putney district in South West London"
+  },
+  {
+    "postcode": "SW16",
+    "name": "Streatham",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Streatham district in South West London"
+  },
+  {
+    "postcode": "SW17",
+    "name": "Tooting",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Tooting district in South West London"
+  },
+  {
+    "postcode": "SW18",
+    "name": "Wandsworth",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Wandsworth district in South West London"
+  },
+  {
+    "postcode": "SW19",
+    "name": "Wimbledon",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Wimbledon district in South West London"
+  },
+  {
+    "postcode": "SW20",
+    "name": "West Wimbledon",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "West Wimbledon district in South West London"
+  },
+  {
+    "postcode": "W1",
+    "name": "Head district",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Head district in West London"
+  },
+  {
+    "postcode": "W2",
+    "name": "Paddington",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Paddington district in West London"
+  },
+  {
+    "postcode": "W3",
+    "name": "Acton",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Acton district in West London"
+  },
+  {
+    "postcode": "W4",
+    "name": "Chiswick",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Chiswick district in West London"
+  },
+  {
+    "postcode": "W5",
+    "name": "Ealing",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Ealing district in West London"
+  },
+  {
+    "postcode": "W6",
+    "name": "Hammersmith",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Hammersmith district in West London"
+  },
+  {
+    "postcode": "W7",
+    "name": "Hanwell",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Hanwell district in West London"
+  },
+  {
+    "postcode": "W8",
+    "name": "Kensington",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Kensington district in West London"
+  },
+  {
+    "postcode": "W9",
+    "name": "Maida Hill",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Maida Hill district in West London"
+  },
+  {
+    "postcode": "W10",
+    "name": "Ladbroke Grove",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Ladbroke Grove district in West London"
+  },
+  {
+    "postcode": "W11",
+    "name": "Notting Hill",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Notting Hill district in West London"
+  },
+  {
+    "postcode": "W12",
+    "name": "Shepherds Bush",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Shepherds Bush district in West London"
+  },
+  {
+    "postcode": "W13",
+    "name": "West Ealing",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "West Ealing district in West London"
+  },
+  {
+    "postcode": "W14",
+    "name": "West Kensington",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "West Kensington district in West London"
+  },
+  {
+    "postcode": "WC1",
+    "name": "Head district",
+    "area": "Western Central London",
+    "areaPostcode": "WC",
+    "description": "Head district in Western Central London"
+  },
+  {
+    "postcode": "WC2",
+    "name": "Strand",
+    "area": "Western Central London",
+    "areaPostcode": "WC",
+    "description": "Strand district in Western Central London"
+  }
+]

@@ -62,42 +62,30 @@ export default function RootLayout({
               </Link>
               <div className="relative group">
                 <button className="text-base hover:text-blue-600 flex items-center">
-                  Cities
+                  Primary
                   <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
                 <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="py-1">
-                    <Link href="/schools-in-london" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Schools in London
+                    <Link href="/best-primary-schools-england" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      England
                     </Link>
-                    <Link href="/schools-in-manchester" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Schools in Manchester
+                    <Link href="/best-primary-schools/london-overview" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      London
                     </Link>
-                    <Link href="/schools-in-leeds" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Schools in Leeds
+                    <Link href="/best-primary-schools/manchester" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Manchester
                     </Link>
-                    <Link href="/schools-in-birmingham" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Schools in Birmingham
+                    <Link href="/best-primary-schools/birmingham" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Birmingham
                     </Link>
-                    <Link href="/schools-in-liverpool" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Schools in Liverpool
+                    <Link href="/best-primary-schools/leeds" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Leeds
                     </Link>
-                    <Link href="/schools-in-bristol" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Schools in Bristol
-                    </Link>
-                    <Link href="/schools-in-sheffield" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Schools in Sheffield
-                    </Link>
-                    <Link href="/schools-in-newcastle" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Schools in Newcastle
-                    </Link>
-                    <Link href="/schools-in-nottingham" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Schools in Nottingham
-                    </Link>
-                    <Link href="/schools-in-leicester" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                      Schools in Leicester
+                    <Link href="/best-primary-schools/liverpool" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      Liverpool
                     </Link>
                   </div>
                 </div>
@@ -151,37 +139,25 @@ export default function RootLayout({
                   Schools Near Me
                 </Link>
                 <div className="space-y-2">
-                  <div className="text-base font-medium text-gray-900 py-2">Cities</div>
+                  <div className="text-base font-medium text-gray-900 py-2">Primary</div>
                   <div className="pl-4 space-y-2">
-                    <Link href="/schools-in-london" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
-                      Schools in London
+                    <Link href="/best-primary-schools-england" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                      England
                     </Link>
-                    <Link href="/schools-in-manchester" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
-                      Schools in Manchester
+                    <Link href="/best-primary-schools/london-overview" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                      London
                     </Link>
-                    <Link href="/schools-in-leeds" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
-                      Schools in Leeds
+                    <Link href="/best-primary-schools/manchester" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                      Manchester
                     </Link>
-                    <Link href="/schools-in-birmingham" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
-                      Schools in Birmingham
+                    <Link href="/best-primary-schools/birmingham" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                      Birmingham
                     </Link>
-                    <Link href="/schools-in-liverpool" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
-                      Schools in Liverpool
+                    <Link href="/best-primary-schools/leeds" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                      Leeds
                     </Link>
-                    <Link href="/schools-in-bristol" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
-                      Schools in Bristol
-                    </Link>
-                    <Link href="/schools-in-sheffield" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
-                      Schools in Sheffield
-                    </Link>
-                    <Link href="/schools-in-newcastle" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
-                      Schools in Newcastle
-                    </Link>
-                    <Link href="/schools-in-nottingham" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
-                      Schools in Nottingham
-                    </Link>
-                    <Link href="/schools-in-leicester" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
-                      Schools in Leicester
+                    <Link href="/best-primary-schools/liverpool" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                      Liverpool
                     </Link>
                   </div>
                 </div>
@@ -250,15 +226,16 @@ export default function RootLayout({
                 </ul>
               </div>
 
-              {/* Cities */}
+              {/* Primary Schools */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Popular Cities</h3>
+                <h3 className="text-lg font-semibold">Primary Schools</h3>
                 <ul className="space-y-2 text-sm">
-                  <li><Link href="/schools-in-london" className="text-gray-300 hover:text-white transition-colors">Schools in London</Link></li>
-                  <li><Link href="/schools-in-manchester" className="text-gray-300 hover:text-white transition-colors">Schools in Manchester</Link></li>
-                  <li><Link href="/schools-in-birmingham" className="text-gray-300 hover:text-white transition-colors">Schools in Birmingham</Link></li>
-                  <li><Link href="/schools-in-leeds" className="text-gray-300 hover:text-white transition-colors">Schools in Leeds</Link></li>
-                  <li><Link href="/schools-in-liverpool" className="text-gray-300 hover:text-white transition-colors">Schools in Liverpool</Link></li>
+                  <li><Link href="/best-primary-schools-england" className="text-gray-300 hover:text-white transition-colors">England</Link></li>
+                  <li><Link href="/best-primary-schools/london-overview" className="text-gray-300 hover:text-white transition-colors">London</Link></li>
+                  <li><Link href="/best-primary-schools/manchester" className="text-gray-300 hover:text-white transition-colors">Manchester</Link></li>
+                  <li><Link href="/best-primary-schools/birmingham" className="text-gray-300 hover:text-white transition-colors">Birmingham</Link></li>
+                  <li><Link href="/best-primary-schools/leeds" className="text-gray-300 hover:text-white transition-colors">Leeds</Link></li>
+                  <li><Link href="/best-primary-schools/liverpool" className="text-gray-300 hover:text-white transition-colors">Liverpool</Link></li>
                 </ul>
               </div>
 

@@ -1,12 +1,56 @@
-export const metadata = {
+import { Metadata } from 'next';
+import AboutStructuredData from '@/components/AboutStructuredData';
+
+export const metadata: Metadata = {
   title: "About Us - SchoolChecker.io | The UK's Free School Finder",
   description: "Learn about SchoolChecker.io, the UK's only 100% free school finder. We help parents discover the best schools with Ofsted ratings, performance data, and catchment areas.",
-  keywords: "about schoolchecker, school finder uk, free school search, ofsted data, school performance",
+  keywords: "about schoolchecker, school finder uk, free school search, ofsted data, school performance, education technology, school comparison tool",
+  alternates: {
+    canonical: 'https://schoolchecker.io/about',
+  },
+  openGraph: {
+    title: "About Us - SchoolChecker.io | The UK's Free School Finder",
+    description: "Learn about SchoolChecker.io, the UK's only 100% free school finder. We help parents discover the best schools with Ofsted ratings, performance data, and catchment areas.",
+    url: 'https://schoolchecker.io/about',
+    siteName: 'SchoolChecker.io',
+    locale: 'en_GB',
+    type: 'website',
+    images: [
+      {
+        url: 'https://schoolchecker.io/api/og?title=About%20SchoolChecker.io&location=UK&rating=Free',
+        width: 1200,
+        height: 630,
+        alt: 'About SchoolChecker.io - The UK\'s Free School Finder',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "About Us - SchoolChecker.io | The UK's Free School Finder",
+    description: "Learn about SchoolChecker.io, the UK's only 100% free school finder. We help parents discover the best schools with Ofsted ratings, performance data, and catchment areas.",
+    images: ['https://schoolchecker.io/api/og?title=About%20SchoolChecker.io&location=UK&rating=Free'],
+    creator: '@schoolcheckerio',
+    site: '@schoolcheckerio',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function AboutPage() {
   return (
     <div className="bg-gray-50 min-h-screen">
+      {/* Structured Data */}
+      <AboutStructuredData />
+      
       {/* Hero Section */}
       <div className="bg-white shadow-sm border-b">
         <div className="container mx-auto px-6 py-16">

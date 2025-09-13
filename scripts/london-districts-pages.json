@@ -1,0 +1,1202 @@
+[
+  {
+    "postcode": "E1",
+    "name": "Head district",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Head district in East London",
+    "totalSchools": 0,
+    "primarySchools": 0,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "E2",
+    "name": "Bethnal Green",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Bethnal Green district in East London",
+    "totalSchools": 42,
+    "primarySchools": 23,
+    "secondarySchools": 9
+  },
+  {
+    "postcode": "E3",
+    "name": "Bow",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Bow district in East London",
+    "totalSchools": 35,
+    "primarySchools": 19,
+    "secondarySchools": 5
+  },
+  {
+    "postcode": "E4",
+    "name": "Chingford",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Chingford district in East London",
+    "totalSchools": 47,
+    "primarySchools": 25,
+    "secondarySchools": 7
+  },
+  {
+    "postcode": "E5",
+    "name": "Clapton",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Clapton district in East London",
+    "totalSchools": 36,
+    "primarySchools": 20,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "E6",
+    "name": "East Ham",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "East Ham district in East London",
+    "totalSchools": 42,
+    "primarySchools": 31,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "E7",
+    "name": "Forest Gate",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Forest Gate district in East London",
+    "totalSchools": 35,
+    "primarySchools": 19,
+    "secondarySchools": 6
+  },
+  {
+    "postcode": "E8",
+    "name": "Hackney",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Hackney district in East London",
+    "totalSchools": 28,
+    "primarySchools": 18,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "E9",
+    "name": "Homerton",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Homerton district in East London",
+    "totalSchools": 27,
+    "primarySchools": 17,
+    "secondarySchools": 6
+  },
+  {
+    "postcode": "E10",
+    "name": "Leyton",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Leyton district in East London",
+    "totalSchools": 31,
+    "primarySchools": 17,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "E11",
+    "name": "Leytonstone",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Leytonstone district in East London",
+    "totalSchools": 24,
+    "primarySchools": 16,
+    "secondarySchools": 5
+  },
+  {
+    "postcode": "E12",
+    "name": "Manor Park",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Manor Park district in East London",
+    "totalSchools": 22,
+    "primarySchools": 18,
+    "secondarySchools": 1
+  },
+  {
+    "postcode": "E13",
+    "name": "Plaistow",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Plaistow district in East London",
+    "totalSchools": 41,
+    "primarySchools": 26,
+    "secondarySchools": 6
+  },
+  {
+    "postcode": "E14",
+    "name": "Poplar",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Poplar district in East London",
+    "totalSchools": 63,
+    "primarySchools": 33,
+    "secondarySchools": 5
+  },
+  {
+    "postcode": "E15",
+    "name": "Stratford",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Stratford district in East London",
+    "totalSchools": 38,
+    "primarySchools": 22,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "E16",
+    "name": "Victoria Docks and North Woolwich",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Victoria Docks and North Woolwich district in East London",
+    "totalSchools": 43,
+    "primarySchools": 25,
+    "secondarySchools": 9
+  },
+  {
+    "postcode": "E17",
+    "name": "Walthamstow",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Walthamstow district in East London",
+    "totalSchools": 67,
+    "primarySchools": 41,
+    "secondarySchools": 9
+  },
+  {
+    "postcode": "E18",
+    "name": "Woodford and South Woodford",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Woodford and South Woodford district in East London",
+    "totalSchools": 13,
+    "primarySchools": 10,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "E20",
+    "name": "Olympic Park",
+    "area": "East London",
+    "areaPostcode": "E",
+    "description": "Olympic Park district in East London",
+    "totalSchools": 2,
+    "primarySchools": 2,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "EC1",
+    "name": "Head district",
+    "area": "Eastern Central London",
+    "areaPostcode": "EC",
+    "description": "Head district in Eastern Central London",
+    "totalSchools": 19,
+    "primarySchools": 12,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "EC2",
+    "name": "Bishopsgate",
+    "area": "Eastern Central London",
+    "areaPostcode": "EC",
+    "description": "Bishopsgate district in Eastern Central London",
+    "totalSchools": 7,
+    "primarySchools": 0,
+    "secondarySchools": 1
+  },
+  {
+    "postcode": "EC3",
+    "name": "Fenchurch Street",
+    "area": "Eastern Central London",
+    "areaPostcode": "EC",
+    "description": "Fenchurch Street district in Eastern Central London",
+    "totalSchools": 2,
+    "primarySchools": 1,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "EC4",
+    "name": "Fleet Street",
+    "area": "Eastern Central London",
+    "areaPostcode": "EC",
+    "description": "Fleet Street district in Eastern Central London",
+    "totalSchools": 2,
+    "primarySchools": 0,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "N1",
+    "name": "Head district",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Head district in North London",
+    "totalSchools": 371,
+    "primarySchools": 198,
+    "secondarySchools": 39
+  },
+  {
+    "postcode": "N2",
+    "name": "East Finchley",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "East Finchley district in North London",
+    "totalSchools": 81,
+    "primarySchools": 42,
+    "secondarySchools": 16
+  },
+  {
+    "postcode": "N3",
+    "name": "Finchley",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Finchley district in North London",
+    "totalSchools": 14,
+    "primarySchools": 8,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "N4",
+    "name": "Finsbury Park",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Finsbury Park district in North London",
+    "totalSchools": 23,
+    "primarySchools": 15,
+    "secondarySchools": 3
+  },
+  {
+    "postcode": "N5",
+    "name": "Highbury",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Highbury district in North London",
+    "totalSchools": 12,
+    "primarySchools": 5,
+    "secondarySchools": 3
+  },
+  {
+    "postcode": "N6",
+    "name": "Highgate",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Highgate district in North London",
+    "totalSchools": 13,
+    "primarySchools": 4,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "N7",
+    "name": "Holloway",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Holloway district in North London",
+    "totalSchools": 28,
+    "primarySchools": 15,
+    "secondarySchools": 1
+  },
+  {
+    "postcode": "N8",
+    "name": "Hornsey",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Hornsey district in North London",
+    "totalSchools": 22,
+    "primarySchools": 15,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "N9",
+    "name": "Lower Edmonton",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Lower Edmonton district in North London",
+    "totalSchools": 30,
+    "primarySchools": 20,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "N10",
+    "name": "Muswell Hill",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Muswell Hill district in North London",
+    "totalSchools": 21,
+    "primarySchools": 10,
+    "secondarySchools": 1
+  },
+  {
+    "postcode": "N11",
+    "name": "New Southgate",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "New Southgate district in North London",
+    "totalSchools": 20,
+    "primarySchools": 12,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "N12",
+    "name": "North Finchley",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "North Finchley district in North London",
+    "totalSchools": 25,
+    "primarySchools": 10,
+    "secondarySchools": 6
+  },
+  {
+    "postcode": "N13",
+    "name": "Palmers Green",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Palmers Green district in North London",
+    "totalSchools": 12,
+    "primarySchools": 8,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "N14",
+    "name": "Southgate",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Southgate district in North London",
+    "totalSchools": 27,
+    "primarySchools": 16,
+    "secondarySchools": 3
+  },
+  {
+    "postcode": "N15",
+    "name": "South Tottenham",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "South Tottenham district in North London",
+    "totalSchools": 33,
+    "primarySchools": 25,
+    "secondarySchools": 3
+  },
+  {
+    "postcode": "N16",
+    "name": "Stoke Newington",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Stoke Newington district in North London",
+    "totalSchools": 76,
+    "primarySchools": 27,
+    "secondarySchools": 6
+  },
+  {
+    "postcode": "N17",
+    "name": "Tottenham",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Tottenham district in North London",
+    "totalSchools": 51,
+    "primarySchools": 30,
+    "secondarySchools": 5
+  },
+  {
+    "postcode": "N18",
+    "name": "Upper Edmonton",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Upper Edmonton district in North London",
+    "totalSchools": 19,
+    "primarySchools": 14,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "N19",
+    "name": "Upper Holloway",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Upper Holloway district in North London",
+    "totalSchools": 16,
+    "primarySchools": 8,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "N20",
+    "name": "Whetstone",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Whetstone district in North London",
+    "totalSchools": 16,
+    "primarySchools": 7,
+    "secondarySchools": 3
+  },
+  {
+    "postcode": "N21",
+    "name": "Winchmore Hill",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Winchmore Hill district in North London",
+    "totalSchools": 16,
+    "primarySchools": 10,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "N22",
+    "name": "Wood Green",
+    "area": "North London",
+    "areaPostcode": "N",
+    "description": "Wood Green district in North London",
+    "totalSchools": 35,
+    "primarySchools": 21,
+    "secondarySchools": 6
+  },
+  {
+    "postcode": "NW1",
+    "name": "Head district",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Head district in North West London",
+    "totalSchools": 120,
+    "primarySchools": 58,
+    "secondarySchools": 14
+  },
+  {
+    "postcode": "NW2",
+    "name": "Cricklewood",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Cricklewood district in North West London",
+    "totalSchools": 44,
+    "primarySchools": 25,
+    "secondarySchools": 9
+  },
+  {
+    "postcode": "NW3",
+    "name": "Hampstead",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Hampstead district in North West London",
+    "totalSchools": 49,
+    "primarySchools": 10,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "NW4",
+    "name": "Hendon",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Hendon district in North West London",
+    "totalSchools": 32,
+    "primarySchools": 14,
+    "secondarySchools": 5
+  },
+  {
+    "postcode": "NW5",
+    "name": "Kentish Town",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Kentish Town district in North West London",
+    "totalSchools": 18,
+    "primarySchools": 8,
+    "secondarySchools": 5
+  },
+  {
+    "postcode": "NW6",
+    "name": "Kilburn",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Kilburn district in North West London",
+    "totalSchools": 46,
+    "primarySchools": 27,
+    "secondarySchools": 6
+  },
+  {
+    "postcode": "NW7",
+    "name": "Mill Hill",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Mill Hill district in North West London",
+    "totalSchools": 27,
+    "primarySchools": 14,
+    "secondarySchools": 5
+  },
+  {
+    "postcode": "NW8",
+    "name": "St John's Wood",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "St John's Wood district in North West London",
+    "totalSchools": 23,
+    "primarySchools": 7,
+    "secondarySchools": 3
+  },
+  {
+    "postcode": "NW9",
+    "name": "The Hyde",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "The Hyde district in North West London",
+    "totalSchools": 43,
+    "primarySchools": 20,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "NW10",
+    "name": "Willesden",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Willesden district in North West London",
+    "totalSchools": 61,
+    "primarySchools": 31,
+    "secondarySchools": 8
+  },
+  {
+    "postcode": "NW11",
+    "name": "Golders Green",
+    "area": "North West London",
+    "areaPostcode": "NW",
+    "description": "Golders Green district in North West London",
+    "totalSchools": 23,
+    "primarySchools": 10,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "SE1",
+    "name": "Head district",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Head district in South East London",
+    "totalSchools": 333,
+    "primarySchools": 177,
+    "secondarySchools": 45
+  },
+  {
+    "postcode": "SE2",
+    "name": "Abbey Wood",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Abbey Wood district in South East London",
+    "totalSchools": 181,
+    "primarySchools": 103,
+    "secondarySchools": 23
+  },
+  {
+    "postcode": "SE3",
+    "name": "Blackheath",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Blackheath district in South East London",
+    "totalSchools": 32,
+    "primarySchools": 11,
+    "secondarySchools": 10
+  },
+  {
+    "postcode": "SE4",
+    "name": "Brockley",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Brockley district in South East London",
+    "totalSchools": 22,
+    "primarySchools": 11,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "SE5",
+    "name": "Camberwell",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Camberwell district in South East London",
+    "totalSchools": 36,
+    "primarySchools": 20,
+    "secondarySchools": 5
+  },
+  {
+    "postcode": "SE6",
+    "name": "Catford",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Catford district in South East London",
+    "totalSchools": 27,
+    "primarySchools": 13,
+    "secondarySchools": 5
+  },
+  {
+    "postcode": "SE7",
+    "name": "Charlton",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Charlton district in South East London",
+    "totalSchools": 16,
+    "primarySchools": 9,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "SE8",
+    "name": "Deptford",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Deptford district in South East London",
+    "totalSchools": 20,
+    "primarySchools": 13,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "SE9",
+    "name": "Eltham",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Eltham district in South East London",
+    "totalSchools": 54,
+    "primarySchools": 33,
+    "secondarySchools": 7
+  },
+  {
+    "postcode": "SE10",
+    "name": "Greenwich",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Greenwich district in South East London",
+    "totalSchools": 18,
+    "primarySchools": 11,
+    "secondarySchools": 1
+  },
+  {
+    "postcode": "SE11",
+    "name": "Kennington",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Kennington district in South East London",
+    "totalSchools": 26,
+    "primarySchools": 9,
+    "secondarySchools": 3
+  },
+  {
+    "postcode": "SE12",
+    "name": "Lee",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Lee district in South East London",
+    "totalSchools": 16,
+    "primarySchools": 12,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "SE13",
+    "name": "Lewisham",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Lewisham district in South East London",
+    "totalSchools": 19,
+    "primarySchools": 11,
+    "secondarySchools": 1
+  },
+  {
+    "postcode": "SE14",
+    "name": "New Cross",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "New Cross district in South East London",
+    "totalSchools": 17,
+    "primarySchools": 9,
+    "secondarySchools": 5
+  },
+  {
+    "postcode": "SE15",
+    "name": "Peckham",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Peckham district in South East London",
+    "totalSchools": 45,
+    "primarySchools": 23,
+    "secondarySchools": 3
+  },
+  {
+    "postcode": "SE16",
+    "name": "Rotherhithe",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Rotherhithe district in South East London",
+    "totalSchools": 36,
+    "primarySchools": 22,
+    "secondarySchools": 9
+  },
+  {
+    "postcode": "SE17",
+    "name": "Walworth",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Walworth district in South East London",
+    "totalSchools": 19,
+    "primarySchools": 17,
+    "secondarySchools": 1
+  },
+  {
+    "postcode": "SE18",
+    "name": "Woolwich",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Woolwich district in South East London",
+    "totalSchools": 62,
+    "primarySchools": 39,
+    "secondarySchools": 3
+  },
+  {
+    "postcode": "SE19",
+    "name": "Norwood",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Norwood district in South East London",
+    "totalSchools": 26,
+    "primarySchools": 7,
+    "secondarySchools": 8
+  },
+  {
+    "postcode": "SE20",
+    "name": "Anerley",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Anerley district in South East London",
+    "totalSchools": 16,
+    "primarySchools": 13,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "SE21",
+    "name": "Dulwich",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Dulwich district in South East London",
+    "totalSchools": 17,
+    "primarySchools": 8,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "SE22",
+    "name": "East Dulwich",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "East Dulwich district in South East London",
+    "totalSchools": 23,
+    "primarySchools": 11,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "SE23",
+    "name": "Forest Hill",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Forest Hill district in South East London",
+    "totalSchools": 19,
+    "primarySchools": 12,
+    "secondarySchools": 1
+  },
+  {
+    "postcode": "SE24",
+    "name": "Herne Hill",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Herne Hill district in South East London",
+    "totalSchools": 13,
+    "primarySchools": 4,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "SE25",
+    "name": "South Norwood",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "South Norwood district in South East London",
+    "totalSchools": 25,
+    "primarySchools": 15,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "SE26",
+    "name": "Sydenham",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Sydenham district in South East London",
+    "totalSchools": 14,
+    "primarySchools": 11,
+    "secondarySchools": 1
+  },
+  {
+    "postcode": "SE27",
+    "name": "West Norwood",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "West Norwood district in South East London",
+    "totalSchools": 15,
+    "primarySchools": 6,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "SE28",
+    "name": "Thamesmead",
+    "area": "South East London",
+    "areaPostcode": "SE",
+    "description": "Thamesmead district in South East London",
+    "totalSchools": 17,
+    "primarySchools": 13,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "SW1",
+    "name": "Head district",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Head district in South West London",
+    "totalSchools": 341,
+    "primarySchools": 157,
+    "secondarySchools": 39
+  },
+  {
+    "postcode": "SW2",
+    "name": "Brixton",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Brixton district in South West London",
+    "totalSchools": 58,
+    "primarySchools": 24,
+    "secondarySchools": 10
+  },
+  {
+    "postcode": "SW3",
+    "name": "Chelsea",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Chelsea district in South West London",
+    "totalSchools": 15,
+    "primarySchools": 5,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "SW4",
+    "name": "Clapham",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Clapham district in South West London",
+    "totalSchools": 33,
+    "primarySchools": 20,
+    "secondarySchools": 3
+  },
+  {
+    "postcode": "SW5",
+    "name": "Earls Court",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Earls Court district in South West London",
+    "totalSchools": 5,
+    "primarySchools": 2,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "SW6",
+    "name": "Fulham",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Fulham district in South West London",
+    "totalSchools": 56,
+    "primarySchools": 23,
+    "secondarySchools": 11
+  },
+  {
+    "postcode": "SW7",
+    "name": "South Kensington",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "South Kensington district in South West London",
+    "totalSchools": 22,
+    "primarySchools": 2,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "SW8",
+    "name": "South Lambeth",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "South Lambeth district in South West London",
+    "totalSchools": 14,
+    "primarySchools": 11,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "SW9",
+    "name": "Stockwell",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Stockwell district in South West London",
+    "totalSchools": 35,
+    "primarySchools": 19,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "SW10",
+    "name": "West Brompton",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "West Brompton district in South West London",
+    "totalSchools": 9,
+    "primarySchools": 3,
+    "secondarySchools": 1
+  },
+  {
+    "postcode": "SW11",
+    "name": "Battersea",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Battersea district in South West London",
+    "totalSchools": 49,
+    "primarySchools": 25,
+    "secondarySchools": 5
+  },
+  {
+    "postcode": "SW12",
+    "name": "Balham",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Balham district in South West London",
+    "totalSchools": 22,
+    "primarySchools": 9,
+    "secondarySchools": 3
+  },
+  {
+    "postcode": "SW13",
+    "name": "Barnes",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Barnes district in South West London",
+    "totalSchools": 9,
+    "primarySchools": 4,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "SW14",
+    "name": "Mortlake",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Mortlake district in South West London",
+    "totalSchools": 7,
+    "primarySchools": 4,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "SW15",
+    "name": "Putney",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Putney district in South West London",
+    "totalSchools": 42,
+    "primarySchools": 22,
+    "secondarySchools": 3
+  },
+  {
+    "postcode": "SW16",
+    "name": "Streatham",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Streatham district in South West London",
+    "totalSchools": 41,
+    "primarySchools": 21,
+    "secondarySchools": 3
+  },
+  {
+    "postcode": "SW17",
+    "name": "Tooting",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Tooting district in South West London",
+    "totalSchools": 43,
+    "primarySchools": 19,
+    "secondarySchools": 6
+  },
+  {
+    "postcode": "SW18",
+    "name": "Wandsworth",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Wandsworth district in South West London",
+    "totalSchools": 28,
+    "primarySchools": 14,
+    "secondarySchools": 5
+  },
+  {
+    "postcode": "SW19",
+    "name": "Wimbledon",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "Wimbledon district in South West London",
+    "totalSchools": 50,
+    "primarySchools": 22,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "SW20",
+    "name": "West Wimbledon",
+    "area": "South West London",
+    "areaPostcode": "SW",
+    "description": "West Wimbledon district in South West London",
+    "totalSchools": 21,
+    "primarySchools": 6,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "W1",
+    "name": "Head district",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Head district in West London",
+    "totalSchools": 153,
+    "primarySchools": 55,
+    "secondarySchools": 12
+  },
+  {
+    "postcode": "W2",
+    "name": "Paddington",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Paddington district in West London",
+    "totalSchools": 25,
+    "primarySchools": 11,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "W3",
+    "name": "Acton",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Acton district in West London",
+    "totalSchools": 33,
+    "primarySchools": 11,
+    "secondarySchools": 6
+  },
+  {
+    "postcode": "W4",
+    "name": "Chiswick",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Chiswick district in West London",
+    "totalSchools": 19,
+    "primarySchools": 11,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "W5",
+    "name": "Ealing",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Ealing district in West London",
+    "totalSchools": 35,
+    "primarySchools": 13,
+    "secondarySchools": 3
+  },
+  {
+    "postcode": "W6",
+    "name": "Hammersmith",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Hammersmith district in West London",
+    "totalSchools": 44,
+    "primarySchools": 15,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "W7",
+    "name": "Hanwell",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Hanwell district in West London",
+    "totalSchools": 20,
+    "primarySchools": 9,
+    "secondarySchools": 4
+  },
+  {
+    "postcode": "W8",
+    "name": "Kensington",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Kensington district in West London",
+    "totalSchools": 11,
+    "primarySchools": 3,
+    "secondarySchools": 3
+  },
+  {
+    "postcode": "W9",
+    "name": "Maida Hill",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Maida Hill district in West London",
+    "totalSchools": 17,
+    "primarySchools": 7,
+    "secondarySchools": 3
+  },
+  {
+    "postcode": "W10",
+    "name": "Ladbroke Grove",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Ladbroke Grove district in West London",
+    "totalSchools": 34,
+    "primarySchools": 15,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "W11",
+    "name": "Notting Hill",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Notting Hill district in West London",
+    "totalSchools": 16,
+    "primarySchools": 5,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "W12",
+    "name": "Shepherds Bush",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "Shepherds Bush district in West London",
+    "totalSchools": 36,
+    "primarySchools": 17,
+    "secondarySchools": 5
+  },
+  {
+    "postcode": "W13",
+    "name": "West Ealing",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "West Ealing district in West London",
+    "totalSchools": 18,
+    "primarySchools": 7,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "W14",
+    "name": "West Kensington",
+    "area": "West London",
+    "areaPostcode": "W",
+    "description": "West Kensington district in West London",
+    "totalSchools": 25,
+    "primarySchools": 5,
+    "secondarySchools": 2
+  },
+  {
+    "postcode": "WC1",
+    "name": "Head district",
+    "area": "Western Central London",
+    "areaPostcode": "WC",
+    "description": "Head district in Western Central London",
+    "totalSchools": 22,
+    "primarySchools": 2,
+    "secondarySchools": 0
+  },
+  {
+    "postcode": "WC2",
+    "name": "Strand",
+    "area": "Western Central London",
+    "areaPostcode": "WC",
+    "description": "Strand district in Western Central London",
+    "totalSchools": 7,
+    "primarySchools": 2,
+    "secondarySchools": 0
+  }
+]

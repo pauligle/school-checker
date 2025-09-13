@@ -1,0 +1,66 @@
+[
+  {
+    "postcode": "E",
+    "name": "East London",
+    "description": "Eastern London postcodes covering Tower Hamlets, Hackney, Waltham Forest, Newham, and Redbridge",
+    "totalSchools": 1564,
+    "primarySchools": 974,
+    "secondarySchools": 201
+  },
+  {
+    "postcode": "EC",
+    "name": "Eastern Central London",
+    "description": "Eastern Central London postcodes covering the City of London financial district",
+    "totalSchools": 30,
+    "primarySchools": 13,
+    "secondarySchools": 1
+  },
+  {
+    "postcode": "N",
+    "name": "North London",
+    "description": "Northern London postcodes covering Camden, Islington, Haringey, Enfield, and Barnet",
+    "totalSchools": 4973,
+    "primarySchools": 2871,
+    "secondarySchools": 599
+  },
+  {
+    "postcode": "NW",
+    "name": "North West London",
+    "description": "North Western London postcodes covering Brent, Camden, Westminster, and Barnet",
+    "totalSchools": 402,
+    "primarySchools": 183,
+    "secondarySchools": 53
+  },
+  {
+    "postcode": "SE",
+    "name": "South East London",
+    "description": "South Eastern London postcodes covering Greenwich, Lewisham, Southwark, and Bexley",
+    "totalSchools": 721,
+    "primarySchools": 390,
+    "secondarySchools": 101
+  },
+  {
+    "postcode": "SW",
+    "name": "South West London",
+    "description": "South Western London postcodes covering Wandsworth, Richmond, Kingston, Merton, and Sutton",
+    "totalSchools": 579,
+    "primarySchools": 263,
+    "secondarySchools": 69
+  },
+  {
+    "postcode": "W",
+    "name": "West London",
+    "description": "Western London postcodes covering Westminster, Kensington and Chelsea, Hammersmith and Fulham, and Ealing",
+    "totalSchools": 3093,
+    "primarySchools": 1913,
+    "secondarySchools": 420
+  },
+  {
+    "postcode": "WC",
+    "name": "Western Central London",
+    "description": "Western Central London postcodes covering Camden and Westminster",
+    "totalSchools": 29,
+    "primarySchools": 4,
+    "secondarySchools": 0
+  }
+]
