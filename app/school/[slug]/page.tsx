@@ -390,11 +390,11 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section - Dark Professional */}
       <div className="bg-gray-900 text-white">
-        <div className="container mx-auto px-4 md:px-6 py-6 md:py-16">
+        <div className="container mx-auto px-4 md:px-6 py-4 md:py-8">
           <div className="max-w-6xl">
             {/* Breadcrumbs */}
-            <nav className="mb-4 md:mb-6">
-              <div className="flex items-center space-x-2 text-sm text-gray-300">
+            <nav className="mb-3 md:mb-4">
+              <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-300">
                 <Link href="/" className="hover:text-white transition-colors">
                   Home
                 </Link>
@@ -418,8 +418,8 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
               </div>
             </nav>
             
-            <h1 className="text-3xl md:text-6xl font-bold mb-4 md:mb-6 leading-tight">{school.establishmentname}</h1>
-            <div className="flex flex-wrap items-center gap-3 md:gap-6 text-gray-300 text-sm md:text-lg">
+            <h1 className="text-xl md:text-3xl font-bold mb-3 md:mb-4 leading-tight">{school.establishmentname}</h1>
+            <div className="flex flex-wrap items-center gap-2 md:gap-4 text-gray-300 text-xs md:text-sm">
               {school.postcode && (
                 <span className="flex items-center gap-2">
                   <span className="text-gray-400">📍</span>
@@ -445,11 +445,11 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                 </span>
               )}
             </div>
-            <div className="mt-4 md:mt-8 space-y-3 md:space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <div className="mt-3 md:mt-4 space-y-2 md:space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm md:text-lg font-medium text-gray-200">Ofsted Overall Rating:</span>
-                  <span className={`px-2 md:px-3 py-1 text-xs md:text-sm font-medium rounded ${getRatingColor(getOfstedRatingText(inspection?.outcome))}`}>
+                  <span className="text-xs md:text-sm font-medium text-gray-200">Ofsted Overall Rating:</span>
+                  <span className={`px-2 py-1 text-xs font-medium rounded ${getRatingColor(getOfstedRatingText(inspection?.outcome))}`}>
                     {getOfstedRatingText(inspection?.outcome)}
                   </span>
                   {getOfstedRatingText(inspection?.outcome) === 'Not Available' && (
@@ -467,10 +467,10 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                 if (schoolcheckerRating) {
                   const ratingInfo = getRatingInfo(schoolcheckerRating.rating);
                   return (
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm md:text-lg font-medium text-gray-200">Schoolchecker.io Rating:</span>
-                        <span className={`px-2 md:px-3 py-1 text-xs md:text-sm font-medium rounded ${ratingInfo.color}`}>
+                        <span className="text-xs md:text-sm font-medium text-gray-200">Schoolchecker.io Rating:</span>
+                        <span className={`px-2 py-1 text-xs font-medium rounded ${ratingInfo.color}`}>
                           {ratingInfo.text}
                         </span>
                         <span className="text-xs text-gray-300">
@@ -497,8 +497,8 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
       <div className="bg-gray-50 py-6 md:py-12">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-7xl">
-            <div className="flex items-center justify-between mb-4 md:mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">School Location</h2>
+            <div className="flex items-center justify-between mb-3 md:mb-6">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900">School Location</h2>
               <a
                 href={`/?school=${school.urn}`}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-lg text-sm md:text-base"
@@ -521,9 +521,9 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
       <div className="container mx-auto px-4 md:px-6 py-4 md:py-8">
         <div className="max-w-7xl space-y-8">
           {/* School Details Section */}
-          <div className="bg-white rounded-lg shadow-sm p-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-              <span className="w-1 h-8 bg-blue-600 rounded"></span>
+          <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
+              <span className="w-1 h-6 bg-blue-600 rounded"></span>
               School Details
             </h2>
             
