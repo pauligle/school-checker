@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "dev:clean": "rm -rf .next && rm -rf node_modules/.cache && rm -rf .turbo && npm run dev",
     "dev:fresh": "rm -rf .next && rm -rf node_modules/.cache && rm -rf .turbo && rm -rf .swc && npm run dev",
     "dev:reset": "./scripts/dev-reset.sh",

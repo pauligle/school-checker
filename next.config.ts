@@ -5,15 +5,6 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizeCss: false,
   },
-  turbopack: {
-    // Turbopack configuration
-    rules: {
-      '*.svg': {
-        loaders: ['@svgr/webpack'],
-        as: '*.js',
-      },
-    },
-  },
   images: {
     unoptimized: true,
   },
@@ -22,9 +13,9 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Only use webpack config when not using Turbopack
-  webpack: (config, { dev, isServer }) => {
-    if (dev && !process.env.TURBOPACK) {
+  // Simplified webpack config
+  webpack: (config, { dev }) => {
+    if (dev) {
       config.cache = false;
       config.optimization = {
         ...config.optimization,
