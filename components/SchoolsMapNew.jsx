@@ -85,6 +85,9 @@ const CITY_COORDINATES = {
   'west london': { lat: 51.5074, lng: -0.1958, zoom: 11 },
   'western central london': { lat: 51.5154, lng: -0.1278, zoom: 11 },
   
+  // London Districts
+  camberwell: { lat: 51.4744, lng: -0.0919, zoom: 13 },
+  
   // Additional Cities
   nottingham: { lat: 52.9548, lng: -1.1581, zoom: 11 },
   'newcastle upon tyne': { lat: 54.9783, lng: -1.6178, zoom: 11 },

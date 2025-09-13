@@ -64,6 +64,7 @@ export default function CitySchoolsMap({ schools, city }: CitySchoolsMapProps) {
     'Greenwich': [51.4769, -0.0006],
     'Lewisham': [51.4556, -0.0119],
     'Peckham': [51.4744, -0.0694],
+    'Camberwell': [51.4744, -0.0919],
     'Woolwich': [51.4994, 0.0644],
     'Clapham': [51.4619, -0.1381],
     'Battersea': [51.4744, -0.1556],
