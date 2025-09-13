@@ -64,7 +64,12 @@ async function getCityData(): Promise<CityData[]> {
       secondarySchools: london.secondarySchools,
       totalSchools: london.totalSchools,
       postcodeCount: 1,
-      postcodes: [london.postcode]
+      postcodes: [london.postcode],
+      pagesToCreate: {
+        primary: london.primarySchools >= 10,
+        secondary: london.secondarySchools >= 10,
+        all: true
+      }
     }))
     
     // Add London overview page
