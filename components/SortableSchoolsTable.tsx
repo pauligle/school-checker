@@ -16,9 +16,10 @@ interface SchoolData {
   lon: number | null
   statutorylowage: number | null
   statutoryhighage: number | null
+  religiouscharacter__name_: string | null
 }
 
-type SortField = 'name' | 'rating' | 'ageRange' | 'pupils' | 'postcode' | 'localAuthority'
+type SortField = 'ks2Rank' | 'localRank' | 'name' | 'rating' | 'ageRange' | 'pupils' | 'postcode' | 'localAuthority' | 'religiousCharacter'
 type SortDirection = 'asc' | 'desc'
 type FilterType = 'all' | 'outstanding' | 'good'
 
@@ -113,14 +114,14 @@ function getRatingDisplay(inspection: any) {
     case 2: // Good
       return {
         text: 'Good',
-        color: 'bg-blue-100 text-blue-800',
+        color: 'bg-yellow-100 text-yellow-800',
         type: isCalculated ? 'SchoolChecker' : 'Ofsted',
         isCalculated
       }
     case 3: // Requires improvement
       return {
         text: 'Requires Improvement',
-        color: 'bg-yellow-100 text-yellow-800',
+        color: 'bg-orange-100 text-orange-800',
         type: isCalculated ? 'SchoolChecker' : 'Ofsted',
         isCalculated
       }
@@ -162,9 +163,9 @@ function SortableHeader({
       className={`${widthClass} px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none`}
       onClick={() => onSort(field)}
     >
-      <div className="flex items-center gap-1">
+      <div className="flex items-center justify-between pr-2">
         <span>{children}</span>
-        <div className="flex flex-col">
+        <div className="flex flex-col ml-2">
           <span className={`text-xs ${isActive && direction === 'asc' ? 'text-blue-600' : 'text-gray-300'}`}>
             ▲
           </span>
@@ -182,15 +183,19 @@ export default function SortableSchoolsTable({
   schools, 
   inspections, 
   city,
-  initialFilter = 'all'
+  initialFilter = 'all',
+  rankings = {},
+  localRankings = {}
 }: { 
   schools: SchoolData[]
   inspections: { [urn: string]: any }
   city: string
   initialFilter?: FilterType
+  rankings?: { [urn: string]: { rwm_rank: number } }
+  localRankings?: { [urn: string]: { la_rank: number } }
 }) {
   const [sort, setSort] = useState<{ field: SortField | null; direction: SortDirection }>({
-    field: null,
+    field: 'localRank',
     direction: 'asc'
   })
   
@@ -228,6 +233,14 @@ export default function SortableSchoolsTable({
       let aValue: any, bValue: any
 
       switch (sort.field) {
+        case 'ks2Rank':
+          aValue = rankings[a.urn]?.rwm_rank || 999999 // Put schools without ranking at end
+          bValue = rankings[b.urn]?.rwm_rank || 999999
+          break
+        case 'localRank':
+          aValue = localRankings[a.urn]?.la_rank || 999999 // Put schools without local ranking at end
+          bValue = localRankings[b.urn]?.la_rank || 999999
+          break
         case 'name':
           aValue = a.establishmentname.toLowerCase()
           bValue = b.establishmentname.toLowerCase()
@@ -255,6 +268,10 @@ export default function SortableSchoolsTable({
         case 'localAuthority':
           aValue = a.la__name_.toLowerCase()
           bValue = b.la__name_.toLowerCase()
+          break
+        case 'religiousCharacter':
+          aValue = a.religiouscharacter__name_?.toLowerCase() || 'zzz'
+          bValue = b.religiouscharacter__name_?.toLowerCase() || 'zzz'
           break
         default:
           return 0
@@ -315,26 +332,44 @@ export default function SortableSchoolsTable({
       <table className="w-full divide-y divide-gray-200 table-fixed">
         <thead className="bg-gray-50">
           <tr>
-            <th className="w-16 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Rank
+            <th className="w-48 bg-blue-100 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none" onClick={() => handleSort('localRank')}>
+              <div className="flex items-center justify-between pr-2">
+                <span className="text-blue-700 font-bold text-xs px-2 py-1">
+KS2 PRIMARY RESULTS RANK IN {city.toUpperCase()}
+                </span>
+                <div className="flex flex-col ml-2">
+                  <span className={`text-xs ${sort.field === 'localRank' && sort.direction === 'asc' ? 'text-blue-600' : 'text-gray-300'}`}>
+                    ▲
+                  </span>
+                  <span className={`text-xs ${sort.field === 'localRank' && sort.direction === 'desc' ? 'text-blue-600' : 'text-gray-300'}`}>
+                    ▼
+                  </span>
+                </div>
+              </div>
             </th>
+            <SortableHeader field="ks2Rank" currentSort={sort} onSort={handleSort} widthClass="w-24">
+              KS2 PRIMARY RESULTS RANKING (ENGLAND)
+            </SortableHeader>
             <SortableHeader field="name" currentSort={sort} onSort={handleSort} widthClass="w-1/3">
               School Name
             </SortableHeader>
-            <SortableHeader field="rating" currentSort={sort} onSort={handleSort} widthClass="w-24">
+            <SortableHeader field="rating" currentSort={sort} onSort={handleSort} widthClass="w-28">
               Rating
             </SortableHeader>
-            <SortableHeader field="ageRange" currentSort={sort} onSort={handleSort} widthClass="w-20">
+            <SortableHeader field="ageRange" currentSort={sort} onSort={handleSort} widthClass="w-24">
               Age Range
             </SortableHeader>
-            <SortableHeader field="pupils" currentSort={sort} onSort={handleSort} widthClass="w-20">
+            <SortableHeader field="pupils" currentSort={sort} onSort={handleSort} widthClass="w-24">
               Pupils
             </SortableHeader>
-            <SortableHeader field="postcode" currentSort={sort} onSort={handleSort} widthClass="w-24">
+            <SortableHeader field="postcode" currentSort={sort} onSort={handleSort} widthClass="w-28">
               Postcode
             </SortableHeader>
-            <SortableHeader field="localAuthority" currentSort={sort} onSort={handleSort} widthClass="w-32">
+            <SortableHeader field="localAuthority" currentSort={sort} onSort={handleSort} widthClass="w-36">
               Local Authority
+            </SortableHeader>
+            <SortableHeader field="religiousCharacter" currentSort={sort} onSort={handleSort} widthClass="w-32">
+              Religious Character
             </SortableHeader>
           </tr>
         </thead>
@@ -344,8 +379,13 @@ export default function SortableSchoolsTable({
             const ratingDisplay = getRatingDisplay(inspection)
             return (
               <tr key={school.id} className="hover:bg-gray-50">
+                <td className="px-6 py-4 text-center bg-blue-50 border-l-4 border-blue-400">
+                  <span className="text-lg font-bold text-blue-800">
+                    {localRankings[school.urn]?.la_rank ? `#${localRankings[school.urn].la_rank}` : 'N/A'}
+                  </span>
+                </td>
                 <td className="px-3 py-3 text-sm font-medium text-gray-900 text-center">
-                  #{index + 1}
+                  {rankings[school.urn]?.rwm_rank ? `#${rankings[school.urn].rwm_rank}` : 'N/A'}
                 </td>
                 <td className="px-3 py-3">
                   <Link 
@@ -385,6 +425,9 @@ export default function SortableSchoolsTable({
                 </td>
                 <td className="px-3 py-3 text-sm text-gray-500">
                   {school.la__name_}
+                </td>
+                <td className="px-3 py-3 text-sm text-gray-900 text-center">
+                  {school.religiouscharacter__name_ === 'Does not apply' ? 'No' : 'Yes'}
                 </td>
               </tr>
             )

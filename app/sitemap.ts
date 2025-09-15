@@ -34,7 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: 'https://schoolchecker.io/best-primary-schools/london-overview',
+      url: 'https://schoolchecker.io/best-primary-schools/london',
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.9,
@@ -92,6 +92,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.5,
+    },
+    {
+      url: 'https://schoolchecker.io/how-school-rankings-work',
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
     },
   ]
 
@@ -173,6 +179,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       console.error('Error loading city data for sitemap:', cityError)
     }
 
+    // Load Local Authority data for LA pages
+    let laPages: MetadataRoute.Sitemap = []
+    try {
+      const laListPath = path.join(process.cwd(), 'scripts', 'la-pages.json')
+      const laData = JSON.parse(fs.readFileSync(laListPath, 'utf8'))
+      
+      laPages = laData.map((la: any) => ({
+        url: `https://schoolchecker.io${la.url}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly' as const,
+        priority: 0.8, // High priority for Local Authority pages
+      }))
+    } catch (laError) {
+      console.error('Error loading Local Authority data for sitemap:', laError)
+    }
+
     // Fetch all schools from database
     const { data: schools, error } = await supabase
       .from('schools')
@@ -201,7 +223,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     }) || []
 
-    return [...staticPages, ...cityPages, ...schoolPages]
+    return [...staticPages, ...cityPages, ...laPages, ...schoolPages]
   } catch (error) {
     console.error('Error generating sitemap:', error)
     return staticPages

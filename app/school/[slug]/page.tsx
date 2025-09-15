@@ -38,6 +38,34 @@ function getCityFromPostcode(postcode: string): string | null {
   }
 }
 
+// Helper function to get school rankings (same as area pages)
+async function getSchoolRankings(schools: any[]): Promise<{ [urn: string]: { rwm_rank: number } }> {
+  const schoolUrns = schools.map(s => s.urn).filter(Boolean)
+  
+  if (schoolUrns.length === 0) {
+    return {}
+  }
+
+  const { data: rankings, error } = await supabase
+    .from('school_rankings')
+    .select('urn, rwm_rank')
+    .in('urn', schoolUrns)
+    .eq('data_year', 2024) // Use latest year
+
+  if (error) {
+    console.error('Error fetching school rankings:', error)
+    return {}
+  }
+
+  // Convert to object keyed by URN
+  const rankingsMap: { [urn: string]: { rwm_rank: number } } = {}
+  rankings?.forEach(ranking => {
+    rankingsMap[ranking.urn] = { rwm_rank: ranking.rwm_rank }
+  })
+
+  return rankingsMap
+}
+
 
 // Helper function to convert numeric Ofsted rating to text
 function getOfstedRatingText(rating: number | null | undefined): string {
@@ -113,11 +141,11 @@ function calculateSchoolCheckerRating(inspection: any) {
 // Get rating text and color
 function getRatingInfo(rating: number) {
   switch (rating) {
-    case 1: return { text: 'Outstanding', color: 'bg-green-100 text-green-800' };
-    case 2: return { text: 'Good', color: 'bg-yellow-100 text-yellow-800' };
-    case 3: return { text: 'Requires Improvement', color: 'bg-orange-100 text-orange-800' };
-    case 4: return { text: 'Inadequate', color: 'bg-red-100 text-red-800' };
-    default: return { text: 'N/A', color: 'bg-gray-100 text-gray-800' };
+    case 1: return { text: 'Outstanding', color: 'text-green-600 bg-green-100' };
+    case 2: return { text: 'Good', color: 'text-yellow-600 bg-yellow-100' };
+    case 3: return { text: 'Requires Improvement', color: 'text-orange-600 bg-orange-100' };
+    case 4: return { text: 'Inadequate', color: 'text-red-600 bg-red-100' };
+    default: return { text: 'N/A', color: 'text-gray-600 bg-gray-100' };
   }
 }
 
@@ -237,15 +265,26 @@ interface InspectionData {
 }
 
 
+function createLaSlug(laName: string): string {
+  return laName
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .trim();
+}
+
 async function getSchoolData(slug: string): Promise<{
   school: SchoolData | null;
   inspection: InspectionData | null;
+  ranking: any | null;
+  laRanking: any | null;
 }> {
   try {
     // Extract URN from slug (format: school-name-urn)
     const urn = slug.split('-').pop();
     if (!urn || isNaN(Number(urn))) {
-      return { school: null, inspection: null };
+      return { school: null, inspection: null, ranking: null, laRanking: null };
     }
 
     // Get school data
@@ -256,7 +295,7 @@ async function getSchoolData(slug: string): Promise<{
       .single();
 
     if (schoolError || !schoolData) {
-      return { school: null, inspection: null };
+      return { school: null, inspection: null, ranking: null, laRanking: null };
     }
 
     // Get latest inspection data
@@ -268,19 +307,115 @@ async function getSchoolData(slug: string): Promise<{
       .limit(1)
       .single();
 
+    // Get ranking data for the latest year (2024)
+    const { data: rankingData } = await supabase
+      .from('school_rankings')
+      .select('*')
+      .eq('urn', urn)
+      .eq('data_year', 2024)
+      .limit(1)
+      .single();
+
+    // Get LA ranking data using the same method as area pages
+    let laRankingData = null;
+    try {
+      // Get all schools in the same local authority with the same filtering as area pages
+      const { data: laSchools, error: laError } = await supabase
+        .from('schools')
+        .select(`
+          id,
+          establishmentname,
+          urn,
+          la__name_,
+          typeofestablishment__name_,
+          numberofpupils,
+          postcode,
+          lat,
+          lon,
+          statutorylowage,
+          statutoryhighage,
+          religiouscharacter__name_
+        `)
+        .eq('la__name_', schoolData.la__name_)
+        .in('phaseofeducation__name_', ['Primary', 'All-through'])
+        .not('lat', 'is', null)
+        .not('lon', 'is', null)
+        .order('establishmentname');
+
+      if (!laError && laSchools) {
+        // Filter out nursery age ranges (same as area pages)
+        const excludedAgeRanges = ['0-5', '2-4', '2-5', '2-7', '2-9', '2-11', '3-5', '3-7', '4-7', '5-7']
+        const filteredSchools = laSchools.filter(laSchool => {
+          if (!laSchool.statutorylowage || !laSchool.statutoryhighage) return false
+          const ageRange = `${laSchool.statutorylowage}-${laSchool.statutoryhighage}`
+          return !excludedAgeRanges.includes(ageRange)
+        });
+
+        // Get rankings for these schools using the same logic as area pages
+        const schoolUrns = filteredSchools.map(s => s.urn).filter(Boolean);
+        const rankings = await getSchoolRankings(filteredSchools);
+        
+        // Only include schools that have ranking data (same as area pages)
+        const schoolsWithRankings = filteredSchools
+          .filter(laSchool => rankings[laSchool.urn]) // Only schools with ranking data
+          .map(laSchool => ({
+            ...laSchool,
+            ranking: rankings[laSchool.urn]
+          }));
+
+        schoolsWithRankings.sort((a, b) => {
+          const aRank = a.ranking.rwm_rank || 999999;
+          const bRank = b.ranking.rwm_rank || 999999;
+          return aRank - bRank;
+        });
+
+        // Find the current school's rank
+        const schoolIndex = schoolsWithRankings.findIndex(s => s.urn === schoolData.urn);
+        
+        if (schoolIndex !== -1) {
+          // Calculate tied ranking (same logic as area pages)
+          let currentRank = 1;
+          for (let i = 0; i < schoolsWithRankings.length; i++) {
+            if (schoolsWithRankings[i].urn === schoolData.urn) {
+              laRankingData = {
+                la_rank: currentRank,
+                total_la_schools: schoolsWithRankings.length,
+                la_name: schoolData.la__name_,
+                la_code: schoolData.la__code_,
+                year: 2024
+              };
+              break;
+            }
+            // Check if next school has different ranking to increment rank
+            if (i < schoolsWithRankings.length - 1) {
+              const currentSchoolRank = schoolsWithRankings[i].ranking.rwm_rank || 999999;
+              const nextSchoolRank = schoolsWithRankings[i + 1].ranking.rwm_rank || 999999;
+              if (nextSchoolRank !== currentSchoolRank) {
+                currentRank = i + 2;
+              }
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching LA ranking:', error);
+    }
+
     return {
       school: schoolData as SchoolData,
-      inspection: inspectionData as InspectionData
+      inspection: inspectionData as InspectionData,
+      ranking: rankingData,
+      laRanking: laRankingData
     };
   } catch (error) {
     console.error('Error fetching school data:', error);
-    return { school: null, inspection: null };
+    return { school: null, inspection: null, ranking: null, laRanking: null };
   }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const { school, inspection } = await getSchoolData(slug);
+  const { school, inspection, ranking, laRanking } = await getSchoolData(slug);
   
   if (!school) {
     return {
@@ -347,7 +482,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
   const { slug } = await params;
   
   try {
-    const { school, inspection } = await getSchoolData(slug);
+    const { school, inspection, ranking, laRanking } = await getSchoolData(slug);
 
     // Get city from postcode for breadcrumbs
     const city = school?.postcode ? getCityFromPostcode(school.postcode) : null;
@@ -400,21 +535,12 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                 </Link>
                 <span className="text-gray-400">/</span>
                 <Link href="/best-primary-schools" className="hover:text-white transition-colors">
-                  Best Primary Schools
+                  Primary Schools
                 </Link>
-                {cityDisplayName && (
-                  <>
-                    <span className="text-gray-400">/</span>
-                    <Link 
-                      href={`/best-primary-schools/${cityDisplayName.toLowerCase().replace(/\s+/g, '-')}`} 
-                      className="hover:text-white transition-colors"
-                    >
-                      {cityDisplayName}
-                    </Link>
-                  </>
-                )}
                 <span className="text-gray-400">/</span>
-                <span className="text-white font-medium">{school.establishmentname}</span>
+                <Link href="/best-primary-schools-england" className="hover:text-white transition-colors">
+                  England
+                </Link>
               </div>
             </nav>
             
@@ -444,6 +570,18 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                   With Nursery
                 </span>
               )}
+              {school.statutorylowage && school.statutoryhighage && (
+                <span className="flex items-center gap-2">
+                  <span className="text-gray-400">📅</span>
+                  Ages {school.statutorylowage}-{school.statutoryhighage}
+                </span>
+              )}
+              {(school.pupils_202425 || school.numberofpupils) && (
+                <span className="flex items-center gap-2">
+                  <span className="text-gray-400">👥</span>
+                  {formatNumber(school.pupils_202425 || school.numberofpupils)} pupils
+                </span>
+              )}
             </div>
             <div className="mt-3 md:mt-4 space-y-2 md:space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
@@ -452,6 +590,11 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                   <span className={`px-2 py-1 text-xs font-medium rounded ${getRatingColor(getOfstedRatingText(inspection?.outcome))}`}>
                     {getOfstedRatingText(inspection?.outcome)}
                   </span>
+                  {inspection?.inspection_date && (
+                    <span className="ml-2 text-xs text-gray-300">
+                      ({new Date(inspection.inspection_date).getFullYear()})
+                    </span>
+                  )}
                   {getOfstedRatingText(inspection?.outcome) === 'Not Available' && (
                     <a 
                       href="/schoolchecker-rating" 
@@ -463,32 +606,92 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                 </div>
               </div>
               {(() => {
-                const schoolcheckerRating = calculateSchoolCheckerRating(inspection);
-                if (schoolcheckerRating) {
-                  const ratingInfo = getRatingInfo(schoolcheckerRating.rating);
-                  return (
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs md:text-sm font-medium text-gray-200">Schoolchecker.io Rating:</span>
-                        <span className={`px-2 py-1 text-xs font-medium rounded ${ratingInfo.color}`}>
-                          {ratingInfo.text}
-                        </span>
-                        <span className="text-xs text-gray-200">
-                          ({schoolcheckerRating.isCalculated ? 'calculated' : 'official'})
-                        </span>
-                        <a 
-                          href="/schoolchecker-rating" 
-                          className="text-blue-300 hover:text-blue-100 underline text-xs"
-                        >
-                          How?
-                        </a>
+                const ofstedRating = getOfstedRatingText(inspection?.outcome);
+                // Only show SchoolChecker.io rating if Ofsted rating is "Not Available"
+                if (ofstedRating === 'Not Available') {
+                  const schoolcheckerRating = calculateSchoolCheckerRating(inspection);
+                  if (schoolcheckerRating) {
+                    const ratingInfo = getRatingInfo(schoolcheckerRating.rating);
+                    return (
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs md:text-sm font-medium text-gray-200">Schoolchecker.io Rating:</span>
+                          <span className={`px-2 py-1 text-xs font-medium rounded ${ratingInfo.color}`}>
+                            {ratingInfo.text}
+                          </span>
+                          <span className="text-xs text-gray-200">
+                            ({schoolcheckerRating.isCalculated ? 'calculated' : 'official'})
+                          </span>
+                          <a 
+                            href="/schoolchecker-rating" 
+                            className="text-blue-300 hover:text-blue-100 underline text-xs"
+                          >
+                            How?
+                          </a>
+                        </div>
                       </div>
-                    </div>
-                  );
+                    );
+                  }
                 }
                 return null;
               })()}
             </div>
+            
+            {/* Ranking Information */}
+            {ranking && (
+              <div className="mt-3 md:mt-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs md:text-sm font-medium text-gray-200">KS2 Primary Results Ranking:</span>
+                  <span className="text-xs md:text-sm text-white font-semibold">
+                    #{ranking.rwm_rank?.toLocaleString()} Ranked of {ranking.total_schools?.toLocaleString()} Primary Schools in England 
+                    {(() => {
+                      if (ranking.rwm_rank === 1) {
+                        return ' (this is the best school in the area!)';
+                      }
+                      const percentile = (ranking.rwm_rank / ranking.total_schools) * 100;
+                      return ` (top ${Math.round(percentile)}%)`;
+                    })()}
+                  </span>
+                  <a 
+                    href="/how-school-rankings-work" 
+                    className="text-blue-300 hover:text-blue-100 underline text-xs"
+                  >
+                    How?
+                  </a>
+                </div>
+              </div>
+            )}
+            
+            {/* LA Ranking Information */}
+            {laRanking && (
+              <div className="mt-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs md:text-sm font-medium text-gray-200">Local Ranking:</span>
+                  <span className="text-xs md:text-sm text-white font-semibold">
+                    #{laRanking.la_rank} Ranked out of {laRanking.total_la_schools} Primary Schools in{' '}
+                    <Link 
+                      href={`/best-primary-schools/${createLaSlug(laRanking.la_name)}`}
+                      className="text-blue-300 hover:text-blue-100 underline"
+                    >
+                      {laRanking.la_name}
+                    </Link>
+                    {(() => {
+                      if (laRanking.la_rank === 1) {
+                        return ' (this is the best school in the area!)';
+                      }
+                      const percentile = (laRanking.la_rank / laRanking.total_la_schools) * 100;
+                      const percentileText = percentile <= 1 ? 'top 1%' :
+                                            percentile <= 5 ? 'top 5%' :
+                                            percentile <= 10 ? 'top 10%' :
+                                            percentile <= 25 ? 'top 25%' :
+                                            percentile <= 50 ? 'top 50%' :
+                                            'bottom 50%';
+                      return ` (top ${Math.round(percentile)}%)`;
+                    })()}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -826,32 +1029,36 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                         </td>
                       </tr>
                       {(() => {
-                        const schoolcheckerRating = calculateSchoolCheckerRating(inspection);
-                        if (schoolcheckerRating) {
-                          const ratingInfo = getRatingInfo(schoolcheckerRating.rating);
-                          return (
-                            <tr className="border-b border-gray-100">
-                              <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Schoolchecker.io Rating:</td>
-                              <td className="py-2 pl-1 pr-4 text-gray-800">
-                                <div className="flex items-center space-x-2">
-                                  <span className={`px-3 py-1 text-sm font-medium rounded ${ratingInfo.color}`}>
-                                    {ratingInfo.text}
-                                  </span>
-                                  <span className="text-xs text-gray-500">
-                                    ({schoolcheckerRating.isCalculated ? 'calculated' : 'official'})
-                                  </span>
-                                  <a 
-                                    href="/schoolchecker-rating" 
-                                    className="text-blue-600 hover:text-blue-800 text-xs underline ml-2"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    How?
-                                  </a>
-                                </div>
-                              </td>
-                            </tr>
-                          );
+                        const ofstedRating = getOfstedRatingText(inspection.outcome);
+                        // Only show SchoolChecker.io rating if Ofsted rating is "Not Available"
+                        if (ofstedRating === 'Not Available') {
+                          const schoolcheckerRating = calculateSchoolCheckerRating(inspection);
+                          if (schoolcheckerRating) {
+                            const ratingInfo = getRatingInfo(schoolcheckerRating.rating);
+                            return (
+                              <tr className="border-b border-gray-100">
+                                <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Schoolchecker.io Rating:</td>
+                                <td className="py-2 pl-1 pr-4 text-gray-800">
+                                  <div className="flex items-center space-x-2">
+                                    <span className={`px-3 py-1 text-sm font-medium rounded ${ratingInfo.color}`}>
+                                      {ratingInfo.text}
+                                    </span>
+                                    <span className="text-xs text-gray-500">
+                                      ({schoolcheckerRating.isCalculated ? 'calculated' : 'official'})
+                                    </span>
+                                    <a 
+                                      href="/schoolchecker-rating" 
+                                      className="text-blue-600 hover:text-blue-800 text-xs underline ml-2"
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      How?
+                                    </a>
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          }
                         }
                         return null;
                       })()}

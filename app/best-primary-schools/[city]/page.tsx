@@ -88,6 +88,42 @@ async function getLocationData(city: string): Promise<LocationData> {
   const path = require('path')
   
   try {
+    // First check if this is a local authority
+    const { data: laSchools, error: laError } = await supabase
+      .from('schools')
+      .select('*', { count: 'exact', head: true })
+      .eq('la__name_', city)
+      .in('phaseofeducation__name_', ['Primary', 'All-through'])
+      .not('lat', 'is', null)
+      .not('lon', 'is', null)
+    
+    if (!laError && laSchools !== null && laSchools.length > 0) {
+      // This is a local authority
+      const { count: totalSchools } = await supabase
+        .from('schools')
+        .select('*', { count: 'exact', head: true })
+        .eq('la__name_', city)
+      
+      const { count: primarySchools } = await supabase
+        .from('schools')
+        .select('*', { count: 'exact', head: true })
+        .eq('la__name_', city)
+        .in('phaseofeducation__name_', ['Primary', 'All-through'])
+      
+      const { count: secondarySchools } = await supabase
+        .from('schools')
+        .select('*', { count: 'exact', head: true })
+        .eq('la__name_', city)
+        .in('phaseofeducation__name_', ['Secondary', 'All-through'])
+      
+      return {
+        location: city,
+        totalSchools: totalSchools || 0,
+        primarySchools: primarySchools || 0,
+        secondarySchools: secondarySchools || 0
+      }
+    }
+
     // Check if this is a London postcode district
     const londonDistrictsPath = path.join(process.cwd(), 'scripts', 'london-districts-pages.json')
     let isLondonDistrict = false
@@ -200,23 +236,130 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
   const path = require('path')
   
   try {
-    // Check if this is a London postcode district
+    const allSchools: SchoolData[] = []
+    const seenUrns = new Set<string>()
+    
+    // Helper function to add schools without duplicates
+    const addSchools = (schools: SchoolData[]) => {
+      schools.forEach(school => {
+        if (!seenUrns.has(school.urn.toString())) {
+          seenUrns.add(school.urn.toString())
+          allSchools.push(school)
+        }
+      })
+    }
+    
+    // 1. Check if this is a local authority - use primary_results table for consistency
+    const { data: laData, error: laNameError } = await supabase
+      .from('la_averages')
+      .select('lea_code')
+      .ilike('lea_name', `%${city}%`)
+      .eq('data_year', 2024)
+      .limit(1)
+    
+    if (!laNameError && laData && laData.length > 0) {
+      // Use primary_results table for consistency with individual school pages
+      const leaCode = laData[0].lea_code
+      
+      const { data: primaryResults, error: primaryError } = await supabase
+        .from('primary_results')
+        .select('urn, school_name, lea_code')
+        .eq('lea_code', leaCode)
+        .eq('data_year', 2024)
+        .not('rwm_exp_2024', 'is', null)
+        .order('school_name')
+      
+      if (!primaryError && primaryResults && primaryResults.length > 0) {
+        // Get additional school details from schools table
+        const schoolUrns = primaryResults.map(s => s.urn.toString())
+        const { data: schoolDetails, error: detailsError } = await supabase
+          .from('schools')
+          .select(`
+            id,
+            establishmentname,
+            urn,
+            la__name_,
+            typeofestablishment__name_,
+            numberofpupils,
+            postcode,
+            lat,
+            lon,
+            statutorylowage,
+            statutoryhighage,
+            religiouscharacter__name_
+          `)
+          .in('urn', schoolUrns)
+          .in('phaseofeducation__name_', ['Primary', 'All-through'])
+          .not('lat', 'is', null)
+          .not('lon', 'is', null)
+        
+        if (!detailsError && schoolDetails) {
+          // Merge primary_results data with school details
+          const mergedSchools = primaryResults.map(primary => {
+            const details = schoolDetails.find(s => s.urn === primary.urn.toString())
+            return details ? {
+              ...details,
+              establishmentname: primary.school_name || details.establishmentname
+            } : null
+          }).filter(Boolean)
+          
+          addSchools(mergedSchools)
+        }
+      }
+    } else {
+      // Fallback to schools table if no LA data found
+      const { data: laSchools, error: laError } = await supabase
+        .from('schools')
+        .select(`
+          id,
+          establishmentname,
+          urn,
+          la__name_,
+          typeofestablishment__name_,
+          numberofpupils,
+          postcode,
+          lat,
+          lon,
+          statutorylowage,
+          statutoryhighage,
+          religiouscharacter__name_
+        `)
+        .eq('la__name_', city)
+        .in('phaseofeducation__name_', ['Primary', 'All-through'])
+        .not('lat', 'is', null)
+        .not('lon', 'is', null)
+        .order('establishmentname')
+      
+      if (!laError && laSchools && laSchools.length > 0) {
+        addSchools(laSchools)
+      }
+    }
+
+    // 2. Check if this is a London postcode district
     const londonDistrictsPath = path.join(process.cwd(), 'scripts', 'london-districts-pages.json')
-    let isLondonDistrict = false
     let londonDistrictData = null
     
     try {
       const londonDistricts = JSON.parse(fs.readFileSync(londonDistrictsPath, 'utf8'))
+      const cityLower = city.toLowerCase()
+      const cityWithSpaces = cityLower.replace(/-/g, ' ')
+      const cityCapitalized = cityLower.split(' ').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join(' ')
+      
       londonDistrictData = londonDistricts.find((item: any) => 
-        item.name.toLowerCase() === city.toLowerCase() || 
-        item.postcode.toLowerCase() === city.toLowerCase()
+        item.name.toLowerCase() === cityLower ||
+        item.name.toLowerCase() === cityWithSpaces ||
+        item.name === cityCapitalized ||
+        item.postcode.toLowerCase() === cityLower ||
+        item.postcode.toLowerCase() === cityWithSpaces ||
+        item.postcode === cityCapitalized
       )
-      isLondonDistrict = !!londonDistrictData
     } catch (londonDistrictError) {
       // London districts file doesn't exist or is invalid, continue with other checks
     }
     
-    if (isLondonDistrict && londonDistrictData) {
+    if (londonDistrictData) {
       // This is a London postcode district - fetch schools by postcode prefix
       const { data: schools, error } = await supabase
         .from('schools')
@@ -231,7 +374,8 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
           lat,
           lon,
           statutorylowage,
-          statutoryhighage
+          statutoryhighage,
+          religiouscharacter__name_
         `)
         .in('phaseofeducation__name_', ['Primary', 'All-through'])
         .like('postcode', londonDistrictData.postcode + '%')
@@ -239,17 +383,13 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
         .not('lon', 'is', null)
         .order('establishmentname')
       
-      if (error) {
-        console.error('Error fetching London district schools:', error)
-        return []
+      if (!error && schools && schools.length > 0) {
+        addSchools(schools)
       }
-      
-      return schools || []
     }
     
-    // Check if this is a London postcode area
+    // 3. Check if this is a London postcode area
     const londonMappingPath = path.join(process.cwd(), 'scripts', 'london-postcode-pages.json')
-    let isLondonPostcode = false
     let londonData = null
     
     try {
@@ -258,50 +398,119 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
         item.name.toLowerCase() === city.toLowerCase() || 
         item.postcode.toLowerCase() === city.toLowerCase()
       )
-      isLondonPostcode = !!londonData
     } catch (londonError) {
       // London mapping file doesn't exist or is invalid, continue with regular city logic
     }
     
-    if (isLondonPostcode && londonData) {
-      // This is a London postcode area - fetch schools by postcode prefix
-      const { data: schools, error } = await supabase
-        .from('schools')
-        .select(`
-          id,
-          establishmentname,
-          urn,
-          la__name_,
-          typeofestablishment__name_,
-          numberofpupils,
-          postcode,
-          lat,
-          lon,
-          statutorylowage,
-          statutoryhighage
-        `)
-        .in('phaseofeducation__name_', ['Primary', 'All-through'])
-        .like('postcode', londonData.postcode + '%')
-        .not('lat', 'is', null)
-        .not('lon', 'is', null)
-        .order('establishmentname')
-      
-      if (error) {
-        console.error('Error fetching London schools:', error)
-        return []
+    if (londonData) {
+      // This is a London postcode area - use hardcoded postcode prefixes for accuracy
+      let schools: any[] = []
+      let error: any = null
+
+      if (londonData.postcode === 'E') {
+        // East London - use exact postcode prefixes with a single query
+        const eastLondonPostcodes = ['E1', 'E1W', 'E2', 'E3', 'E4', 'E5', 'E6', 'E7', 'E8', 'E9', 'E10', 'E11', 'E12', 'E13', 'E14', 'E15', 'E16', 'E17', 'E18', 'E20', 'E22', 'E77', 'E98']
+        
+        // Build OR conditions for all East London postcodes
+        const orConditions = eastLondonPostcodes.map(postcode => `postcode.like.${postcode}%`).join(',')
+        
+        const { data, error: fetchError } = await supabase
+          .from('schools')
+          .select(`
+            id,
+            establishmentname,
+            urn,
+            la__name_,
+            typeofestablishment__name_,
+            numberofpupils,
+            postcode,
+            lat,
+            lon,
+            statutorylowage,
+            statutoryhighage,
+            religiouscharacter__name_
+          `)
+          .in('phaseofeducation__name_', ['Primary', 'All-through'])
+          .or(orConditions)
+          .not('lat', 'is', null)
+          .not('lon', 'is', null)
+          .order('establishmentname')
+        
+        schools = data || []
+        error = fetchError
+      } else if (londonData.postcode === 'N') {
+        // North London - exclude NW postcodes
+        const { data: allSchools, error: fetchError } = await supabase
+          .from('schools')
+          .select(`
+            id,
+            establishmentname,
+            urn,
+            la__name_,
+            typeofestablishment__name_,
+            numberofpupils,
+            postcode,
+            lat,
+            lon,
+            statutorylowage,
+            statutoryhighage,
+            religiouscharacter__name_
+          `)
+          .in('phaseofeducation__name_', ['Primary', 'All-through'])
+          .like('postcode', 'N%')
+          .not('lat', 'is', null)
+          .not('lon', 'is', null)
+          .order('establishmentname')
+
+        // Filter out NW postcodes (North West London)
+        schools = (allSchools || []).filter((school: any) =>
+          school.postcode && school.postcode.startsWith('N') && !school.postcode.startsWith('NW')
+        )
+        error = fetchError
+      } else {
+        // For other prefixes, use the original logic
+        const { data, error: fetchError } = await supabase
+          .from('schools')
+          .select(`
+            id,
+            establishmentname,
+            urn,
+            la__name_,
+            typeofestablishment__name_,
+            numberofpupils,
+            postcode,
+            lat,
+            lon,
+            statutorylowage,
+            statutoryhighage,
+            religiouscharacter__name_
+          `)
+          .in('phaseofeducation__name_', ['Primary', 'All-through'])
+          .like('postcode', londonData.postcode + '%')
+          .not('lat', 'is', null)
+          .not('lon', 'is', null)
+          .order('establishmentname')
+
+        schools = data || []
+        error = fetchError
       }
-      
-      return schools || []
+
+      if (!error && schools && schools.length > 0) {
+        addSchools(schools)
+      }
     }
     
-    // Regular city logic - check both data sources
+    // 4. Regular city logic - check both data sources
     let cityPostcodes: string[] = []
     
     // First, try the new city data
     try {
       const cityDataPath = path.join(process.cwd(), 'scripts', 'city-pages-to-create.json')
       const cityData = JSON.parse(fs.readFileSync(cityDataPath, 'utf8'))
-      const cityInfo = cityData.find((item: any) => item.city.toLowerCase() === city.toLowerCase())
+      const cityInfo = cityData.find((item: any) => 
+        item.city.toLowerCase() === city.toLowerCase() || 
+        item.slug === city.toLowerCase()
+      )
       
       if (cityInfo && cityInfo.postcodes) {
         cityPostcodes = cityInfo.postcodes
@@ -325,13 +534,8 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
     }
     
     if (cityPostcodes.length === 0) {
-      return []
-    }
-    
-    // Use LIKE queries for postcode prefixes - try each postcode prefix separately
-    let allSchools: any[] = []
-    
-    for (const postcodePrefix of cityPostcodes) {
+      // If no postcodes found, try querying by local authority name
+      // This handles cases like "leicestershire" where the URL is a local authority name
       const { data: schools, error } = await supabase
         .from('schools')
         .select(`
@@ -345,34 +549,188 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
           lat,
           lon,
           statutorylowage,
-          statutoryhighage
+          statutoryhighage,
+          religiouscharacter__name_
         `)
         .in('phaseofeducation__name_', ['Primary', 'All-through'])
-        .like('postcode', `${postcodePrefix}%`)
+        .ilike('la__name_', `%${city}%`)
         .not('lat', 'is', null)
         .not('lon', 'is', null)
         .order('establishmentname')
       
-      if (error) {
-        console.error(`Error fetching schools for postcode ${postcodePrefix}:`, error)
-        continue
+      if (!error && schools && schools.length > 0) {
+        addSchools(schools)
       }
-      
-      if (schools) {
-        allSchools = allSchools.concat(schools)
+    } else {
+      // Use LIKE queries for postcode prefixes - try each postcode prefix separately
+      for (const postcodePrefix of cityPostcodes) {
+        const { data: schools, error } = await supabase
+          .from('schools')
+          .select(`
+            id,
+            establishmentname,
+            urn,
+            la__name_,
+            typeofestablishment__name_,
+            numberofpupils,
+            postcode,
+            lat,
+            lon,
+            statutorylowage,
+            statutoryhighage,
+            religiouscharacter__name_
+          `)
+          .in('phaseofeducation__name_', ['Primary', 'All-through'])
+          .like('postcode', `${postcodePrefix}%`)
+          .not('lat', 'is', null)
+          .not('lon', 'is', null)
+          .order('establishmentname')
+        
+        if (!error && schools && schools.length > 0) {
+          addSchools(schools)
+        }
       }
     }
     
-    // Remove duplicates based on URN
-    const uniqueSchools = allSchools.filter((school, index, self) => 
-      index === self.findIndex(s => s.urn === school.urn)
-    )
-    
-    return uniqueSchools
+    // Return all collected schools (already deduplicated by addSchools function)
+    return filterNurseryAgeRanges(allSchools)
   } catch (error) {
     console.error('Error loading postcode mapping:', error)
     return []
   }
+}
+
+// Helper function to filter out nursery age ranges
+function filterNurseryAgeRanges(schools: any[]): any[] {
+  const excludedAgeRanges = ['0-5', '2-4', '2-5', '2-7', '2-9', '2-11', '3-5', '3-7', '4-7', '5-7']
+  return schools.filter(school => {
+    if (!school.statutorylowage || !school.statutoryhighage) return false
+    const ageRange = `${school.statutorylowage}-${school.statutoryhighage}`
+    return !excludedAgeRanges.includes(ageRange)
+  })
+}
+
+async function getSchoolRankings(schools: SchoolData[]): Promise<{ [urn: string]: { rwm_rank: number } }> {
+  const schoolUrns = schools.map(s => s.urn).filter(Boolean)
+  
+  if (schoolUrns.length === 0) {
+    return {}
+  }
+
+  const { data: rankings, error } = await supabase
+    .from('school_rankings')
+    .select('urn, rwm_rank')
+    .in('urn', schoolUrns)
+    .eq('data_year', 2024) // Use latest year
+
+  if (error) {
+    console.error('Error fetching school rankings:', error)
+    return {}
+  }
+
+  // Convert to object keyed by URN
+  const rankingsMap: { [urn: string]: { rwm_rank: number } } = {}
+  rankings?.forEach(ranking => {
+    rankingsMap[ranking.urn] = { rwm_rank: ranking.rwm_rank }
+  })
+
+  return rankingsMap
+}
+
+async function getLocalRankings(schools: SchoolData[], city: string): Promise<{ [urn: string]: { la_rank: number } }> {
+  const schoolUrns = schools.map(s => s.urn).filter(Boolean)
+  
+  if (schoolUrns.length === 0) {
+    return {}
+  }
+
+  // For city pages, rank ALL schools in the city/area together, regardless of LA
+  // Get all schools with their KS2 results
+  const { data: citySchools, error: schoolsError } = await supabase
+    .from('primary_results')
+    .select('urn, rwm_exp_2024, rwm_high_2024, gps_exp_2024, gps_high_2024')
+    .eq('data_year', 2024)
+    .in('urn', schoolUrns)
+    .not('rwm_exp_2024', 'is', null)
+
+  if (schoolsError) {
+    console.error(`Error fetching city schools for ranking:`, schoolsError)
+    return {}
+  }
+
+  if (!citySchools || citySchools.length === 0) {
+    return {}
+  }
+
+  // Sort ALL schools in the city using the same methodology as national rankings
+  citySchools.sort((a, b) => {
+    const aExpected = a.rwm_exp_2024 || 0
+    const bExpected = b.rwm_exp_2024 || 0
+    const aHigher = a.rwm_high_2024 || 0
+    const bHigher = b.rwm_high_2024 || 0
+    
+    // 1. Primary: RWM Expected percentage (descending)
+    if (bExpected !== aExpected) {
+      return bExpected - aExpected
+    }
+    
+    // 2. Secondary: RWM Higher percentage (descending)
+    if (bHigher !== aHigher) {
+      return bHigher - aHigher
+    }
+    
+    // 3. Tertiary: Gap between Expected and Higher (ascending - smaller gap = better consistency)
+    const aGap = aExpected - aHigher
+    const bGap = bExpected - bHigher
+    if (aGap !== bGap) {
+      return aGap - bGap // Smaller gap ranks higher
+    }
+    
+    // 4. Quaternary: GPS Expected percentage (descending - for final tie-breaking)
+    const aGPS = a.gps_exp_2024 || 0
+    const bGPS = b.gps_exp_2024 || 0
+    if (bGPS !== aGPS) {
+      return bGPS - aGPS
+    }
+    
+    // 5. Quinary: GPS Higher percentage (descending - for extra accuracy)
+    const aGPSHigher = a.gps_high_2024 || 0
+    const bGPSHigher = b.gps_high_2024 || 0
+    if (bGPSHigher !== aGPSHigher) {
+      return bGPSHigher - aGPSHigher
+    }
+    
+    // If all criteria are identical, schools are considered tied
+    return 0
+  })
+
+  // Add rankings with proper tied ranking logic
+  const localRankingsMap: { [urn: string]: { la_rank: number } } = {}
+  let currentRank = 1
+  
+  for (let i = 0; i < citySchools.length; i++) {
+    const school = citySchools[i]
+    
+    // Check if this school is tied with the previous school
+    if (i > 0) {
+      const prevSchool = citySchools[i - 1]
+      const isTied = (
+        (school.rwm_exp_2024 || 0) === (prevSchool.rwm_exp_2024 || 0) &&
+        (school.rwm_high_2024 || 0) === (prevSchool.rwm_high_2024 || 0) &&
+        ((school.rwm_exp_2024 || 0) - (school.rwm_high_2024 || 0)) === ((prevSchool.rwm_exp_2024 || 0) - (prevSchool.rwm_high_2024 || 0)) &&
+        (school.gps_exp_2024 || 0) === (prevSchool.gps_exp_2024 || 0) &&
+        (school.gps_high_2024 || 0) === (prevSchool.gps_high_2024 || 0)
+      )
+      
+      if (!isTied) {
+        currentRank = i + 1
+      }
+    }
+    
+    localRankingsMap[school.urn] = { la_rank: currentRank }
+  }
+
+  return localRankingsMap
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ city: string }> }): Promise<Metadata> {
@@ -626,6 +984,8 @@ export default async function CityPage({
   const locationData = await getLocationData(city)
   const schools = await getPrimarySchools(city)
   const inspections = await getSchoolInspections(schools)
+  const rankings = await getSchoolRankings(schools)
+  const localRankings = await getLocalRankings(schools, city)
   
   // Check if we should show specific filter
   const filterParam = searchParamsData.filter
@@ -635,42 +995,61 @@ export default async function CityPage({
   // Get London districts for this area
   const londonDistricts = getLondonDistrictsForArea(city)
   
-  // Check if this is a London area for breadcrumb logic
+  // Check if this is a local authority, London area, or regular city for breadcrumb logic
   const fs = require('fs')
   const path = require('path')
   let isLondonArea = false
+  let isLocalAuthority = false
   
+  // First check if this is a local authority
   try {
-    const londonDistrictsPath = path.join(process.cwd(), 'scripts', 'london-districts-pages.json')
-    const londonDistricts = JSON.parse(fs.readFileSync(londonDistrictsPath, 'utf8'))
+    const { data: laCheck, error: laError } = await supabase
+      .from('schools')
+      .select('la__name_', { count: 'exact', head: true })
+      .eq('la__name_', city)
+      .limit(1)
     
-    // Convert city parameter to different formats for matching
-    const cityLower = city.toLowerCase()
-    const cityWithSpaces = cityLower.replace(/-/g, ' ')
-    const cityCapitalized = cityWithSpaces.split(' ').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ')
-    
-    const londonDistrictData = londonDistricts.find((item: any) => 
-      item.name.toLowerCase() === cityLower || 
-      item.postcode.toLowerCase() === cityLower ||
-      item.area.toLowerCase() === cityLower ||
-      item.name.toLowerCase() === cityWithSpaces ||
-      item.area.toLowerCase() === cityWithSpaces ||
-      item.area === cityCapitalized
-    )
-    isLondonArea = !!londonDistrictData
-    console.log('London area check:', { 
-      city, 
-      cityLower, 
-      cityWithSpaces, 
-      cityCapitalized,
-      isLondonArea, 
-      foundData: londonDistrictData 
-    })
+    if (!laError && laCheck !== null && laCheck.length > 0) {
+      isLocalAuthority = true
+    }
   } catch (error) {
-    console.log('Error checking London districts:', error)
-    // London districts file doesn't exist or is invalid, continue with regular logic
+    console.log('Error checking local authority:', error)
+  }
+  
+  // If not a local authority, check if it's a London area
+  if (!isLocalAuthority) {
+    try {
+      const londonDistrictsPath = path.join(process.cwd(), 'scripts', 'london-districts-pages.json')
+      const londonDistricts = JSON.parse(fs.readFileSync(londonDistrictsPath, 'utf8'))
+      
+      // Convert city parameter to different formats for matching
+      const cityLower = city.toLowerCase()
+      const cityWithSpaces = cityLower.replace(/-/g, ' ')
+      const cityCapitalized = cityWithSpaces.split(' ').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join(' ')
+      
+      const londonDistrictData = londonDistricts.find((item: any) => 
+        item.name.toLowerCase() === cityLower || 
+        item.postcode.toLowerCase() === cityLower ||
+        item.area.toLowerCase() === cityLower ||
+        item.name.toLowerCase() === cityWithSpaces ||
+        item.area.toLowerCase() === cityWithSpaces ||
+        item.area === cityCapitalized
+      )
+      isLondonArea = !!londonDistrictData
+      console.log('London area check:', { 
+        city, 
+        cityLower, 
+        cityWithSpaces, 
+        cityCapitalized,
+        isLondonArea, 
+        foundData: londonDistrictData 
+      })
+    } catch (error) {
+      console.log('Error checking London districts:', error)
+      // London districts file doesn't exist or is invalid, continue with regular logic
+    }
   }
   
   // Calculate statistics for key highlights using the same logic as the table
@@ -831,6 +1210,16 @@ export default async function CityPage({
     4: 'Inadequate'
   })
   
+  // Find the #1 ranked school in KS2 Results
+  const topRankedSchool = schools.find(school => localRankings[school.urn]?.la_rank === 1)
+  
+  // Find the best non-religious school (Religious Character = "Does not apply")
+  const nonReligiousSchools = schools.filter(school => school.religiouscharacter__name_ === 'Does not apply')
+  const topNonReligiousSchool = nonReligiousSchools.find(school => {
+    const rank = localRankings[school.urn]?.la_rank
+    return rank === Math.min(...nonReligiousSchools.map(s => localRankings[s.urn]?.la_rank || Infinity))
+  })
+  
   // Debug logging
   console.log(`City: ${city}, CityDisplayName: ${cityDisplayName}, Schools: ${schools.length}, Inspections: ${totalSchoolsWithInspections}, Outstanding: ${outstandingSchools}, Good: ${goodSchools}`)
   
@@ -838,22 +1227,30 @@ export default async function CityPage({
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section - Dark Professional */}
       <div className="bg-gray-900 text-white">
-        <div className="container mx-auto px-4 md:px-6 py-6 md:py-16">
+        <div className="container mx-auto px-4 md:px-6 py-4 md:py-8">
           <div className="max-w-6xl">
             {/* Breadcrumbs */}
-            <nav className="mb-4 md:mb-6">
-              <div className="flex items-center space-x-2 text-sm text-gray-300">
+            <nav className="mb-3 md:mb-4">
+              <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-300">
                 <Link href="/" className="hover:text-white transition-colors">
                   Home
                 </Link>
                 <span className="text-gray-400">/</span>
-                {isLondonArea ? (
+                {isLocalAuthority ? (
                   <>
                     <Link href="/best-primary-schools-england" className="hover:text-white transition-colors">
                       England
                     </Link>
                     <span className="text-gray-400">/</span>
-                    <Link href="/best-primary-schools/london-overview" className="hover:text-white transition-colors">
+                    <span className="text-white font-medium">{cityDisplayName}</span>
+                  </>
+                ) : isLondonArea ? (
+                  <>
+                    <Link href="/best-primary-schools-england" className="hover:text-white transition-colors">
+                      England
+                    </Link>
+                    <span className="text-gray-400">/</span>
+                    <Link href="/best-primary-schools/london" className="hover:text-white transition-colors">
                       London
                     </Link>
                     <span className="text-gray-400">/</span>
@@ -871,12 +1268,12 @@ export default async function CityPage({
               </div>
             </nav>
             
-            <h1 className="text-3xl md:text-6xl font-bold mb-4 md:mb-6 leading-tight">Best Primary Schools in {cityDisplayName}</h1>
+            <h1 className="text-2xl md:text-4xl font-bold mb-3 md:mb-4 leading-tight">Best Primary Schools in {cityDisplayName}</h1>
             
             {/* London Districts List */}
             {londonDistricts.length > 0 && (
-              <div className="mb-4 md:mb-6">
-                <p className="text-gray-300 text-sm md:text-base mb-2">
+              <div className="mb-3 md:mb-4">
+                <p className="text-gray-300 text-xs md:text-sm mb-2">
                   Areas included: 
                 </p>
                 <div className="flex flex-wrap gap-1">
@@ -884,7 +1281,7 @@ export default async function CityPage({
                     <span key={district.postcode}>
                       <Link 
                         href={`/best-primary-schools/${district.name.toLowerCase().replace(/\s+/g, '-')}`}
-                        className="text-blue-300 hover:text-blue-100 hover:underline text-sm md:text-base"
+                        className="text-blue-300 hover:text-blue-100 hover:underline text-xs md:text-sm"
                       >
                         {district.name}
                       </Link>
@@ -897,14 +1294,14 @@ export default async function CityPage({
               </div>
             )}
             
-            <div className="flex flex-wrap items-center gap-3 md:gap-6 text-gray-300 text-sm md:text-lg">
+            <div className="flex flex-wrap items-center gap-2 md:gap-4 text-gray-300 text-xs md:text-sm">
               <span className="flex items-center gap-2">
                 <span className="text-gray-400">📍</span>
-                {cityDisplayName} Area
+                {isLocalAuthority ? `${cityDisplayName} Local Authority` : `${cityDisplayName} Area`}
               </span>
               <span className="flex items-center gap-2">
                 <span className="text-gray-400">🏛️</span>
-                {cityDisplayName} & Surrounding Areas
+                {isLocalAuthority ? `${cityDisplayName} Local Authority` : `${cityDisplayName} & Surrounding Areas`}
               </span>
               <span className="flex items-center gap-2">
                 <span className="text-gray-400">🎓</span>
@@ -914,23 +1311,53 @@ export default async function CityPage({
                 <span className="text-gray-400">📊</span>
                 {schools.length} Schools Listed
               </span>
+              {topRankedSchool && (
+                <span className="flex items-center gap-2 border border-yellow-400/30 bg-yellow-400/10 rounded-lg px-3 py-2 backdrop-blur-sm">
+                  <span className="text-yellow-400">⭐</span>
+                  <span>
+                    Best School in KS2 Results in {cityDisplayName}: 
+                    <Link 
+                      href={`/school/${topRankedSchool.urn}`} 
+                      className="ml-1 text-yellow-200 hover:text-white underline font-medium"
+                    >
+                      {topRankedSchool.establishmentname}
+                    </Link>
+                    <span className="text-gray-300 ml-1">(2024)</span>
+                  </span>
+                </span>
+              )}
+              {topNonReligiousSchool && (
+                <span className="flex items-center gap-2 border border-yellow-400/30 bg-yellow-400/10 rounded-lg px-3 py-2 backdrop-blur-sm">
+                  <span className="text-yellow-400">⭐</span>
+                  <span>
+                    Best Non-Religious School in KS2 Results in {cityDisplayName} (#{localRankings[topNonReligiousSchool.urn]?.la_rank}): 
+                    <Link 
+                      href={`/school/${topNonReligiousSchool.urn}`} 
+                      className="ml-1 text-yellow-200 hover:text-white underline font-medium"
+                    >
+                      {topNonReligiousSchool.establishmentname}
+                    </Link>
+                    <span className="text-gray-300 ml-1">(2024)</span>
+                  </span>
+                </span>
+              )}
             </div>
-            <div className="mt-4 md:mt-8 space-y-3 md:space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+            <div className="mt-3 md:mt-4 space-y-2 md:space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm md:text-lg font-medium text-gray-200">Coverage Area:</span>
-                  <span className="px-2 md:px-3 py-1 text-xs md:text-sm font-medium rounded bg-blue-100 text-blue-800">
-                    {cityDisplayName} Metropolitan Area
+                  <span className="text-xs md:text-sm font-medium text-gray-200">Coverage Area:</span>
+                  <span className="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800">
+                    {isLocalAuthority ? `${cityDisplayName} Local Authority` : `${cityDisplayName} Metropolitan Area`}
                   </span>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm md:text-lg font-medium text-gray-200">School Types:</span>
-                  <span className="px-2 md:px-3 py-1 text-xs md:text-sm font-medium rounded bg-green-100 text-green-800">
+                  <span className="text-xs md:text-sm font-medium text-gray-200">School Types:</span>
+                  <span className="px-2 py-1 text-xs font-medium rounded bg-green-100 text-green-800">
                     Primary Schools
                   </span>
-                  <span className="px-2 md:px-3 py-1 text-xs md:text-sm font-medium rounded bg-purple-100 text-purple-800">
+                  <span className="px-2 py-1 text-xs font-medium rounded bg-purple-100 text-purple-800">
                     All-through Schools
                   </span>
                 </div>
@@ -958,10 +1385,54 @@ export default async function CityPage({
       <div className="container mx-auto px-4 md:px-6 py-8">
         <div className="max-w-6xl">
 
+        {/* School Ranking Methodology */}
+        <div className="bg-blue-50 rounded-lg shadow-sm border border-blue-200 p-6 mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">How Schools Are Ranked in {cityDisplayName}</h3>
+          <div className="text-gray-600 text-sm leading-relaxed mb-3">
+            Ranking schools fairly and properly is an extremely difficult thing to achieve. Ofsted inspections do not always draw the full picture and sometimes are not even that frequent or may have old data.
+          </div>
+          <div className="text-gray-600 text-sm leading-relaxed mb-3">
+            What is important is how the pupils are performing in the exams. This is ultimately showing how good the school is and it's the only objective and fair evidence of the level and the quality of education a school gives.
+          </div>
+          <div className="text-gray-600 text-sm leading-relaxed">
+            That's why the following table has this score as the main ranking factor. You can read about the detailed ranking methodology <Link href="/how-school-rankings-work" className="text-blue-600 hover:text-blue-800 underline font-medium">here</Link>.
+          </div>
+        </div>
+
         {/* Key Highlights */}
         <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
           <h3 className="text-lg font-semibold text-gray-900 mb-3">Key Highlights for {cityDisplayName}</h3>
           <ul className="space-y-2 text-gray-700">
+            {topRankedSchool && (
+              <li className="flex items-start border border-yellow-400/30 bg-yellow-400/10 rounded-lg px-3 py-2 backdrop-blur-sm">
+                <span className="text-yellow-400 mr-2">⭐</span>
+                <span>
+                  Best School in KS2 Results in {cityDisplayName}: 
+                  <Link 
+                    href={`/school/${topRankedSchool.urn}`} 
+                    className="ml-1 text-yellow-600 hover:text-yellow-800 underline font-medium"
+                  >
+                    {topRankedSchool.establishmentname}
+                  </Link>
+                  <span className="text-gray-500 ml-1">(2024)</span>
+                </span>
+              </li>
+            )}
+            {topNonReligiousSchool && (
+              <li className="flex items-start border border-yellow-400/30 bg-yellow-400/10 rounded-lg px-3 py-2 backdrop-blur-sm">
+                <span className="text-yellow-400 mr-2">⭐</span>
+                <span>
+                  Best Non-Religious School in KS2 Results in {cityDisplayName} (#{localRankings[topNonReligiousSchool.urn]?.la_rank}): 
+                  <Link 
+                    href={`/school/${topNonReligiousSchool.urn}`} 
+                    className="ml-1 text-yellow-600 hover:text-yellow-800 underline font-medium"
+                  >
+                    {topNonReligiousSchool.establishmentname}
+                  </Link>
+                  <span className="text-gray-500 ml-1">(2024)</span>
+                </span>
+              </li>
+            )}
             <li className="flex items-start">
               <span className="text-green-500 mr-2">✓</span>
               <span>
@@ -1021,10 +1492,10 @@ export default async function CityPage({
         <div id="schools-table" className="bg-white rounded-lg shadow-sm border overflow-hidden">
           <div className="px-6 py-4 border-b bg-gray-50">
             <h2 className="text-xl font-semibold text-gray-900">
-              Primary Schools in {city} - Ranked by Rating
+              Primary Schools in {cityDisplayName} - Ranked by their KS2 Primary Results <span className="text-sm font-normal">(<Link href="/how-school-rankings-work" className="text-blue-600 hover:text-blue-800 underline">how is this calculated</Link>)</span>
             </h2>
             <p className="text-gray-600 mt-1">
-              Showing {schools.length} primary schools in {city} sorted by Ofsted rating and SchoolChecker.io calculated rating
+              Showing {schools.length} primary schools in {cityDisplayName} sorted by KS2 Primary Results
             </p>
           </div>
             
@@ -1033,6 +1504,8 @@ export default async function CityPage({
             inspections={inspections} 
             city={city} 
             initialFilter={initialFilter}
+            rankings={rankings}
+            localRankings={localRankings}
           />
           
           {schools.length === 0 && (

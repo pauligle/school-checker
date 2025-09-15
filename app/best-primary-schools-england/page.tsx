@@ -139,7 +139,7 @@ export default async function EnglandPage() {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
               <Link 
-                href="/best-primary-schools/london-overview"
+                href="/best-primary-schools/london"
                 className="text-blue-600 hover:text-blue-800 hover:underline"
               >
                 🏙️ London Primary Schools

@@ -95,24 +95,59 @@ export default async function LondonPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="bg-gray-900 text-white py-16">
-        <div className="container mx-auto px-4 md:px-6">
+      <div className="bg-gray-900 text-white">
+        <div className="container mx-auto px-4 md:px-6 py-4 md:py-8">
           <div className="max-w-6xl">
             {/* Breadcrumbs */}
-            <nav className="mb-8">
-              <div className="flex items-center space-x-2 text-sm">
-                <Link href="/" className="text-gray-300 hover:text-white">Home</Link>
+            <nav className="mb-3 md:mb-4">
+              <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-300">
+                <Link href="/" className="hover:text-white transition-colors">Home</Link>
                 <span className="text-gray-400">/</span>
-                <Link href="/best-primary-schools-england" className="text-gray-300 hover:text-white">Best Primary Schools</Link>
+                <Link href="/best-primary-schools" className="hover:text-white transition-colors">Primary Schools</Link>
                 <span className="text-gray-400">/</span>
-                <span className="text-white font-medium">London</span>
+                <Link href="/best-primary-schools-england" className="hover:text-white transition-colors">England</Link>
               </div>
             </nav>
             
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <h1 className="text-2xl md:text-4xl font-bold mb-3 md:mb-4 leading-tight">
               Best Primary Schools in London
             </h1>
-            <p className="text-xl text-gray-300">
+            <div className="flex flex-wrap items-center gap-2 md:gap-4 text-gray-300 text-xs md:text-sm">
+              <span className="flex items-center gap-2">
+                <span className="text-gray-400">🏛️</span>
+                London Metropolitan Area
+              </span>
+              <span className="flex items-center gap-2">
+                <span className="text-gray-400">🎓</span>
+                Primary & All-through Schools
+              </span>
+              <span className="flex items-center gap-2">
+                <span className="text-gray-400">📊</span>
+                {totalPrimarySchools} Schools Listed
+              </span>
+            </div>
+            <div className="mt-3 md:mt-4 space-y-2 md:space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs md:text-sm font-medium text-gray-200">Coverage Area:</span>
+                  <span className="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800">
+                    Greater London
+                  </span>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs md:text-sm font-medium text-gray-200">School Types:</span>
+                  <span className="px-2 py-1 text-xs font-medium rounded bg-green-100 text-green-800">
+                    Primary Schools
+                  </span>
+                  <span className="px-2 py-1 text-xs font-medium rounded bg-purple-100 text-purple-800">
+                    All-through Schools
+                  </span>
+                </div>
+              </div>
+            </div>
+            <p className="mt-3 md:mt-4 text-xs md:text-sm text-gray-300">
               Discover the best primary schools across all London areas. From North London to South London, find comprehensive rankings, Ofsted ratings, and detailed information for primary schools in every London postcode district.
             </p>
           </div>

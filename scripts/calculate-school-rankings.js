@@ -101,8 +101,22 @@ async function calculateSchoolRankings() {
             return aGap - bGap; // Smaller gap ranks higher
           }
           
-          // 4. Quaternary: URN (ascending - for final tie-breaking)
-          return a.urn - b.urn;
+          // 4. Quaternary: GPS Expected percentage (descending - for final tie-breaking)
+          const aGPS = a[gpsExpColumn] || 0;
+          const bGPS = b[gpsExpColumn] || 0;
+          if (bGPS !== aGPS) {
+            return bGPS - aGPS;
+          }
+          
+          // 5. Quinary: GPS Higher percentage (descending - for extra accuracy)
+          const aGPSHigher = a[gpsHighColumn] || 0;
+          const bGPSHigher = b[gpsHighColumn] || 0;
+          if (bGPSHigher !== aGPSHigher) {
+            return bGPSHigher - aGPSHigher;
+          }
+          
+          // If all criteria are identical, schools are considered tied
+          return 0;
         } else {
           // Neither has RWM data - compare GPS expected percentage
           const aGPS = a[gpsExpColumn] || 0;
@@ -116,8 +130,8 @@ async function calculateSchoolRankings() {
           if (bGPSHigher !== aGPSHigher) {
             return bGPSHigher - aGPSHigher;
           }
-          // Final tie-breaker: URN
-          return a.urn - b.urn;
+          // If all criteria are identical, schools are considered tied
+          return 0;
         }
       });
       

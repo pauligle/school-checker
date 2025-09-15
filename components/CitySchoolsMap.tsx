@@ -124,14 +124,96 @@ export default function CitySchoolsMap({ schools, city }: CitySchoolsMapProps) {
     'Portsmouth': [50.8198, -1.0880],
     'Bath': [51.3811, -2.3590],
     'Southampton': [50.9097, -1.4044],
-    'Cambridge': [52.2053, 0.1218]
+    'Cambridge': [52.2053, 0.1218],
+    
+    // Local Authorities
+    'Leicestershire': [52.6369, -1.1398], // Same as Leicester
+    'Norfolk': [52.6309, 1.2974], // Same as Norwich
+    'Suffolk': [52.1872, 0.9708], // Ipswich area
+    'Essex': [51.7356, 0.4686], // Chelmsford area
+    'Kent': [51.2787, 0.5217], // Maidstone area
+    'Surrey': [51.3148, -0.5600], // Guildford area
+    'Hampshire': [51.0579, -1.3081], // Winchester area
+    'Devon': [50.7156, -3.5309], // Exeter area
+    'Cornwall': [50.2660, -5.0527], // Truro area
+    'Somerset': [51.1051, -2.9262], // Taunton area
+    'Dorset': [50.7156, -2.4264], // Dorchester area
+    'Wiltshire': [51.3498, -1.9942], // Salisbury area
+    'Gloucestershire': [51.8642, -2.2381], // Gloucester area
+    'Oxfordshire': [51.7520, -1.2577], // Same as Oxford
+    'Buckinghamshire': [51.8133, -0.8097], // Aylesbury area
+    'Hertfordshire': [51.8098, -0.2377], // Hertford area
+    'Bedfordshire': [52.1351, -0.4663], // Bedford area
+    'Cambridgeshire': [52.2053, 0.1218], // Same as Cambridge
+    'Lincolnshire': [53.2307, -0.5408], // Lincoln area
+    'Nottinghamshire': [52.9548, -1.1581], // Same as Nottingham
+    'Derbyshire': [53.1056, -1.4756], // Derby area
+    'Leicestershire': [52.6369, -1.1398], // Same as Leicester
+    'Northamptonshire': [52.2405, -0.9027], // Northampton area
+    'Warwickshire': [52.2819, -1.5845], // Warwick area
+    'Staffordshire': [52.8067, -2.1167], // Stafford area
+    'Shropshire': [52.7069, -2.7528], // Shrewsbury area
+    'Herefordshire': [52.0567, -2.7167], // Hereford area
+    'Worcestershire': [52.1936, -2.2206], // Worcester area
+    'West Midlands': [52.4862, -1.8904], // Same as Birmingham
+    'Cheshire': [53.1906, -2.8919], // Chester area
+    'Greater Manchester': [53.4808, -2.2426], // Same as Manchester
+    'Lancashire': [53.7632, -2.7031], // Preston area
+    'Merseyside': [53.4084, -2.9916], // Same as Liverpool
+    'Greater London': [51.5074, -0.1278], // Same as London
+    'West Yorkshire': [53.8008, -1.5491], // Same as Leeds
+    'South Yorkshire': [53.3811, -1.4701], // Same as Sheffield
+    'North Yorkshire': [53.9590, -1.0815], // Same as York
+    'East Yorkshire': [53.7676, -0.3274], // Hull area
+    'Tyne and Wear': [54.9783, -1.6178], // Same as Newcastle
+    'Northumberland': [55.2083, -2.0785], // Morpeth area
+    'Durham': [54.7794, -1.5756], // Durham area
+    'Cumbria': [54.8952, -2.9441], // Carlisle area
+    'North East': [54.9783, -1.6178], // Newcastle area
+    'North West': [53.4808, -2.2426], // Manchester area
+    'Yorkshire and the Humber': [53.8008, -1.5491], // Leeds area
+    'East Midlands': [52.6369, -1.1398], // Leicester area
+    'West Midlands': [52.4862, -1.8904], // Birmingham area
+    'East of England': [52.2053, 0.1218], // Cambridge area
+    'London': [51.5074, -0.1278], // London
+    'South East': [51.2787, 0.5217], // Kent area
+    'South West': [50.7156, -3.5309] // Devon area
   }
 
-  // Find city coordinates with case-insensitive lookup
-  const cityKey = Object.keys(cityCoordinates).find(key => 
-    key.toLowerCase() === city.toLowerCase()
-  )
-  const center = cityKey ? cityCoordinates[cityKey] : [53.8008, -1.5491] // Default to Leeds
+  // Find city coordinates with improved lookup logic
+  const cityKey = Object.keys(cityCoordinates).find(key => {
+    const keyLower = key.toLowerCase()
+    const cityLower = city.toLowerCase()
+    
+    // Direct match
+    if (keyLower === cityLower) return true
+    
+    // Handle common variations
+    if (cityLower === 'leicestershire' && keyLower === 'leicester') return true
+    if (cityLower === 'newcastle-upon-tyne' && keyLower === 'newcastle upon tyne') return true
+    if (cityLower === 'barking-and-dagenham' && keyLower === 'barking and dagenham') return true
+    if (cityLower === 'woodford-and-south-woodford' && keyLower === 'woodford and south woodford') return true
+    if (cityLower === 'victoria-docks-and-north-woolwich' && keyLower === 'victoria docks and north woolwich') return true
+    if (cityLower === 'stoke-newington' && keyLower === 'stoke newington') return true
+    if (cityLower === 'east-ham' && keyLower === 'east ham') return true
+    if (cityLower === 'forest-gate' && keyLower === 'forest gate') return true
+    if (cityLower === 'manor-park' && keyLower === 'manor park') return true
+    if (cityLower === 'west-ealing' && keyLower === 'west ealing') return true
+    if (cityLower === 'maida-hill' && keyLower === 'maida hill') return true
+    if (cityLower === 'ladbroke-grove' && keyLower === 'ladbroke grove') return true
+    if (cityLower === 'shepherds-bush' && keyLower === 'shepherds bush') return true
+    if (cityLower === 'west-kensington' && keyLower === 'west kensington') return true
+    if (cityLower === 'notting-hill' && keyLower === 'notting hill') return true
+    if (cityLower === 'south-east-london' && keyLower === 'south east london') return true
+    if (cityLower === 'south-west-london' && keyLower === 'south west london') return true
+    if (cityLower === 'north-west-london' && keyLower === 'north west london') return true
+    if (cityLower === 'eastern-central-london' && keyLower === 'eastern central london') return true
+    if (cityLower === 'western-central-london' && keyLower === 'western central london') return true
+    
+    return false
+  })
+  
+  const center = cityKey ? cityCoordinates[cityKey] : [51.5074, -0.1278] // Default to London instead of Leeds
   const zoom = 10
 
   return (

@@ -72,7 +72,7 @@ export default function RootLayout({
                     <Link href="/best-primary-schools-england" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                       England
                     </Link>
-                    <Link href="/best-primary-schools/london-overview" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <Link href="/best-primary-schools/london" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                       London
                     </Link>
                     <Link href="/best-primary-schools/manchester" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
@@ -144,7 +144,7 @@ export default function RootLayout({
                     <Link href="/best-primary-schools-england" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
                       England
                     </Link>
-                    <Link href="/best-primary-schools/london-overview" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
+                    <Link href="/best-primary-schools/london" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
                       London
                     </Link>
                     <Link href="/best-primary-schools/manchester" className="block text-sm text-gray-600 hover:text-blue-600 py-1" onClick={closeMobileMenu}>
@@ -231,7 +231,7 @@ export default function RootLayout({
                 <h3 className="text-lg font-semibold">Primary Schools</h3>
                 <ul className="space-y-2 text-sm">
                   <li><Link href="/best-primary-schools-england" className="text-gray-300 hover:text-white transition-colors">England</Link></li>
-                  <li><Link href="/best-primary-schools/london-overview" className="text-gray-300 hover:text-white transition-colors">London</Link></li>
+                  <li><Link href="/best-primary-schools/london" className="text-gray-300 hover:text-white transition-colors">London</Link></li>
                   <li><Link href="/best-primary-schools/manchester" className="text-gray-300 hover:text-white transition-colors">Manchester</Link></li>
                   <li><Link href="/best-primary-schools/birmingham" className="text-gray-300 hover:text-white transition-colors">Birmingham</Link></li>
                   <li><Link href="/best-primary-schools/leeds" className="text-gray-300 hover:text-white transition-colors">Leeds</Link></li>
@@ -245,6 +245,7 @@ export default function RootLayout({
                 <ul className="space-y-2 text-sm">
                   <li><Link href="/blog" className="text-gray-300 hover:text-white transition-colors">Blog</Link></li>
                   <li><Link href="/schoolchecker-rating" className="text-gray-300 hover:text-white transition-colors">Schoolchecker Rating Calculation</Link></li>
+                  <li><Link href="/how-school-rankings-work" className="text-gray-300 hover:text-white transition-colors">Primary School KS2 Rankings</Link></li>
                   <li><Link href="/privacy" className="text-gray-300 hover:text-white transition-colors">Privacy Policy</Link></li>
                   <li><Link href="/terms" className="text-gray-300 hover:text-white transition-colors">Terms of Service</Link></li>
                   <li><Link href="/help" className="text-gray-300 hover:text-white transition-colors">Help Center</Link></li>
