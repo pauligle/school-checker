@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
 import ClientSchoolsMap from '@/components/ClientSchoolsMap';
 import PrimaryResultsCard from '@/components/PrimaryResultsCard';
+import AdmissionsCard from '@/components/AdmissionsCard';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -279,12 +280,13 @@ async function getSchoolData(slug: string): Promise<{
   inspection: InspectionData | null;
   ranking: any | null;
   laRanking: any | null;
+  admissionsData: { [year: string]: any } | null;
 }> {
   try {
     // Extract URN from slug (format: school-name-urn)
     const urn = slug.split('-').pop();
     if (!urn || isNaN(Number(urn))) {
-      return { school: null, inspection: null, ranking: null, laRanking: null };
+      return { school: null, inspection: null, ranking: null, laRanking: null, admissionsData: null };
     }
 
     // Get school data
@@ -295,7 +297,7 @@ async function getSchoolData(slug: string): Promise<{
       .single();
 
     if (schoolError || !schoolData) {
-      return { school: null, inspection: null, ranking: null, laRanking: null };
+      return { school: null, inspection: null, ranking: null, laRanking: null, admissionsData: null };
     }
 
     // Get latest inspection data
@@ -401,21 +403,100 @@ async function getSchoolData(slug: string): Promise<{
       console.error('Error fetching LA ranking:', error);
     }
 
+    // Get admissions data for all years
+    let admissionsData: { [year: string]: any } = {};
+    try {
+      const years = ['202526', '202425', '202324', '202223'];
+      const schoolName = schoolData.establishmentname;
+      const schoolPhase = schoolData.phaseofeducation__name_ === 'All-through' ? 'Primary' : schoolData.phaseofeducation__name_;
+
+      for (const year of years) {
+        try {
+          let query = supabase
+            .from('admissions')
+            .select('*')
+            .eq('school_phase', schoolPhase)
+            .eq('time_period', year);
+
+          // Try school name first, then URN
+          if (schoolName) {
+            query = query.ilike('school_name', `%${schoolName}%`);
+          } else {
+            query = query.eq('school_urn', urn);
+          }
+
+          const { data: yearData, error: yearError } = await query.limit(1);
+          
+          if (!yearError && yearData && yearData.length > 0) {
+            const data = yearData[0];
+            // Calculate additional metrics
+            const isOversubscribed = data.times_put_as_1st_preference > data.number_1st_preference_offers;
+            const oversubscriptionRate = data.times_put_as_1st_preference > 0 
+              ? ((data.times_put_as_1st_preference - data.number_1st_preference_offers) / data.number_1st_preference_offers * 100)
+              : 0;
+
+            const successRate = data.total_places_offered > 0 
+              ? (data.total_offers / data.total_places_offered) * 100
+              : 0;
+            const competitionRatio = data.total_offers > 0 
+              ? data.total_applications / data.total_offers
+              : 0;
+
+            admissionsData[year] = {
+              school_name: data.school_name,
+              school_urn: data.school_urn,
+              la_name: data.la_name,
+              school_phase: data.school_phase,
+              time_period: data.time_period,
+              is_oversubscribed: isOversubscribed,
+              oversubscription_rate: oversubscriptionRate,
+              total_applications: data.times_put_as_any_preferred_school,
+              first_preference_applications: data.times_put_as_1st_preference,
+              second_preference_applications: data.times_put_as_2nd_preference,
+              third_preference_applications: data.times_put_as_3rd_preference,
+              applications_from_another_la: data.applications_from_another_la,
+              total_offers: data.total_places_offered,
+              first_preference_offers: data.number_1st_preference_offers,
+              second_preference_offers: data.number_2nd_preference_offers,
+              third_preference_offers: data.number_3rd_preference_offers,
+              total_preferred_offers: data.number_preferred_offers,
+              offers_to_another_la: data.offers_to_another_la,
+              success_rate: Math.round(successRate * 100) / 100,
+              competition_ratio: Math.round(competitionRatio * 100) / 100,
+              establishment_type: data.establishment_type,
+              denomination: data.denomination,
+              admissions_policy: data.admissions_policy,
+              fsm_eligible_percent: data.fsm_eligible_percent,
+              urban_rural: data.urban_rural,
+              allthrough_school: data.allthrough_school,
+              proportion_1stprefs_v_1stprefoffers: data.proportion_1stprefs_v_1stprefoffers,
+              proportion_1stprefs_v_totaloffers: data.proportion_1stprefs_v_totaloffers,
+            };
+          }
+        } catch (yearError) {
+          console.error(`Error fetching admissions data for year ${year}:`, yearError);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching admissions data:', error);
+    }
+
     return {
       school: schoolData as SchoolData,
       inspection: inspectionData as InspectionData,
       ranking: rankingData,
-      laRanking: laRankingData
+      laRanking: laRankingData,
+      admissionsData: Object.keys(admissionsData).length > 0 ? admissionsData : null
     };
   } catch (error) {
     console.error('Error fetching school data:', error);
-    return { school: null, inspection: null, ranking: null, laRanking: null };
+    return { school: null, inspection: null, ranking: null, laRanking: null, admissionsData: null };
   }
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const { school, inspection, ranking, laRanking } = await getSchoolData(slug);
+  const { school, inspection, ranking, laRanking, admissionsData } = await getSchoolData(slug);
   
   if (!school) {
     return {
@@ -482,7 +563,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
   const { slug } = await params;
   
   try {
-    const { school, inspection, ranking, laRanking } = await getSchoolData(slug);
+    const { school, inspection, ranking, laRanking, admissionsData } = await getSchoolData(slug);
 
     // Get city from postcode for breadcrumbs
     const city = school?.postcode ? getCityFromPostcode(school.postcode) : null;
@@ -1140,6 +1221,22 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
               Primary Results
             </h2>
             <PrimaryResultsCard schoolData={school} />
+          </div>
+
+          {/* Admissions Section */}
+          <div className="bg-white rounded-lg shadow-sm p-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+              <span className="w-1 h-8 bg-blue-600 rounded"></span>
+              Admissions
+            </h2>
+            
+            
+            <AdmissionsCard 
+              urn={school.urn} 
+              schoolName={school.establishmentname}
+              phase={school.phaseofeducation__name_}
+              preloadedData={admissionsData}
+            />
           </div>
 
         </div>

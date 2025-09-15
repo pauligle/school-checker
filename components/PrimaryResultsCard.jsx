@@ -166,22 +166,22 @@ const PrimaryResultsCard = ({ schoolData }) => {
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       {/* Warning Banner */}
-      <div className="bg-amber-50 border border-amber-200 rounded p-4 mb-4">
-        <div className="text-sm text-amber-800">
+      <div className="bg-amber-50 border border-amber-200 rounded p-2 mb-2">
+        <div className="text-xs text-amber-800">
           <strong>2025 exam results have not yet been published.</strong> You can check the DfE publication timetable{' '}
           <a href="https://www.compare-school-performance.service.gov.uk/publication-timetable" target="_blank" rel="noopener noreferrer" className="text-amber-600 underline hover:text-amber-800">here</a>.
         </div>
       </div>
 
       {/* Year Selection Tabs */}
-      <div className="flex space-x-2 pb-4 justify-start">
+      <div className="flex space-x-1 pb-2 justify-start">
         {years.map((year) => (
           <button
             key={year}
             onClick={() => handleYearChange(year)}
-            className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
+            className={`px-2 py-1 text-xs font-medium rounded transition-all duration-200 ${
               selectedYear === year
                 ? 'bg-gray-100 text-gray-900 border border-gray-300'
                 : 'bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200'
@@ -208,12 +208,12 @@ const PrimaryResultsCard = ({ schoolData }) => {
                                 betterPercentage <= 50 ? 'top 50%' : 'bottom 50%';
           
           return (
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
-              <div className="flex items-center space-x-2">
-                <span className="text-base font-medium text-gray-700">
+            <div className="bg-gray-50 border border-gray-200 rounded p-2 mb-3">
+              <div className="flex items-center space-x-1">
+                <span className="text-sm font-medium text-gray-700">
                   Ranked {ranking.rwm_rank.toLocaleString()} of {ranking.total_schools.toLocaleString()} schools ({percentileText})
                 </span>
-                <span className="text-sm text-gray-500">¹</span>
+                <span className="text-xs text-gray-500">¹</span>
               </div>
             </div>
           );
@@ -270,31 +270,31 @@ const PrimaryResultsCard = ({ schoolData }) => {
 
       {/* Reading, Writing and Maths Table */}
       <div className="border border-blue-200 rounded overflow-hidden bg-white shadow-sm">
-        <div className="bg-blue-50 px-6 py-4 border-b border-blue-200">
-          <h3 className="text-lg font-semibold text-blue-800">Reading, writing and maths</h3>
+        <div className="bg-blue-50 px-3 py-2 border-b border-blue-200">
+          <h3 className="text-sm font-semibold text-blue-800">Reading, writing and maths</h3>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-base">
+          <table className="w-full text-xs">
             <thead>
               <tr className="bg-blue-25 border-b border-blue-100">
-                <th className="text-left py-3 px-6 font-semibold text-blue-900"></th>
-                <th className="text-center py-3 px-6 font-semibold text-blue-900">School</th>
-                <th className="text-center py-3 px-6 font-semibold text-blue-900">LA</th>
-                <th className="text-center py-3 px-6 font-semibold text-blue-900">England</th>
+                <th className="text-left py-2 px-3 font-semibold text-blue-900"></th>
+                <th className="text-center py-2 px-3 font-semibold text-blue-900">School</th>
+                <th className="text-center py-2 px-3 font-semibold text-blue-900">LA</th>
+                <th className="text-center py-2 px-3 font-semibold text-blue-900">England</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-blue-50">
               <tr className="hover:bg-blue-25">
-                <td className="py-3 px-6 font-semibold text-blue-900">Pupils meeting the expected standard</td>
-                <td className="py-3 px-6 text-center text-blue-800 font-medium">{school.rwm_expected_percentage || 'N/A'}%</td>
-                <td className="py-3 px-6 text-center text-blue-700">{laAverages?.rwm_expected_percentage || 'N/A'}%</td>
-                <td className="py-3 px-6 text-center text-blue-700">{englandAverages?.rwm_expected_percentage || 'N/A'}%</td>
+                <td className="py-2 px-3 font-semibold text-blue-900">Pupils meeting the expected standard</td>
+                <td className="py-2 px-3 text-center text-blue-800 font-medium">{school.rwm_expected_percentage || 'N/A'}%</td>
+                <td className="py-2 px-3 text-center text-blue-700">{laAverages?.rwm_expected_percentage || 'N/A'}%</td>
+                <td className="py-2 px-3 text-center text-blue-700">{englandAverages?.rwm_expected_percentage || 'N/A'}%</td>
               </tr>
               <tr className="hover:bg-blue-25">
-                <td className="py-3 px-6 font-semibold text-blue-900">Pupils achieving at a higher standard</td>
-                <td className="py-3 px-6 text-center text-blue-800 font-medium">{school.rwm_higher_percentage || 'N/A'}%</td>
-                <td className="py-3 px-6 text-center text-blue-700">{laAverages?.rwm_higher_percentage || 'N/A'}%</td>
-                <td className="py-3 px-6 text-center text-blue-700">{englandAverages?.rwm_higher_percentage || 'N/A'}%</td>
+                <td className="py-2 px-3 font-semibold text-blue-900">Pupils achieving at a higher standard</td>
+                <td className="py-2 px-3 text-center text-blue-800 font-medium">{school.rwm_higher_percentage || 'N/A'}%</td>
+                <td className="py-2 px-3 text-center text-blue-700">{laAverages?.rwm_higher_percentage || 'N/A'}%</td>
+                <td className="py-2 px-3 text-center text-blue-700">{englandAverages?.rwm_higher_percentage || 'N/A'}%</td>
               </tr>
             </tbody>
           </table>
@@ -304,46 +304,46 @@ const PrimaryResultsCard = ({ schoolData }) => {
 
       {/* Average Scaled Score Table */}
       <div className="border border-emerald-200 rounded overflow-hidden bg-white shadow-sm">
-        <div className="bg-emerald-50 px-6 py-4 border-b border-emerald-200">
-          <div className="flex items-center space-x-2">
-            <h3 className="text-lg font-semibold text-emerald-800">Average scaled score</h3>
-            <svg className="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+        <div className="bg-emerald-50 px-3 py-2 border-b border-emerald-200">
+          <div className="flex items-center space-x-1">
+            <h3 className="text-sm font-semibold text-emerald-800">Average scaled score</h3>
+            <svg className="w-3 h-3 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
             </svg>
           </div>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-base">
+          <table className="w-full text-xs">
             <thead>
               <tr className="bg-emerald-25 border-b border-emerald-100">
-                <th className="text-left py-3 px-6 font-semibold text-emerald-900"></th>
-                <th className="text-center py-3 px-6 font-semibold text-emerald-900">School</th>
-                <th className="text-center py-3 px-6 font-semibold text-emerald-900">LA</th>
-                <th className="text-center py-3 px-6 font-semibold text-emerald-900">England</th>
+                <th className="text-left py-2 px-3 font-semibold text-emerald-900"></th>
+                <th className="text-center py-2 px-3 font-semibold text-emerald-900">School</th>
+                <th className="text-center py-2 px-3 font-semibold text-emerald-900">LA</th>
+                <th className="text-center py-2 px-3 font-semibold text-emerald-900">England</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-emerald-50">
               <tr className="hover:bg-emerald-25">
-                <td className="py-3 px-6 font-semibold text-emerald-900">Reading</td>
-                <td className="py-3 px-6 text-center text-emerald-800 font-medium">
+                <td className="py-2 px-3 font-semibold text-emerald-900">Reading</td>
+                <td className="py-2 px-3 text-center text-emerald-800 font-medium">
                   {school.reading_average_score ? school.reading_average_score : 'N/A'}
                 </td>
-                <td className="py-3 px-6 text-center text-emerald-700">
+                <td className="py-2 px-3 text-center text-emerald-700">
                   {laAverages?.reading_average_score ? laAverages.reading_average_score : 'N/A'}
                 </td>
-                <td className="py-3 px-6 text-center text-emerald-700">
+                <td className="py-2 px-3 text-center text-emerald-700">
                   {englandAverages?.reading_average_score ? englandAverages.reading_average_score : 'N/A'}
                 </td>
               </tr>
               <tr className="hover:bg-emerald-25">
-                <td className="py-3 px-6 font-semibold text-emerald-900">Maths</td>
-                <td className="py-3 px-6 text-center text-emerald-800 font-medium">
+                <td className="py-2 px-3 font-semibold text-emerald-900">Maths</td>
+                <td className="py-2 px-3 text-center text-emerald-800 font-medium">
                   {school.maths_average_score ? school.maths_average_score : 'N/A'}
                 </td>
-                <td className="py-3 px-6 text-center text-emerald-700">
+                <td className="py-2 px-3 text-center text-emerald-700">
                   {laAverages?.maths_average_score ? laAverages.maths_average_score : 'N/A'}
                 </td>
-                <td className="py-3 px-6 text-center text-emerald-700">
+                <td className="py-2 px-3 text-center text-emerald-700">
                   {englandAverages?.maths_average_score ? englandAverages.maths_average_score : 'N/A'}
                 </td>
               </tr>
@@ -354,16 +354,16 @@ const PrimaryResultsCard = ({ schoolData }) => {
 
       {/* Scaled Scores Note */}
       {(!school.reading_average_score || !school.maths_average_score) && (
-        <div className="bg-amber-50 border border-amber-200 rounded p-4">
-          <div className="text-sm text-amber-800">
+        <div className="bg-amber-50 border border-amber-200 rounded p-2">
+          <div className="text-xs text-amber-800">
             Average scaled scores are not available for this year. This may be due to data collection changes or the year being before scaled scores were introduced.
           </div>
         </div>
       )}
 
       {/* Information Box */}
-      <div className="bg-blue-50 border border-blue-200 rounded p-4">
-        <div className="text-sm text-blue-800">
+      <div className="bg-blue-50 border border-blue-200 rounded p-2">
+        <div className="text-xs text-blue-800">
           The Department for Education have not produced KS1 to KS2 progress (value-added) measures for this year. 
           This is because there is no KS1 baseline available to calculate primary progress measures for 2023/24 and 2024/25 due to Covid-19 disruption.
         </div>
@@ -372,31 +372,31 @@ const PrimaryResultsCard = ({ schoolData }) => {
       {/* Grammar, Punctuation and Spelling Table - Only show for 2023 and 2024 */}
       {(selectedYear === '2023' || selectedYear === '2024') && (
         <div className="border border-purple-200 rounded overflow-hidden bg-white shadow-sm">
-          <div className="bg-purple-50 px-6 py-4 border-b border-purple-200">
-            <h3 className="text-lg font-semibold text-purple-800">Grammar, punctuation and spelling</h3>
+          <div className="bg-purple-50 px-3 py-2 border-b border-purple-200">
+            <h3 className="text-sm font-semibold text-purple-800">Grammar, punctuation and spelling</h3>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-base">
+            <table className="w-full text-xs">
               <thead>
                 <tr className="bg-purple-25 border-b border-purple-100">
-                  <th className="text-left py-3 px-6 font-semibold text-purple-900"></th>
-                  <th className="text-center py-3 px-6 font-semibold text-purple-900">School</th>
-                  <th className="text-center py-3 px-6 font-semibold text-purple-900">LA</th>
-                  <th className="text-center py-3 px-6 font-semibold text-purple-900">England</th>
+                  <th className="text-left py-2 px-3 font-semibold text-purple-900"></th>
+                  <th className="text-center py-2 px-3 font-semibold text-purple-900">School</th>
+                  <th className="text-center py-2 px-3 font-semibold text-purple-900">LA</th>
+                  <th className="text-center py-2 px-3 font-semibold text-purple-900">England</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-purple-50">
                 <tr className="hover:bg-purple-25">
-                  <td className="py-3 px-6 font-semibold text-purple-900">Pupils meeting the expected standard</td>
-                  <td className="py-3 px-6 text-center text-purple-800 font-medium">{school.gps_expected_percentage || 'N/A'}%</td>
-                  <td className="py-3 px-6 text-center text-purple-700">{laAverages?.gps_expected_percentage || 'N/A'}%</td>
-                  <td className="py-3 px-6 text-center text-purple-700">{englandAverages?.gps_expected_percentage || 'N/A'}%</td>
+                  <td className="py-2 px-3 font-semibold text-purple-900">Pupils meeting the expected standard</td>
+                  <td className="py-2 px-3 text-center text-purple-800 font-medium">{school.gps_expected_percentage || 'N/A'}%</td>
+                  <td className="py-2 px-3 text-center text-purple-700">{laAverages?.gps_expected_percentage || 'N/A'}%</td>
+                  <td className="py-2 px-3 text-center text-purple-700">{englandAverages?.gps_expected_percentage || 'N/A'}%</td>
                 </tr>
                 <tr className="hover:bg-purple-25">
-                  <td className="py-3 px-6 font-semibold text-purple-900">Pupils achieving at a higher standard</td>
-                  <td className="py-3 px-6 text-center text-purple-800 font-medium">{school.gps_higher_percentage || 'N/A'}%</td>
-                  <td className="py-3 px-6 text-center text-purple-700">{laAverages?.gps_higher_percentage || 'N/A'}%</td>
-                  <td className="py-3 px-6 text-center text-purple-700">{englandAverages?.gps_higher_percentage || 'N/A'}%</td>
+                  <td className="py-2 px-3 font-semibold text-purple-900">Pupils achieving at a higher standard</td>
+                  <td className="py-2 px-3 text-center text-purple-800 font-medium">{school.gps_higher_percentage || 'N/A'}%</td>
+                  <td className="py-2 px-3 text-center text-purple-700">{laAverages?.gps_higher_percentage || 'N/A'}%</td>
+                  <td className="py-2 px-3 text-center text-purple-700">{englandAverages?.gps_higher_percentage || 'N/A'}%</td>
                 </tr>
               </tbody>
             </table>

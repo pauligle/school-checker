@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import SchoolInspectionCard from './SchoolInspectionCard';
 import PrimaryResultsCard from './PrimaryResultsCard';
+import AdmissionsCard from './AdmissionsCard';
 
 const SchoolDetailsCard = ({ 
   selectedSchool, 
@@ -16,6 +17,9 @@ const SchoolDetailsCard = ({
   const [primaryResultsChecked, setPrimaryResultsChecked] = useState(false);
   const [pupilData, setPupilData] = useState(null);
   const [pupilDataLoaded, setPupilDataLoaded] = useState(false);
+  const [hasAdmissionsData, setHasAdmissionsData] = useState(false);
+  const [admissionsDataChecked, setAdmissionsDataChecked] = useState(false);
+  const [admissionsData, setAdmissionsData] = useState(null);
 
   // Calculate School Checker Inspection Rating (same logic as SchoolInspectionCard)
   const calculateSchoolCheckerRating = (inspection) => {
@@ -104,6 +108,9 @@ const SchoolDetailsCard = ({
     setPrimaryRanking(null);
     setPupilData(null);
     setPupilDataLoaded(false);
+    setAdmissionsDataChecked(false);
+    setHasAdmissionsData(false);
+    setAdmissionsData(null);
   }, [selectedSchool?.urn]);
 
   // Check if school has primary results data (only once per school)
@@ -138,6 +145,34 @@ const SchoolDetailsCard = ({
 
     checkPrimaryResults();
   }, [selectedSchool?.urn, primaryResultsChecked]);
+
+  // Check if school has admissions data (only once per school)
+  useEffect(() => {
+    const checkAdmissionsData = async () => {
+      if (!selectedSchool?.urn || admissionsDataChecked) {
+        return;
+      }
+
+      try {
+        // Check if school has any admissions data by trying to fetch 2025 data
+        const response = await fetch(`/api/admissions?schoolName=${encodeURIComponent(selectedSchool.establishmentname)}&phase=${selectedSchool.phaseofeducation__name_ === 'All-through' ? 'Primary' : selectedSchool.phaseofeducation__name_}&year=202526`);
+        if (response.ok) {
+          const data = await response.json();
+          setHasAdmissionsData(true);
+          setAdmissionsData(data);
+        } else {
+          setHasAdmissionsData(false);
+        }
+      } catch (error) {
+        console.error('Error checking admissions data:', error);
+        setHasAdmissionsData(false);
+      } finally {
+        setAdmissionsDataChecked(true);
+      }
+    };
+
+    checkAdmissionsData();
+  }, [selectedSchool?.urn, admissionsDataChecked]);
 
   // Fetch pupil data when pupils tab is accessed
   useEffect(() => {
@@ -334,6 +369,30 @@ const SchoolDetailsCard = ({
               <span className="text-gray-400">+</span>
             </button>
           )}
+          {/* Only show Admissions tab if school has admissions data */}
+          {hasAdmissionsData && (
+            <button
+              onClick={() => setActiveTab('admissions')}
+              className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded transition-colors ${
+                activeTab === 'admissions'
+                  ? 'bg-blue-50 text-blue-600 border border-blue-200'
+                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <span>🎯</span>
+                <span>Admissions</span>
+                {admissionsData && (
+                  <span className={`text-white text-xs px-2 py-1 rounded-full font-medium ${
+                    admissionsData.is_oversubscribed ? 'bg-red-600' : 'bg-green-600'
+                  }`}>
+                    {admissionsData.is_oversubscribed ? 'Oversubscribed' : 'Not Oversubscribed'}
+                  </span>
+                )}
+              </div>
+              <span className="text-gray-400">+</span>
+            </button>
+          )}
           <button
             onClick={() => setActiveTab('gcse-results')}
             className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded transition-colors ${
@@ -370,62 +429,62 @@ const SchoolDetailsCard = ({
           <div className={`overflow-hidden transition-all duration-300 ${activeTab === 'details' ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'}`}>
             <div className="pt-4">
               {/* School Details */}
-              <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                <div className="bg-gray-200 px-4 py-3 border-b border-gray-200">
-                  <h3 className="text-base font-semibold text-gray-800">School Details</h3>
+              <div className="bg-white border border-gray-200 rounded overflow-hidden">
+                <div className="bg-gray-200 px-2 py-1 border-b border-gray-200">
+                  <h3 className="text-xs font-semibold text-gray-800">School Details</h3>
               </div>
                 <div className="overflow-visible">
-                  <table className="w-full text-sm">
+                  <table className="w-full text-xs">
                     <thead>
                       <tr className="bg-gray-50 border-b border-gray-200">
-                        <th className="text-left py-2 px-3 font-medium text-gray-700 border-r border-gray-200">Detail</th>
-                        <th className="text-right py-2 px-3 font-medium text-gray-700">Value</th>
+                        <th className="text-left py-1 px-2 font-medium text-gray-700 border-r border-gray-200">Detail</th>
+                        <th className="text-right py-1 px-2 font-medium text-gray-700">Value</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Phase</td>
-                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.phaseofeducation__name_ || 'N/A'}</td>
+                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Phase</td>
+                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.phaseofeducation__name_ || 'N/A'}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Type</td>
-                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.typeofestablishment__name_ || 'N/A'}</td>
+                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Type</td>
+                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.typeofestablishment__name_ || 'N/A'}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Age Range</td>
-                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.statutorylowage}-{selectedSchool.statutoryhighage}</td>
+                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Age Range</td>
+                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.statutorylowage}-{selectedSchool.statutoryhighage}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Gender</td>
-                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.gender__name_ || 'Mixed'}</td>
+                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Gender</td>
+                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.gender__name_ || 'Mixed'}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Coeducational Sixth Form</td>
-                        <td className="py-2 px-3 text-right text-gray-800">Yes</td>
+                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Coeducational Sixth Form</td>
+                        <td className="py-1 px-2 text-right text-gray-800">Yes</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Has Nursery</td>
-                        <td className="py-2 px-3 text-right text-gray-800">Yes</td>
+                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Has Nursery</td>
+                        <td className="py-1 px-2 text-right text-gray-800">Yes</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Religious Character</td>
-                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.religiouscharacter__name_ || 'Does not apply'}</td>
+                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Religious Character</td>
+                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.religiouscharacter__name_ || 'Does not apply'}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Principal</td>
-                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.headtitle__name_ || ''} {selectedSchool.headfirstname || ''} {selectedSchool.headlastname || ''}</td>
+                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Principal</td>
+                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.headtitle__name_ || ''} {selectedSchool.headfirstname || ''} {selectedSchool.headlastname || ''}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Address</td>
-                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.street}, {selectedSchool.town}, {selectedSchool.postcode}</td>
+                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Address</td>
+                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.street}, {selectedSchool.town}, {selectedSchool.postcode}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Phone Number</td>
-                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.telephonenum || 'N/A'}</td>
+                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Phone Number</td>
+                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.telephonenum || 'N/A'}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Website</td>
-                        <td className="py-2 px-3 text-right text-gray-800">
+                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Website</td>
+                        <td className="py-1 px-2 text-right text-gray-800">
                 {selectedSchool.schoolwebsite ? (
                   <a 
                     href={selectedSchool.schoolwebsite.startsWith('http') ? selectedSchool.schoolwebsite : `https://${selectedSchool.schoolwebsite}`}
@@ -441,8 +500,8 @@ const SchoolDetailsCard = ({
                         </td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Academy Sponsor</td>
-                        <td className="py-2 px-3 text-right text-gray-800">
+                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Academy Sponsor</td>
+                        <td className="py-1 px-2 text-right text-gray-800">
                 {selectedSchool.trusts__code_ && selectedSchool.trusts__name_ ? (
                   <a 
                     href={`https://www.compare-school-performance.service.gov.uk/multi-academy-trust/${selectedSchool.trusts__code_}/${selectedSchool.trusts__name_.toLowerCase().replace(/\s+/g, '-')}`}
@@ -458,12 +517,12 @@ const SchoolDetailsCard = ({
                         </td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Local Authority</td>
-                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.la__name_ || 'N/A'}</td>
+                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Local Authority</td>
+                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.la__name_ || 'N/A'}</td>
                       </tr>
                       <tr className="border-b border-gray-100 last:border-b-0">
-                        <td className="py-2 px-3 text-gray-800 border-r border-gray-200">Unique Reference Number</td>
-                        <td className="py-2 px-3 text-right text-gray-800">{selectedSchool.urn || 'N/A'}</td>
+                        <td className="py-1 px-2 text-gray-800 border-r border-gray-200">Unique Reference Number</td>
+                        <td className="py-1 px-2 text-right text-gray-800">{selectedSchool.urn || 'N/A'}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -685,6 +744,20 @@ const SchoolDetailsCard = ({
             <div className={`overflow-hidden transition-all duration-300 ${activeTab === 'primary-results' ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'}`}>
               <div className="pt-4">
                 <PrimaryResultsCard schoolData={selectedSchool} />
+              </div>
+            </div>
+          )}
+
+          {/* Admissions Tab Content - Only show if school has admissions data */}
+          {hasAdmissionsData && (
+            <div className={`overflow-hidden transition-all duration-300 ${activeTab === 'admissions' ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'}`}>
+              <div className="pt-4">
+                <AdmissionsCard 
+                  urn={selectedSchool.urn} 
+                  schoolName={selectedSchool.establishmentname}
+                  phase={selectedSchool.phaseofeducation__name_}
+                  preloadedData={admissionsData ? { '202526': admissionsData } : null}
+                />
               </div>
             </div>
           )}
