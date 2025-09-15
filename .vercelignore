@@ -10,9 +10,15 @@ node_modules/
 *.log
 logs/
 
-# Scripts and data processing files
-scripts/
-*.sh
+# Scripts and data processing files (but keep JSON config files)
+scripts/*.js
+scripts/*.sh
+scripts/data-guidance/
+scripts/supporting-files/
+scripts/pupil-data/
+scripts/school-workforce-england/
+scripts/seo/
+scripts/untitled folder/
 
 # Environment files
 .env.local
