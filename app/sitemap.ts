@@ -148,11 +148,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         primarySchools: londonData.reduce((sum: number, london: any) => sum + london.primarySchools, 0)
       }
       
+      // Add specific London area pages that should always be included
+      const londonAreaPages = [
+        { city: 'East London', primarySchools: 1000 },
+        { city: 'North London', primarySchools: 1000 },
+        { city: 'South London', primarySchools: 1000 },
+        { city: 'West London', primarySchools: 1000 },
+        { city: 'South East London', primarySchools: 1000 },
+        { city: 'South West London', primarySchools: 1000 },
+        { city: 'North West London', primarySchools: 1000 },
+        { city: 'North East London', primarySchools: 1000 },
+        { city: 'Central London', primarySchools: 1000 },
+      ]
+      
       // Combine all cities
-      const allCities = [...cityData, ...londonCities, ...londonDistrictsCities, londonOverview]
+      const allCities = [...cityData, ...londonCities, ...londonDistrictsCities, ...londonAreaPages, londonOverview]
       
       cityPages = allCities
-        .filter((city: any) => city.primarySchools >= 10) // Only cities with 10+ primary schools
+        .filter((city: any) => city.primarySchools >= 5) // Include cities with 5+ primary schools
         .map((city: any) => {
           // Create URL-friendly slug
           const citySlug = city.city.toLowerCase()
@@ -161,12 +174,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             .replace(/-+/g, '-') // Replace multiple hyphens with single
             .trim()
           
-          // Determine priority based on school count
+          // Determine priority based on school count and city type
           let priority = 0.7
           if (city.primarySchools >= 1000) priority = 0.9
           else if (city.primarySchools >= 500) priority = 0.8
           else if (city.primarySchools >= 100) priority = 0.7
-          else priority = 0.6
+          else if (city.primarySchools >= 50) priority = 0.6
+          else priority = 0.5
+          
+          // Boost priority for major cities and London areas
+          if (city.city === 'London' || city.city.includes('London')) {
+            priority = Math.max(priority, 0.9)
+          }
           
           return {
             url: `https://schoolchecker.io/best-primary-schools/${citySlug}`,
@@ -208,15 +227,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Generate school page URLs
     const schoolPages = schools?.map((school) => {
-      // Create URL-friendly slug from school name and URN
-      const slug = `${school.establishmentname.toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
-        .replace(/\s+/g, '-') // Replace spaces with hyphens
-        .replace(/-+/g, '-') // Replace multiple hyphens with single
-        .trim()}-${school.urn}`
-
       return {
-        url: `https://schoolchecker.io/school/${slug}`,
+        url: `https://schoolchecker.io/school/${school.urn}`,
         lastModified: new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.7,
