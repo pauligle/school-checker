@@ -541,6 +541,8 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                 <Link href="/best-primary-schools-england" className="hover:text-white transition-colors">
                   England
                 </Link>
+                <span className="text-gray-400">/</span>
+                <span className="text-white font-medium">{laRanking?.la_name || school.la__name_}</span>
               </div>
             </nav>
             
