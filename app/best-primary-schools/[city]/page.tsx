@@ -947,6 +947,7 @@ export default async function CityPage({
   // If not a local authority, check if it's a London area
   if (!isLocalAuthority) {
     try {
+      // Check London districts first
       const londonDistrictsPath = path.join(process.cwd(), 'scripts', 'london-districts-pages.json')
       const londonDistricts = JSON.parse(fs.readFileSync(londonDistrictsPath, 'utf8'))
       
@@ -965,18 +966,36 @@ export default async function CityPage({
         item.area.toLowerCase() === cityWithSpaces ||
         item.area === cityCapitalized
       )
-      isLondonArea = !!londonDistrictData
+      
+      if (londonDistrictData) {
+        isLondonArea = true
+      } else {
+        // Check London postcode areas if not found in districts
+        const londonPostcodePath = path.join(process.cwd(), 'scripts', 'london-postcode-pages.json')
+        const londonPostcodes = JSON.parse(fs.readFileSync(londonPostcodePath, 'utf8'))
+        
+        const londonPostcodeData = londonPostcodes.find((item: any) => 
+          item.name.toLowerCase() === cityLower || 
+          item.postcode.toLowerCase() === cityLower ||
+          item.name.toLowerCase() === cityWithSpaces ||
+          item.name === cityCapitalized
+        )
+        
+        isLondonArea = !!londonPostcodeData
+      }
+      
       console.log('London area check:', { 
         city, 
         cityLower, 
         cityWithSpaces, 
         cityCapitalized,
         isLondonArea, 
-        foundData: londonDistrictData 
+        foundDistrict: !!londonDistrictData,
+        foundPostcode: !!londonPostcodeData
       })
     } catch (error) {
-      console.log('Error checking London districts:', error)
-      // London districts file doesn't exist or is invalid, continue with regular logic
+      console.log('Error checking London areas:', error)
+      // London files don't exist or are invalid, continue with regular logic
     }
   }
   
