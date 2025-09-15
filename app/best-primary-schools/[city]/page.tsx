@@ -20,6 +20,7 @@ interface SchoolData {
   lat: number | null
   lon: number | null
   statutorylowage: number | null
+  religiouscharacter__name_: string | null
   statutoryhighage: number | null
 }
 
@@ -322,7 +323,7 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
             } : null
           }).filter(Boolean)
           
-          addSchools(mergedSchools)
+          addSchools(mergedSchools.filter((school): school is SchoolData => school !== null))
         }
       }
     } else {
@@ -362,7 +363,7 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
         item.postcode === cityCapitalized
       )
     } catch (londonDistrictError) {
-      console.warn('London districts file not found or invalid:', londonDistrictError.message)
+      console.warn('London districts file not found or invalid:', londonDistrictError instanceof Error ? londonDistrictError.message : String(londonDistrictError))
     }
     
     if (londonDistrictData) {
@@ -392,7 +393,7 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
         item.postcode.toLowerCase() === city.toLowerCase()
       )
     } catch (londonError) {
-      console.warn('London mapping file not found or invalid:', londonError.message)
+      console.warn('London mapping file not found or invalid:', londonError instanceof Error ? londonError.message : String(londonError))
     }
     
     if (londonData) {
@@ -470,7 +471,7 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
         cityPostcodes = cityInfo.postcodes
       }
     } catch (cityDataError) {
-      console.warn('City data file not found, trying postcode mapping:', cityDataError.message)
+      console.warn('City data file not found, trying postcode mapping:', cityDataError instanceof Error ? cityDataError.message : String(cityDataError))
     }
     
     // If no postcodes found, try the old postcode mapping
@@ -483,7 +484,7 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
           .filter((item: any) => item.city.toLowerCase() === city.toLowerCase())
           .map((item: any) => item.postcode)
       } catch (mappingError) {
-        console.warn('Postcode mapping file not found:', mappingError.message)
+        console.warn('Postcode mapping file not found:', mappingError instanceof Error ? mappingError.message : String(mappingError))
       }
     }
     
@@ -967,6 +968,8 @@ export default async function CityPage({
         item.area === cityCapitalized
       )
       
+      let londonPostcodeData = null
+      
       if (londonDistrictData) {
         isLondonArea = true
       } else {
@@ -974,7 +977,7 @@ export default async function CityPage({
         const londonPostcodePath = path.join(process.cwd(), 'scripts', 'london-postcode-pages.json')
         const londonPostcodes = JSON.parse(fs.readFileSync(londonPostcodePath, 'utf8'))
         
-        const londonPostcodeData = londonPostcodes.find((item: any) => 
+        londonPostcodeData = londonPostcodes.find((item: any) => 
           item.name.toLowerCase() === cityLower || 
           item.postcode.toLowerCase() === cityLower ||
           item.name.toLowerCase() === cityWithSpaces ||

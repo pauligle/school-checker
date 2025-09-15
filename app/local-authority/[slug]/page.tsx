@@ -22,6 +22,7 @@ interface SchoolData {
   phaseofeducation__name_: string
   statutorylowage: number | null
   statutoryhighage: number | null
+  religiouscharacter__name_: string | null
   inspectionOutcome?: number | null
 }
 
@@ -207,6 +208,7 @@ async function getPrimarySchools(laName: string): Promise<SchoolData[]> {
   // Add inspection data to schools
   return filteredSchools.map(school => ({
     ...school,
+    religiouscharacter__name_: null, // Default value since not available in source data
     inspectionOutcome: inspectionMap.get(school.urn) || null
   }))
 }
@@ -553,18 +555,6 @@ export default async function LocalAuthorityPage({ params }: { params: Promise<{
               <ClientSchoolsMap
                 center={mapCenter as [number, number]}
                 zoom={10}
-                schools={schools.map(school => ({
-                  id: school.id,
-                  name: school.establishmentname,
-                  urn: school.urn,
-                  lat: school.lat || 0,
-                  lon: school.lon || 0,
-                  postcode: school.postcode || '',
-                  la: school.la__name_,
-                  phase: school.phaseofeducation__name_,
-                  pupils: school.numberofpupils || 0,
-                  type: school.typeofestablishment__name_ || ''
-                }))}
               />
             </div>
           </div>

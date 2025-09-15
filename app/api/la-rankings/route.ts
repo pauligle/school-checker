@@ -64,10 +64,10 @@ export async function GET(request: NextRequest) {
 
     // Sort schools using the same methodology as national rankings
     laSchools.sort((a, b) => {
-      const aExpected = a[rwmExpColumn] || 0;
-      const bExpected = b[rwmExpColumn] || 0;
-      const aHigher = a[rwmHighColumn] || 0;
-      const bHigher = b[rwmHighColumn] || 0;
+      const aExpected = (a as any)[rwmExpColumn] || 0;
+      const bExpected = (b as any)[rwmExpColumn] || 0;
+      const aHigher = (a as any)[rwmHighColumn] || 0;
+      const bHigher = (b as any)[rwmHighColumn] || 0;
       
       // 1. Primary: RWM Expected percentage (descending)
       if (bExpected !== aExpected) {
@@ -87,15 +87,15 @@ export async function GET(request: NextRequest) {
       }
       
       // 4. Quaternary: GPS Expected percentage (descending - for final tie-breaking)
-      const aGPS = a[gpsExpColumn] || 0;
-      const bGPS = b[gpsExpColumn] || 0;
+      const aGPS = (a as any)[gpsExpColumn] || 0;
+      const bGPS = (b as any)[gpsExpColumn] || 0;
       if (bGPS !== aGPS) {
         return bGPS - aGPS;
       }
       
       // 5. Quinary: GPS Higher percentage (descending - for extra accuracy)
-      const aGPSHigher = a[gpsHighColumn] || 0;
-      const bGPSHigher = b[gpsHighColumn] || 0;
+      const aGPSHigher = (a as any)[gpsHighColumn] || 0;
+      const bGPSHigher = (b as any)[gpsHighColumn] || 0;
       if (bGPSHigher !== aGPSHigher) {
         return bGPSHigher - aGPSHigher;
       }
@@ -105,7 +105,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Find the school's rank in the LA
-    const schoolIndex = laSchools.findIndex(school => school.urn === parseInt(urn));
+    const schoolIndex = laSchools.findIndex(school => (school as any).urn === parseInt(urn));
     
     if (schoolIndex === -1) {
       return NextResponse.json({ error: 'School not found in LA ranking' }, { status: 404 });
@@ -122,14 +122,14 @@ export async function GET(request: NextRequest) {
       la_code: leaCode,
       year: parseInt(year),
       top_schools: laSchools.slice(0, 8).map((school, index) => ({
-        urn: school.urn,
-        school_name: school.school_name,
+        urn: (school as any).urn,
+        school_name: (school as any).school_name,
         la_rank: index + 1,
-        rwm_exp_2024: school[rwmExpColumn],
-        rwm_high_2024: school[rwmHighColumn],
-        gps_exp_2024: school[gpsExpColumn],
-        gps_high_2024: school[gpsHighColumn],
-        gap: (school[rwmExpColumn] || 0) - (school[rwmHighColumn] || 0)
+        rwm_exp_2024: (school as any)[rwmExpColumn],
+        rwm_high_2024: (school as any)[rwmHighColumn],
+        gps_exp_2024: (school as any)[gpsExpColumn],
+        gps_high_2024: (school as any)[gpsHighColumn],
+        gap: ((school as any)[rwmExpColumn] || 0) - ((school as any)[rwmHighColumn] || 0)
       }))
     });
 

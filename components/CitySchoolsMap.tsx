@@ -148,14 +148,12 @@ export default function CitySchoolsMap({ schools, city }: CitySchoolsMapProps) {
     'Lincolnshire': [53.2307, -0.5408], // Lincoln area
     'Nottinghamshire': [52.9548, -1.1581], // Same as Nottingham
     'Derbyshire': [53.1056, -1.4756], // Derby area
-    'Leicestershire': [52.6369, -1.1398], // Same as Leicester
     'Northamptonshire': [52.2405, -0.9027], // Northampton area
     'Warwickshire': [52.2819, -1.5845], // Warwick area
     'Staffordshire': [52.8067, -2.1167], // Stafford area
     'Shropshire': [52.7069, -2.7528], // Shrewsbury area
     'Herefordshire': [52.0567, -2.7167], // Hereford area
     'Worcestershire': [52.1936, -2.2206], // Worcester area
-    'West Midlands': [52.4862, -1.8904], // Same as Birmingham
     'Cheshire': [53.1906, -2.8919], // Chester area
     'Greater Manchester': [53.4808, -2.2426], // Same as Manchester
     'Lancashire': [53.7632, -2.7031], // Preston area
@@ -175,7 +173,6 @@ export default function CitySchoolsMap({ schools, city }: CitySchoolsMapProps) {
     'East Midlands': [52.6369, -1.1398], // Leicester area
     'West Midlands': [52.4862, -1.8904], // Birmingham area
     'East of England': [52.2053, 0.1218], // Cambridge area
-    'London': [51.5074, -0.1278], // London
     'South East': [51.2787, 0.5217], // Kent area
     'South West': [50.7156, -3.5309] // Devon area
   }
