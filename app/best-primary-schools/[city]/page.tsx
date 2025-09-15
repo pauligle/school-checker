@@ -231,6 +231,38 @@ async function getLocationData(city: string): Promise<LocationData> {
   }
 }
 
+// Common school selection fields to avoid repetition
+const SCHOOL_SELECT_FIELDS = `
+  id,
+  establishmentname,
+  urn,
+  la__name_,
+  typeofestablishment__name_,
+  numberofpupils,
+  postcode,
+  lat,
+  lon,
+  statutorylowage,
+  statutoryhighage,
+  religiouscharacter__name_
+`
+
+// Common query filters for primary schools
+const PRIMARY_SCHOOL_FILTERS = {
+  phase: ['Primary', 'All-through'],
+  hasLocation: true
+}
+
+// Helper function to create a base school query
+const createSchoolQuery = () => {
+  return supabase
+    .from('schools')
+    .select(SCHOOL_SELECT_FIELDS)
+    .in('phaseofeducation__name_', PRIMARY_SCHOOL_FILTERS.phase)
+    .not('lat', 'is', null)
+    .not('lon', 'is', null)
+}
+
 async function getPrimarySchools(city: string): Promise<SchoolData[]> {
   const fs = require('fs')
   const path = require('path')
@@ -274,22 +306,9 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
         const schoolUrns = primaryResults.map(s => s.urn.toString())
         const { data: schoolDetails, error: detailsError } = await supabase
           .from('schools')
-          .select(`
-            id,
-            establishmentname,
-            urn,
-            la__name_,
-            typeofestablishment__name_,
-            numberofpupils,
-            postcode,
-            lat,
-            lon,
-            statutorylowage,
-            statutoryhighage,
-            religiouscharacter__name_
-          `)
+          .select(SCHOOL_SELECT_FIELDS)
           .in('urn', schoolUrns)
-          .in('phaseofeducation__name_', ['Primary', 'All-through'])
+          .in('phaseofeducation__name_', PRIMARY_SCHOOL_FILTERS.phase)
           .not('lat', 'is', null)
           .not('lon', 'is', null)
         
@@ -310,22 +329,9 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
       // Fallback to schools table if no LA data found
       const { data: laSchools, error: laError } = await supabase
         .from('schools')
-        .select(`
-          id,
-          establishmentname,
-          urn,
-          la__name_,
-          typeofestablishment__name_,
-          numberofpupils,
-          postcode,
-          lat,
-          lon,
-          statutorylowage,
-          statutoryhighage,
-          religiouscharacter__name_
-        `)
+        .select(SCHOOL_SELECT_FIELDS)
         .eq('la__name_', city)
-        .in('phaseofeducation__name_', ['Primary', 'All-through'])
+        .in('phaseofeducation__name_', PRIMARY_SCHOOL_FILTERS.phase)
         .not('lat', 'is', null)
         .not('lon', 'is', null)
         .order('establishmentname')
@@ -356,28 +362,15 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
         item.postcode === cityCapitalized
       )
     } catch (londonDistrictError) {
-      // London districts file doesn't exist or is invalid, continue with other checks
+      console.warn('London districts file not found or invalid:', londonDistrictError.message)
     }
     
     if (londonDistrictData) {
       // This is a London postcode district - fetch schools by postcode prefix
       const { data: schools, error } = await supabase
         .from('schools')
-        .select(`
-          id,
-          establishmentname,
-          urn,
-          la__name_,
-          typeofestablishment__name_,
-          numberofpupils,
-          postcode,
-          lat,
-          lon,
-          statutorylowage,
-          statutoryhighage,
-          religiouscharacter__name_
-        `)
-        .in('phaseofeducation__name_', ['Primary', 'All-through'])
+        .select(SCHOOL_SELECT_FIELDS)
+        .in('phaseofeducation__name_', PRIMARY_SCHOOL_FILTERS.phase)
         .like('postcode', londonDistrictData.postcode + '%')
         .not('lat', 'is', null)
         .not('lon', 'is', null)
@@ -399,7 +392,7 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
         item.postcode.toLowerCase() === city.toLowerCase()
       )
     } catch (londonError) {
-      // London mapping file doesn't exist or is invalid, continue with regular city logic
+      console.warn('London mapping file not found or invalid:', londonError.message)
     }
     
     if (londonData) {
@@ -416,21 +409,8 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
         
         const { data, error: fetchError } = await supabase
           .from('schools')
-          .select(`
-            id,
-            establishmentname,
-            urn,
-            la__name_,
-            typeofestablishment__name_,
-            numberofpupils,
-            postcode,
-            lat,
-            lon,
-            statutorylowage,
-            statutoryhighage,
-            religiouscharacter__name_
-          `)
-          .in('phaseofeducation__name_', ['Primary', 'All-through'])
+          .select(SCHOOL_SELECT_FIELDS)
+          .in('phaseofeducation__name_', PRIMARY_SCHOOL_FILTERS.phase)
           .or(orConditions)
           .not('lat', 'is', null)
           .not('lon', 'is', null)
@@ -442,21 +422,8 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
         // North London - exclude NW postcodes
         const { data: allSchools, error: fetchError } = await supabase
           .from('schools')
-          .select(`
-            id,
-            establishmentname,
-            urn,
-            la__name_,
-            typeofestablishment__name_,
-            numberofpupils,
-            postcode,
-            lat,
-            lon,
-            statutorylowage,
-            statutoryhighage,
-            religiouscharacter__name_
-          `)
-          .in('phaseofeducation__name_', ['Primary', 'All-through'])
+          .select(SCHOOL_SELECT_FIELDS)
+          .in('phaseofeducation__name_', PRIMARY_SCHOOL_FILTERS.phase)
           .like('postcode', 'N%')
           .not('lat', 'is', null)
           .not('lon', 'is', null)
@@ -471,21 +438,8 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
         // For other prefixes, use the original logic
         const { data, error: fetchError } = await supabase
           .from('schools')
-          .select(`
-            id,
-            establishmentname,
-            urn,
-            la__name_,
-            typeofestablishment__name_,
-            numberofpupils,
-            postcode,
-            lat,
-            lon,
-            statutorylowage,
-            statutoryhighage,
-            religiouscharacter__name_
-          `)
-          .in('phaseofeducation__name_', ['Primary', 'All-through'])
+          .select(SCHOOL_SELECT_FIELDS)
+          .in('phaseofeducation__name_', PRIMARY_SCHOOL_FILTERS.phase)
           .like('postcode', londonData.postcode + '%')
           .not('lat', 'is', null)
           .not('lon', 'is', null)
@@ -516,7 +470,7 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
         cityPostcodes = cityInfo.postcodes
       }
     } catch (cityDataError) {
-      console.log('City data file not found, trying postcode mapping...')
+      console.warn('City data file not found, trying postcode mapping:', cityDataError.message)
     }
     
     // If no postcodes found, try the old postcode mapping
@@ -529,7 +483,7 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
           .filter((item: any) => item.city.toLowerCase() === city.toLowerCase())
           .map((item: any) => item.postcode)
       } catch (mappingError) {
-        console.log('Postcode mapping file not found')
+        console.warn('Postcode mapping file not found:', mappingError.message)
       }
     }
     
@@ -538,21 +492,8 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
       // This handles cases like "leicestershire" where the URL is a local authority name
       const { data: schools, error } = await supabase
         .from('schools')
-        .select(`
-          id,
-          establishmentname,
-          urn,
-          la__name_,
-          typeofestablishment__name_,
-          numberofpupils,
-          postcode,
-          lat,
-          lon,
-          statutorylowage,
-          statutoryhighage,
-          religiouscharacter__name_
-        `)
-        .in('phaseofeducation__name_', ['Primary', 'All-through'])
+        .select(SCHOOL_SELECT_FIELDS)
+        .in('phaseofeducation__name_', PRIMARY_SCHOOL_FILTERS.phase)
         .ilike('la__name_', `%${city}%`)
         .not('lat', 'is', null)
         .not('lon', 'is', null)
@@ -566,21 +507,8 @@ async function getPrimarySchools(city: string): Promise<SchoolData[]> {
       for (const postcodePrefix of cityPostcodes) {
         const { data: schools, error } = await supabase
           .from('schools')
-          .select(`
-            id,
-            establishmentname,
-            urn,
-            la__name_,
-            typeofestablishment__name_,
-            numberofpupils,
-            postcode,
-            lat,
-            lon,
-            statutorylowage,
-            statutoryhighage,
-            religiouscharacter__name_
-          `)
-          .in('phaseofeducation__name_', ['Primary', 'All-through'])
+          .select(SCHOOL_SELECT_FIELDS)
+          .in('phaseofeducation__name_', PRIMARY_SCHOOL_FILTERS.phase)
           .like('postcode', `${postcodePrefix}%`)
           .not('lat', 'is', null)
           .not('lon', 'is', null)
