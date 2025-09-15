@@ -1183,6 +1183,10 @@ export default async function CityPage({
                   Home
                 </Link>
                 <span className="text-gray-400">/</span>
+                <Link href="/best-primary-schools" className="hover:text-white transition-colors">
+                  Primary Schools
+                </Link>
+                <span className="text-gray-400">/</span>
                 {isLocalAuthority ? (
                   <>
                     <Link href="/best-primary-schools-england" className="hover:text-white transition-colors">
@@ -1205,10 +1209,6 @@ export default async function CityPage({
                   </>
                 ) : (
                   <>
-                    <Link href="/best-primary-schools" className="hover:text-white transition-colors">
-                      Best Primary Schools
-                    </Link>
-                    <span className="text-gray-400">/</span>
                     <span className="text-white font-medium">{cityDisplayName}</span>
                   </>
                 )}
