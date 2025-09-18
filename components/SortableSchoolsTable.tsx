@@ -287,54 +287,66 @@ export default function SortableSchoolsTable({
     <div className="overflow-hidden">
       {/* Filter Buttons */}
       <div className="mb-4 py-2">
-        <div className="flex flex-wrap items-center gap-3 pl-3">
+        <div className="flex flex-wrap items-center gap-2 md:gap-3 pl-3">
           <button
             onClick={() => setFilter('all')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${
+            className={`px-2 md:px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${
               filter === 'all'
                 ? 'bg-blue-600 text-white'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            Show All Schools ({schools.length})
+            <span className="md:hidden">All ({schools.length})</span>
+            <span className="hidden md:inline">Show All Schools ({schools.length})</span>
           </button>
           <button
             onClick={() => setFilter('outstanding')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${
+            className={`px-2 md:px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${
               filter === 'outstanding'
                 ? 'bg-green-600 text-white'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            Show Only Outstanding ({schools.filter(school => {
+            <span className="md:hidden">Outstanding ({schools.filter(school => {
               const inspection = inspections[school.urn]
               const rating = calculateSchoolCheckerRating(inspection)
               return rating?.rating === 1
-            }).length})
+            }).length})</span>
+            <span className="hidden md:inline">Show Only Outstanding ({schools.filter(school => {
+              const inspection = inspections[school.urn]
+              const rating = calculateSchoolCheckerRating(inspection)
+              return rating?.rating === 1
+            }).length})</span>
           </button>
           <button
             onClick={() => setFilter('good')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${
+            className={`px-2 md:px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${
               filter === 'good'
                 ? 'bg-blue-600 text-white'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            Show Only Good ({schools.filter(school => {
+            <span className="md:hidden">Good ({schools.filter(school => {
               const inspection = inspections[school.urn]
               const rating = calculateSchoolCheckerRating(inspection)
               return rating?.rating === 2
-            }).length})
+            }).length})</span>
+            <span className="hidden md:inline">Show Only Good ({schools.filter(school => {
+              const inspection = inspections[school.urn]
+              const rating = calculateSchoolCheckerRating(inspection)
+              return rating?.rating === 2
+            }).length})</span>
           </button>
         </div>
       </div>
       
-      <table className="w-full divide-y divide-gray-200 table-fixed">
+      <div className="overflow-x-auto">
+        <table className="w-full divide-y divide-gray-200 min-w-[900px]">
         <thead className="bg-gray-50">
           <tr>
-            <th className="w-48 bg-blue-100 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none" onClick={() => handleSort('localRank')}>
-              <div className="flex items-center justify-between pr-2">
-                <span className="text-blue-700 font-bold text-xs px-2 py-1">
+            <th className="w-48 bg-blue-100 px-2 md:px-3 py-2 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 select-none" onClick={() => handleSort('localRank')}>
+              <div className="flex items-center justify-between pr-1 md:pr-2">
+                <span className="text-blue-700 font-bold text-xs px-1 md:px-2 py-1 leading-tight">
 KS2 PRIMARY RESULTS RANK IN {city.toUpperCase()}
                 </span>
                 <div className="flex flex-col ml-2">
@@ -434,6 +446,7 @@ KS2 PRIMARY RESULTS RANK IN {city.toUpperCase()}
           })}
         </tbody>
       </table>
+      </div>
     </div>
   )
 }

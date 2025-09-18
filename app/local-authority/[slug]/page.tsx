@@ -472,7 +472,7 @@ export default async function LocalAuthorityPage({ params }: { params: Promise<{
         <div className="container mx-auto px-4 md:px-6 py-4 md:py-8">
           <div className="max-w-6xl">
             {/* Breadcrumbs */}
-            <nav className="mb-3 md:mb-4">
+            <nav className="mt-3 md:mt-0 mb-3 md:mb-4">
               <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-300">
                 <Link href="/" className="hover:text-white transition-colors">
                   Home

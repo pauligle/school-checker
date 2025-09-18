@@ -2,7 +2,7 @@
 // Updated: 2024-12-19 15:30:00
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMap, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
 import { createClient } from '@supabase/supabase-js';
 import SchoolDetailsCard from './SchoolDetailsCard';
@@ -373,8 +373,6 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
 
       const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
 
-    setLoading(false);
-
     if (error) {
       if (error.message === 'Query timeout') {
         console.error("Query timed out - please zoom in more or try again");
@@ -415,6 +413,7 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
     
     // Fetch Ofsted ratings for the schools
     fetchSchoolRatings(allSchools);
+    setLoading(false);
     } catch (err) {
       console.error("Error fetching schools:", err);
       setLoading(false);
@@ -430,7 +429,49 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
     }
   }, []);
 
+  // Fetch Ofsted ratings for schools
+  const fetchSchoolRatings = useCallback(async (schoolsList) => {
+    if (!supabase || schoolsList.length === 0) return;
 
+    try {
+      const schoolUrns = schoolsList.map(school => school.urn).filter(Boolean);
+      
+      const { data: inspections, error } = await supabase
+        .from('inspections')
+        .select('urn, outcome, inspection_date, quality_of_education, behaviour_and_attitudes, personal_development, effectiveness_of_leadership')
+        .in('urn', schoolUrns)
+        .order('inspection_date', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching inspections:', error);
+        return;
+      }
+
+      // Group inspections by URN and get the latest one for each school
+      const latestInspections = {};
+      inspections?.forEach(inspection => {
+        if (!latestInspections[inspection.urn]) {
+          latestInspections[inspection.urn] = inspection;
+        }
+      });
+
+      // Calculate ratings for each school
+      const ratings = {};
+      schoolsList.forEach(school => {
+        const inspection = latestInspections[school.urn];
+        if (inspection) {
+          const rating = calculateSchoolCheckerRating(inspection);
+          if (rating) {
+            ratings[school.urn] = rating;
+          }
+        }
+      });
+
+      setSchoolRatings(ratings);
+    } catch (error) {
+      console.error('Error fetching school ratings:', error);
+    }
+  }, []);
 
   // Filter schools based on active filter
   const filterSchools = useCallback((schoolsList) => {
@@ -651,51 +692,6 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
     else return 4; // Inadequate
   };
 
-  // Fetch Ofsted ratings for schools
-  const fetchSchoolRatings = useCallback(async (schoolsList) => {
-    if (!supabase || schoolsList.length === 0) return;
-
-    try {
-      const urns = schoolsList.map(school => school.urn);
-      
-      // Fetch latest inspection for each school
-      const { data: inspections, error } = await supabase
-        .from('inspections')
-        .select('urn, outcome, quality_of_education, effectiveness_of_leadership, behaviour_and_attitudes, personal_development')
-        .in('urn', urns)
-        .order('inspection_date', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching inspections:', error);
-        return;
-      }
-
-      // Group inspections by URN and get the latest one for each school
-      const latestInspections = {};
-      inspections?.forEach(inspection => {
-        if (!latestInspections[inspection.urn]) {
-          latestInspections[inspection.urn] = inspection;
-        }
-      });
-
-      // Calculate ratings for each school
-      const ratings = {};
-      schoolsList.forEach(school => {
-        const inspection = latestInspections[school.urn];
-        if (inspection) {
-          const rating = calculateSchoolCheckerRating(inspection);
-          if (rating) {
-            ratings[school.urn] = rating;
-          }
-        }
-      });
-
-      setSchoolRatings(ratings);
-      console.log(`Calculated ratings for ${Object.keys(ratings).length} schools`);
-    } catch (error) {
-      console.error('Error calculating school ratings:', error);
-    }
-  }, [supabase]);
 
   // City-specific initialization effect
   useEffect(() => {
@@ -916,46 +912,50 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
       
       {/* Filter Buttons - Only show on home page, not on individual school pages */}
       {!center && !zoom && (
-        <div className="absolute top-4 left-32 z-[1000] flex flex-wrap gap-2 max-w-4xl">
+        <div className="absolute left-20 md:left-24 z-[1400] flex flex-wrap gap-1 md:gap-2 max-w-xs md:max-w-4xl" style={{ top: '100px' }}>
           <button
             onClick={() => handleFilterChange('all')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-2 md:px-4 py-1 md:py-2 rounded-md md:rounded-lg text-xs md:text-sm font-medium transition-colors ${
               activeFilter === 'all'
-                ? 'bg-blue-600 text-white shadow-lg'
+                ? 'bg-gray-800 text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
             }`}
           >
-            All Schools
+            <span className="md:hidden">All</span>
+            <span className="hidden md:inline">All Schools</span>
           </button>
           <button
             onClick={() => handleFilterChange('nursery')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-2 md:px-4 py-1 md:py-2 rounded-md md:rounded-lg text-xs md:text-sm font-medium transition-colors ${
               activeFilter === 'nursery'
-                ? 'bg-green-600 text-white shadow-lg'
+                ? 'bg-gray-800 text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
             }`}
           >
-            Nurseries
+            <span className="md:hidden">Nurseries</span>
+            <span className="hidden md:inline">Nurseries</span>
           </button>
           <button
             onClick={() => handleFilterChange('primary')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-2 md:px-4 py-1 md:py-2 rounded-md md:rounded-lg text-xs md:text-sm font-medium transition-colors ${
               activeFilter === 'primary'
-                ? 'bg-purple-600 text-white shadow-lg'
+                ? 'bg-gray-800 text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
             }`}
           >
-            Primary Schools
+            <span className="md:hidden">Primaries</span>
+            <span className="hidden md:inline">Primary Schools</span>
           </button>
           <button
             onClick={() => handleFilterChange('secondary')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-2 md:px-4 py-1 md:py-2 rounded-md md:rounded-lg text-xs md:text-sm font-medium transition-colors ${
               activeFilter === 'secondary'
-                ? 'bg-orange-600 text-white shadow-lg'
+                ? 'bg-gray-800 text-white shadow-lg'
                 : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
             }`}
           >
-            Secondary Schools
+            <span className="md:hidden">Secondaries</span>
+            <span className="hidden md:inline">Secondary Schools</span>
           </button>
         </div>
       )}
@@ -963,38 +963,38 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
       {/* Map Container - Full Screen */}
       <div className="relative w-full h-full">
         {tooManySchools && (
-          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[1000] bg-gray-800 bg-opacity-75 text-white px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm">
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-[1600] bg-gray-800 bg-opacity-75 text-white px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm">
             Zoom in to see schools
           </div>
         )}
         
         {loading && (
-          <div className="absolute top-16 left-4 z-[1000] bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg">
+          <div className="absolute top-16 left-4 right-4 md:right-auto md:max-w-xs z-[1600] bg-blue-600 text-white px-3 md:px-4 py-2 rounded-lg shadow-lg text-sm">
             Loading schools...
           </div>
         )}
 
         {/* Location Status Messages */}
         {locationLoading && (
-          <div className="absolute top-16 right-4 z-[1000] bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg">
+          <div className="absolute top-20 left-4 right-4 md:top-16 md:right-4 md:left-auto md:max-w-xs z-[1600] bg-blue-600 text-white px-3 md:px-4 py-2 rounded-lg shadow-lg">
             <div className="flex items-center space-x-2">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-              <span>Finding your location...</span>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white flex-shrink-0"></div>
+              <span className="text-sm">Finding your location...</span>
             </div>
           </div>
         )}
 
         {showLocationError && (
-          <div className="absolute top-16 right-4 z-[1000] bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg max-w-xs">
+          <div className="absolute top-20 left-4 right-4 md:top-16 md:right-4 md:left-auto md:max-w-xs z-[1600] bg-red-600 text-white px-3 md:px-4 py-2 rounded-lg shadow-lg">
             <div className="flex items-start space-x-2">
-              <span className="text-red-200">⚠️</span>
-              <div>
-                <p className="font-semibold">Location Error</p>
-                <p className="text-sm">{locationError}</p>
+              <span className="text-red-200 flex-shrink-0">⚠️</span>
+              <div className="min-w-0">
+                <p className="font-semibold text-sm">Location Error</p>
+                <p className="text-xs">{locationError}</p>
                 {locationPermissionDenied && (
                   <button
                     onClick={getCurrentLocation}
-                    className="mt-2 text-sm underline hover:no-underline"
+                    className="mt-1 text-xs underline hover:no-underline"
                   >
                     Try Again
                   </button>
@@ -1005,10 +1005,10 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
         )}
 
         {showLocationSuccess && (
-          <div className="absolute top-16 left-1/2 transform -translate-x-1/2 z-[1000] bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[1600] bg-green-600 text-white px-4 md:px-6 py-3 md:py-4 rounded-lg shadow-lg">
             <div className="flex items-center space-x-2">
-              <span>✅</span>
-              <span>Location found! Showing nearby schools</span>
+              <span className="text-lg">✅</span>
+              <span className="text-sm md:text-base font-medium">Location found! Showing nearby schools</span>
             </div>
           </div>
         )}
@@ -1020,6 +1020,7 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
           zoom={zoom || (city && CITY_COORDINATES[city] ? CITY_COORDINATES[city].zoom : 6)}
           style={{ height: "100%", width: "100%" }}
           className="z-0"
+          zoomControl={false}
           eventHandlers={{
             click: (e) => {
               // Close popup when clicking on empty map areas (not on markers)
@@ -1049,6 +1050,9 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
             attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
             url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
           />
+
+          {/* Custom positioned zoom control - positioned below header */}
+          <ZoomControl position="topleft" />
           
           {filteredSchools.map((school, index) => {
             // Use calculated offsets from marker-offsets.json if available

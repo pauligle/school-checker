@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+/* Custom positioning for Leaflet zoom controls to avoid navigation header overlap */
+.leaflet-control-zoom {
+  margin-top: 100px !important; /* Push zoom controls further below the fixed header */
+}
+
+/* On mobile, adjust for smaller header */
+@media (max-width: 768px) {
+  .leaflet-control-zoom {
+    margin-top: 90px !important;
+  }
+}

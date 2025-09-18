@@ -18,7 +18,7 @@ function HomeContentInner() {
   const schoolParam = searchParams.get('school');
 
   return (
-    <main className="w-full h-screen pt-14 md:pt-16">
+    <main className="fixed inset-0 w-full h-full">
         <SchoolsMap selectedSchool={schoolParam as any} />
       
       {/* SEO-friendly school links for Google discovery */}
@@ -38,7 +38,7 @@ function HomeContentInner() {
 
 export default function HomeContent() {
   return (
-    <Suspense fallback={<div className="w-full h-screen pt-14 md:pt-16 flex items-center justify-center">Loading...</div>}>
+    <Suspense fallback={<div className="fixed inset-0 w-full h-full flex items-center justify-center">Loading...</div>}>
       <HomeContentInner />
     </Suspense>
   );

@@ -25,6 +25,7 @@ const SchoolDetailsCard = ({
 }) => {
   const [hasPrimaryResults, setHasPrimaryResults] = useState(false);
   const [primaryRanking, setPrimaryRanking] = useState(null);
+  const [laRanking, setLaRanking] = useState(null);
   const [primaryResultsChecked, setPrimaryResultsChecked] = useState(false);
   const [pupilData, setPupilData] = useState(null);
   const [pupilDataLoaded, setPupilDataLoaded] = useState(false);
@@ -106,6 +107,14 @@ const SchoolDetailsCard = ({
       if (response.ok) {
         const data = await response.json();
         setPrimaryRanking(data.ranking);
+        if (data.ranking.la_rank) {
+          setLaRanking({
+            la_rank: data.ranking.la_rank,
+            total_la_schools: data.ranking.total_la_schools,
+            la_name: data.ranking.la_name,
+            year: 2024
+          });
+        }
       }
     } catch (error) {
       console.error('Error fetching primary ranking:', error);
@@ -117,6 +126,7 @@ const SchoolDetailsCard = ({
     setPrimaryResultsChecked(false);
     setHasPrimaryResults(false);
     setPrimaryRanking(null);
+    setLaRanking(null);
     setPupilData(null);
     setPupilDataLoaded(false);
     setAdmissionsDataChecked(false);
@@ -224,13 +234,29 @@ const SchoolDetailsCard = ({
     <div className="fixed right-0 top-20 md:top-24 h-[calc(100vh-5rem)] md:h-[calc(100vh-6rem)] w-full md:w-[420px] bg-white shadow-xl border-l border-gray-200 z-[1500] overflow-y-auto">
       <div className="p-6">
         {/* Header */}
-        <div className="flex justify-between items-start mb-6">
-          <Link 
-            href={`/school/${createSlug(selectedSchool.establishmentname)}-${selectedSchool.urn}`}
-            className="text-xl font-bold text-blue-600 hover:text-blue-800 hover:underline pr-4 leading-tight"
-          >
-            {selectedSchool.establishmentname}
-          </Link>
+        <div className="flex justify-between items-start mb-4">
+          <div className="flex-1 pr-4">
+            <Link 
+              href={`/school/${createSlug(selectedSchool.establishmentname)}-${selectedSchool.urn}`}
+              className="text-xl font-bold text-blue-600 hover:text-blue-800 hover:underline leading-tight"
+            >
+              {selectedSchool.establishmentname}
+            </Link>
+            
+            {/* Rankings Display */}
+            {primaryRanking && (
+              <div className="mt-2 space-y-0.5 text-xs leading-tight">
+                <div className="font-bold text-gray-800">
+                  #{primaryRanking.rwm_rank.toLocaleString()} out of {primaryRanking.total_schools.toLocaleString()} Primary Schools in England (top {Math.round(((primaryRanking.rwm_rank - 1) / primaryRanking.total_schools) * 100) || 1}%)
+                </div>
+                {laRanking && (
+                  <div className="font-bold text-gray-800">
+                    #{laRanking.la_rank} out of {laRanking.total_la_schools} Primary Schools in {laRanking.la_name} (top {Math.round((laRanking.la_rank / laRanking.total_la_schools) * 100) || 1}%)
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 text-xl flex-shrink-0"

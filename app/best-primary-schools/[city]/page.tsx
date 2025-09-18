@@ -1180,7 +1180,7 @@ export default async function CityPage({
         <div className="container mx-auto px-4 md:px-6 py-4 md:py-8">
           <div className="max-w-6xl">
             {/* Breadcrumbs */}
-            <nav className="mb-3 md:mb-4">
+            <nav className="mt-3 md:mt-0 mb-3 md:mb-4">
               <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-300">
                 <Link href="/" className="hover:text-white transition-colors">
                   Home
@@ -1350,13 +1350,13 @@ export default async function CityPage({
         </div>
 
         {/* Key Highlights */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">Key Highlights for {cityDisplayName}</h3>
-          <ul className="space-y-2 text-gray-700">
+        <div className="bg-white rounded-lg shadow-sm border p-4 md:p-6 mb-8">
+          <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-3">Key Highlights for {cityDisplayName}</h3>
+          <ul className="space-y-2 text-sm md:text-base text-gray-700">
             {topRankedSchool && (
-              <li className="flex items-start border border-yellow-400/30 bg-yellow-400/10 rounded-lg px-3 py-2 backdrop-blur-sm">
-                <span className="text-yellow-400 mr-2">⭐</span>
-                <span>
+              <li className="flex items-start border border-yellow-400/30 bg-yellow-400/10 rounded-lg px-2 md:px-3 py-2 backdrop-blur-sm">
+                <span className="text-yellow-400 mr-1 md:mr-2 text-sm md:text-base">⭐</span>
+                <span className="text-xs md:text-sm">
                   Best School in KS2 Results in {cityDisplayName}: 
                   <Link 
                     href={`/school/${topRankedSchool.urn}`} 
@@ -1369,9 +1369,9 @@ export default async function CityPage({
               </li>
             )}
             {topNonReligiousSchool && (
-              <li className="flex items-start border border-yellow-400/30 bg-yellow-400/10 rounded-lg px-3 py-2 backdrop-blur-sm">
-                <span className="text-yellow-400 mr-2">⭐</span>
-                <span>
+              <li className="flex items-start border border-yellow-400/30 bg-yellow-400/10 rounded-lg px-2 md:px-3 py-2 backdrop-blur-sm">
+                <span className="text-yellow-400 mr-1 md:mr-2 text-sm md:text-base">⭐</span>
+                <span className="text-xs md:text-sm">
                   Best Non-Religious School in KS2 Results in {cityDisplayName} (#{localRankings[topNonReligiousSchool.urn]?.la_rank}): 
                   <Link 
                     href={`/school/${topNonReligiousSchool.urn}`} 
@@ -1384,8 +1384,8 @@ export default async function CityPage({
               </li>
             )}
             <li className="flex items-start">
-              <span className="text-green-500 mr-2">✓</span>
-              <span>
+              <span className="text-green-500 mr-1 md:mr-2 text-sm md:text-base">✓</span>
+              <span className="text-xs md:text-sm">
                 <strong>{outstandingSchools}</strong> Outstanding schools in {cityDisplayName}
                 {outstandingSchools > 0 && (
                   <Link href="?filter=outstanding#schools-table" className="ml-2 text-blue-600 hover:text-blue-800 underline">
@@ -1395,8 +1395,8 @@ export default async function CityPage({
               </span>
             </li>
             <li className="flex items-start">
-              <span className="text-blue-500 mr-2">✓</span>
-              <span>
+              <span className="text-blue-500 mr-1 md:mr-2 text-sm md:text-base">✓</span>
+              <span className="text-xs md:text-sm">
                 <strong>{goodSchools}</strong> Good Schools in {cityDisplayName}
                 {goodSchools > 0 && (
                   <Link href="?filter=good#schools-table" className="ml-2 text-blue-600 hover:text-blue-800 underline">
@@ -1407,8 +1407,8 @@ export default async function CityPage({
             </li>
             {schoolWithMostPupils && (
               <li className="flex items-start">
-                <span className="text-purple-500 mr-2">✓</span>
-                <span>
+                <span className="text-purple-500 mr-1 md:mr-2 text-sm md:text-base">✓</span>
+                <span className="text-xs md:text-sm">
                   Primary School with most pupils is: 
                   <Link 
                     href={`/school/${schoolWithMostPupils.urn}`} 
@@ -1422,8 +1422,8 @@ export default async function CityPage({
             )}
             {schoolWithLeastPupils && schoolWithLeastPupils !== schoolWithMostPupils && (
               <li className="flex items-start">
-                <span className="text-orange-500 mr-2">✓</span>
-                <span>
+                <span className="text-orange-500 mr-1 md:mr-2 text-sm md:text-base">✓</span>
+                <span className="text-xs md:text-sm">
                   Primary School with the least pupils: 
                   <Link 
                     href={`/school/${schoolWithLeastPupils.urn}`} 

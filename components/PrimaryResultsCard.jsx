@@ -208,12 +208,11 @@ const PrimaryResultsCard = ({ schoolData }) => {
                                 betterPercentage <= 50 ? 'top 50%' : 'bottom 50%';
           
           return (
-            <div className="bg-gray-50 border border-gray-200 rounded p-2 mb-3">
-              <div className="flex items-center space-x-1">
-                <span className="text-sm font-medium text-gray-700">
-                  Ranked {ranking.rwm_rank.toLocaleString()} of {ranking.total_schools.toLocaleString()} schools ({percentileText})
+            <div className="bg-blue-50 border border-blue-200 rounded p-3 mb-3">
+              <div className="flex items-center">
+                <span className="text-sm font-semibold text-blue-800">
+                  Ranked {ranking.rwm_rank.toLocaleString()} of {ranking.total_schools.toLocaleString()} schools ({percentileText}) in England
                 </span>
-                <span className="text-xs text-gray-500">¹</span>
               </div>
             </div>
           );
@@ -414,15 +413,6 @@ const PrimaryResultsCard = ({ schoolData }) => {
         </a>
       </div>
 
-      {/* Footnotes */}
-      <div className="space-y-2 text-sm text-slate-600 bg-slate-50 p-4 rounded border border-slate-200">
-        <div>
-          <strong className="text-slate-800">¹</strong> Rankings are calculated by sorting schools first by the percentage of pupils who meet the expected standard and then by the percentage of pupils who achieve a higher standard.
-        </div>
-        <div>
-          <strong className="text-slate-800">²</strong> It's important to not confuse exam results with pupil progress. As an analogy, think of two mountain climbers. One starts at the bottom and progresses half way up. The other starts a third of the way up and progresses another third. So, the second progressed less up the mountain (one third compared to one half) but ended up higher (two thirds compared to one half). An exam result shows how high up the mountain a pupil finished, whereas a progress score shows how much of the mountain they climbed. We rank based on exam results (height up the mountain) and not progress (distance climbed). Progress scores are a good indication of how much 'value' a school is adding (like a Sherpa helping a climber up the mountain). There are many reasons as to why some children start from a higher starting point than others, e.g. natural ability and socio-economic factors.
-        </div>
-      </div>
               </>
             );
           })()}

@@ -632,7 +632,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
         <div className="container mx-auto px-4 md:px-6 py-4 md:py-8">
           <div className="max-w-6xl">
             {/* Breadcrumbs */}
-            <nav className="mb-3 md:mb-4">
+            <nav className="mt-3 md:mt-0 mb-3 md:mb-4">
               <div className="flex items-center space-x-2 text-xs md:text-sm text-gray-300">
                 <Link href="/" className="hover:text-white transition-colors">
                   Home
@@ -838,11 +838,11 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
             
             {/* School Details Table - Exact same as map card but larger */}
             <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-              <div className="bg-gray-200 px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-800">School Details</h3>
+              <div className="bg-gray-200 px-4 md:px-6 py-3 md:py-4 border-b border-gray-200">
+                <h3 className="text-base md:text-lg font-semibold text-gray-800">School Details</h3>
               </div>
-              <div className="overflow-visible">
-                <table className="w-full text-base">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm md:text-base min-w-[500px]">
                   <tbody>
                     <tr className="border-b border-gray-100">
                       <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Phase</td>
@@ -941,11 +941,11 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
             
             {/* Pupil Summary Table - Exact same as map card but larger */}
             <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb-8">
-              <div className="bg-gray-200 px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-800">Pupil Summary</h3>
+              <div className="bg-gray-200 px-4 md:px-6 py-3 md:py-4 border-b border-gray-200">
+                <h3 className="text-base md:text-lg font-semibold text-gray-800">Pupil Summary</h3>
               </div>
-              <div className="overflow-visible">
-                <table className="w-full text-base">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm md:text-base min-w-[500px]">
                   <tbody>
                     <tr className="border-b border-gray-100">
                       <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Total Pupils</td>
@@ -1036,11 +1036,11 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
 
             {/* Pupil Ethnicities Table - Exact same as map card but larger */}
             <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-              <div className="bg-gray-200 px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-800">Pupil Ethnicities</h3>
+              <div className="bg-gray-200 px-4 md:px-6 py-3 md:py-4 border-b border-gray-200">
+                <h3 className="text-base md:text-lg font-semibold text-gray-800">Pupil Ethnicities</h3>
               </div>
-              <div className="overflow-visible">
-                <table className="w-full text-base">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm md:text-base min-w-[500px]">
                   <tbody>
                     {(() => {
                       // Create ethnicity mapping from school data
@@ -1108,14 +1108,14 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
               
               {/* Latest Inspection Table - Exact same as map card but larger */}
               <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb-8">
-                <div className="bg-gray-200 px-6 py-4 border-b border-gray-200">
-                  <h3 className="text-lg font-semibold text-gray-800">Latest Inspection</h3>
+                <div className="bg-gray-200 px-4 md:px-6 py-3 md:py-4 border-b border-gray-200">
+                  <h3 className="text-base md:text-lg font-semibold text-gray-800">Latest Inspection</h3>
                 </div>
                 <div className="overflow-visible">
-                  <table className="w-full text-base">
+                  <table className="w-full text-sm md:text-base">
                     <tbody>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Ofsted Overall Rating:</td>
+                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-2/5">Ofsted Overall Rating:</td>
                         <td className="py-2 pl-1 pr-4 text-gray-800">
                           <div className="flex items-center space-x-2">
                             <span className={`px-3 py-1 text-sm font-medium rounded ${getRatingColor(getOfstedRatingText(inspection.outcome))}`}>
@@ -1143,9 +1143,9 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                             const ratingInfo = getRatingInfo(schoolcheckerRating.rating);
                             return (
                               <tr className="border-b border-gray-100">
-                                <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Schoolchecker.io Rating:</td>
+                                <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-2/5">Schoolchecker.io Rating:</td>
                                 <td className="py-2 pl-1 pr-4 text-gray-800">
-                                  <div className="flex items-center space-x-2">
+                                  <div className="flex flex-wrap items-center gap-2">
                                     <span className={`px-3 py-1 text-sm font-medium rounded ${ratingInfo.color}`}>
                                       {ratingInfo.text}
                                     </span>
@@ -1154,7 +1154,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                                     </span>
                                     <a 
                                       href="/schoolchecker-rating" 
-                                      className="text-blue-600 hover:text-blue-800 text-xs underline ml-2"
+                                      className="text-blue-600 hover:text-blue-800 text-xs underline"
                                       target="_blank"
                                       rel="noopener noreferrer"
                                     >
@@ -1169,11 +1169,11 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                         return null;
                       })()}
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Inspection Date:</td>
+                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-2/5">Inspection Date:</td>
                         <td className="py-2 pl-1 pr-4 text-gray-800">{new Date(inspection.inspection_date).toLocaleDateString()}</td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">All Inspections:</td>
+                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-2/5">All Inspections:</td>
                         <td className="py-2 pl-1 pr-4 text-gray-800">
                           <a 
                             href={`https://reports.ofsted.gov.uk/provider/28/${school.urn}`}
@@ -1192,14 +1192,14 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
 
               {/* Category Judgements Table - Exact same as map card but larger */}
               <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb-8">
-                <div className="bg-gray-200 px-6 py-4 border-b border-gray-200">
-                  <h3 className="text-lg font-semibold text-gray-800">Category Judgements</h3>
+                <div className="bg-gray-200 px-4 md:px-6 py-3 md:py-4 border-b border-gray-200">
+                  <h3 className="text-base md:text-lg font-semibold text-gray-800">Category Judgements</h3>
                 </div>
                 <div className="overflow-visible">
-                  <table className="w-full text-base">
+                  <table className="w-full text-sm md:text-base">
                     <tbody>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">The quality of education</td>
+                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-2/5">The quality of education</td>
                         <td className="py-2 pl-1 pr-4 text-gray-800">
                           <span className={`px-3 py-1 text-sm font-medium rounded ${getRatingColor(getOfstedRatingText(inspection.quality_of_education))}`}>
                             {getOfstedRatingText(inspection.quality_of_education)}
@@ -1207,7 +1207,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                         </td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Behaviour and attitudes</td>
+                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-2/5">Behaviour and attitudes</td>
                         <td className="py-2 pl-1 pr-4 text-gray-800">
                           <span className={`px-3 py-1 text-sm font-medium rounded ${getRatingColor(getOfstedRatingText(inspection.behaviour_and_attitudes))}`}>
                             {getOfstedRatingText(inspection.behaviour_and_attitudes)}
@@ -1215,7 +1215,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                         </td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Personal development</td>
+                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-2/5">Personal development</td>
                         <td className="py-2 pl-1 pr-4 text-gray-800">
                           <span className={`px-3 py-1 text-sm font-medium rounded ${getRatingColor(getOfstedRatingText(inspection.personal_development))}`}>
                             {getOfstedRatingText(inspection.personal_development)}
@@ -1223,7 +1223,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                         </td>
                       </tr>
                       <tr className="border-b border-gray-100">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Leadership and management</td>
+                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-2/5">Leadership and management</td>
                         <td className="py-2 pl-1 pr-4 text-gray-800">
                           <span className={`px-3 py-1 text-sm font-medium rounded ${getRatingColor(getOfstedRatingText(inspection.effectiveness_of_leadership))}`}>
                             {getOfstedRatingText(inspection.effectiveness_of_leadership)}

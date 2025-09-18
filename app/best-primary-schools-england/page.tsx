@@ -115,7 +115,7 @@ export default async function EnglandPage() {
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-6xl">
             {/* Breadcrumbs */}
-            <nav className="mb-8">
+            <nav className="mt-3 md:mt-0 mb-8">
               <div className="flex items-center space-x-2 text-sm">
                 <Link href="/" className="text-gray-300 hover:text-white">Home</Link>
                 <span className="text-gray-400">/</span>
