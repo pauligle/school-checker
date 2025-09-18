@@ -1,9 +1,20 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import SchoolInspectionCard from './SchoolInspectionCard';
 import PrimaryResultsCard from './PrimaryResultsCard';
 import AdmissionsCard from './AdmissionsCard';
+
+// Utility function to create slug from school name
+function createSlug(name) {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .trim()
+}
 
 const SchoolDetailsCard = ({ 
   selectedSchool, 
@@ -214,7 +225,12 @@ const SchoolDetailsCard = ({
       <div className="p-6">
         {/* Header */}
         <div className="flex justify-between items-start mb-6">
-          <h2 className="text-xl font-bold text-gray-800 pr-4 leading-tight">{selectedSchool.establishmentname}</h2>
+          <Link 
+            href={`/school/${createSlug(selectedSchool.establishmentname)}-${selectedSchool.urn}`}
+            className="text-xl font-bold text-blue-600 hover:text-blue-800 hover:underline pr-4 leading-tight"
+          >
+            {selectedSchool.establishmentname}
+          </Link>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 text-xl flex-shrink-0"

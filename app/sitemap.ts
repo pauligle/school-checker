@@ -225,10 +225,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       return [...staticPages, ...cityPages]
     }
 
-    // Generate school page URLs
+    // Function to create school slug (same logic as used in pages)
+    const createSchoolSlug = (schoolName: string, urn: string) => {
+      const nameSlug = schoolName
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+        .replace(/\s+/g, '-') // Replace spaces with hyphens
+        .replace(/-+/g, '-') // Replace multiple hyphens with single
+        .trim()
+      return `${nameSlug}-${urn}`
+    }
+
+    // Generate school page URLs with proper slugs
     const schoolPages = schools?.map((school) => {
+      const slug = createSchoolSlug(school.establishmentname, school.urn)
       return {
-        url: `https://schoolchecker.io/school/${school.urn}`,
+        url: `https://schoolchecker.io/school/${slug}`,
         lastModified: new Date(),
         changeFrequency: 'monthly' as const,
         priority: 0.7,

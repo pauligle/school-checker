@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import ClientSchoolsMap from '@/components/ClientSchoolsMap';
 import PrimaryResultsCard from '@/components/PrimaryResultsCard';
 import AdmissionsCard from '@/components/AdmissionsCard';
+import StructuredData from '@/components/StructuredData';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -602,8 +603,30 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
     return value.toLocaleString();
   };
 
+  // Create breadcrumbs for structured data
+  const breadcrumbs = [
+    { name: 'Home', url: 'https://schoolchecker.io' },
+    { name: 'Primary Schools', url: 'https://schoolchecker.io/best-primary-schools' },
+    { name: 'England', url: 'https://schoolchecker.io/best-primary-schools-england' },
+    { name: laRanking?.la_name || school.la__name_, url: `https://schoolchecker.io/best-primary-schools/${createLaSlug(laRanking?.la_name || school.la__name_)}` },
+    { name: school.establishmentname, url: `https://schoolchecker.io/school/${slug}` }
+  ];
+
+  // Add slug property to school data for structured data component
+  const schoolWithSlug = {
+    ...school,
+    slug: slug
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Structured Data */}
+      <StructuredData 
+        school={schoolWithSlug} 
+        inspection={inspection} 
+        breadcrumbs={breadcrumbs}
+      />
+      
       {/* Hero Section - Dark Professional */}
       <div className="bg-gray-900 text-white">
         <div className="container mx-auto px-4 md:px-6 py-4 md:py-8">

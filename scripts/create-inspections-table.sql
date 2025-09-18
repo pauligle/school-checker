@@ -80,3 +80,4 @@ GRANT ALL ON inspections TO service_role;
 
 
 
+

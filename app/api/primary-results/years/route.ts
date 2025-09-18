@@ -15,10 +15,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'URN parameter is required' }, { status: 400 });
     }
 
-    // Get all available years for this school
+    // Get all available years for this school that have meaningful data
     const { data: yearsData, error } = await supabase
       .from('primary_results')
-      .select('data_year')
+      .select('data_year, rwm_expected_percentage, reading_average_score, maths_average_score')
       .eq('urn', urn)
       .order('data_year', { ascending: false });
 
@@ -27,7 +27,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch available years' }, { status: 500 });
     }
 
-    const years = yearsData?.map(row => row.data_year.toString()) || ['2024'];
+    // Filter out years where all key metrics are null
+    const yearsWithData = yearsData?.filter(row => 
+      row.rwm_expected_percentage !== null || 
+      row.reading_average_score !== null || 
+      row.maths_average_score !== null
+    ) || [];
+
+    const years = yearsWithData.map(row => row.data_year.toString());
 
     return NextResponse.json({ years });
 
