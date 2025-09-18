@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
 
           if (!rankingsError && rankings) {
             // Create rankings map
-            const rankingsMap = {};
+            const rankingsMap: { [key: string]: { rwm_rank: number } } = {};
             rankings.forEach(ranking => {
               rankingsMap[ranking.urn] = { rwm_rank: ranking.rwm_rank };
             });
