@@ -15,6 +15,11 @@ interface LondonAreaData {
   totalSchools: number
   primarySchools: number
   secondarySchools: number
+  topSchool?: {
+    name: string
+    urn: string
+    rank: number
+  }
   districts: Array<{
     postcode: string
     name: string
@@ -57,6 +62,63 @@ async function getLondonData(): Promise<LondonAreaData[]> {
         })
       }
     })
+    
+    // Add top school for each area using real data
+    for (const areaKey of Object.keys(areas)) {
+      const area = areas[areaKey]
+      
+      try {
+        // Get all postcodes for this area
+        const areaPostcodes = area.districts.map(d => d.postcode)
+        console.log(`Processing area ${areaKey} with postcodes:`, areaPostcodes)
+        
+        if (areaPostcodes.length > 0) {
+          // Simple approach: get the top school for the first postcode area as a test
+          const firstPostcode = areaPostcodes[0]
+          
+          // Get schools in this postcode area
+          const { data: schools, error: schoolsError } = await supabase
+            .from('schools')
+            .select('establishmentname, urn')
+            .in('phaseofeducation__name_', ['Primary', 'All-through'])
+            .like('postcode', `${firstPostcode}%`)
+            .limit(10)
+
+          console.log(`Found ${schools?.length || 0} schools for ${areaKey}`)
+          
+          if (!schoolsError && schools && schools.length > 0) {
+            // Get rankings for these schools
+            const schoolUrns = schools.map(s => s.urn)
+            const { data: rankings, error: rankingsError } = await supabase
+              .from('school_rankings')
+              .select('urn, rwm_rank')
+              .in('urn', schoolUrns)
+              .eq('data_year', 2024)
+              .not('rwm_rank', 'is', null)
+              .order('rwm_rank', { ascending: true })
+              .limit(1)
+
+            console.log(`Found ${rankings?.length || 0} rankings for ${areaKey}`)
+
+            if (!rankingsError && rankings && rankings.length > 0) {
+              const topRanking = rankings[0]
+              const topSchool = schools.find(s => s.urn === topRanking.urn)
+              
+              if (topSchool) {
+                console.log(`Top school for ${areaKey}: ${topSchool.establishmentname} (rank ${topRanking.rwm_rank})`)
+                area.topSchool = {
+                  name: topSchool.establishmentname,
+                  urn: topSchool.urn,
+                  rank: topRanking.rwm_rank
+                }
+              }
+            }
+          }
+        }
+      } catch (schoolError) {
+        console.error(`Error fetching top school for ${areaKey}:`, schoolError)
+      }
+    }
     
     // Sort districts within each area by primary school count
     Object.values(areas).forEach(area => {
@@ -180,10 +242,23 @@ export default async function LondonPage() {
                     <span className="text-gray-500">Total Schools:</span>
                     <span className="font-medium text-gray-900">{area.totalSchools}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Districts:</span>
-                    <span className="font-medium text-gray-900">{area.districts.length}</span>
-                  </div>
+                  {area.topSchool && (
+                    <div className="border border-yellow-400/30 bg-yellow-400/10 rounded-lg px-3 py-2 mt-3">
+                      <div className="flex items-start gap-2">
+                        <span className="text-yellow-600 text-sm">⭐</span>
+                        <div className="text-xs">
+                          <div className="text-gray-700 font-medium">Best School in KS2 Results:</div>
+                          <Link 
+                            href={`/school/${area.topSchool.name.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim()}-${area.topSchool.urn}`}
+                            className="text-blue-600 hover:text-blue-800 hover:underline font-medium leading-tight block mt-1"
+                          >
+                            {area.topSchool.name}
+                          </Link>
+                          <span className="text-gray-500">Ranked #{area.topSchool.rank} in England (2024)</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 
                 <div className="mt-4 pt-4 border-t border-gray-200">
@@ -198,28 +273,52 @@ export default async function LondonPage() {
             ))}
           </div>
 
-          {/* Top Districts Section */}
+          {/* All London Districts Section */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Top London Districts by Primary School Count</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {londonAreas.flatMap(area => area.districts.slice(0, 3)).slice(0, 12).map((district, index) => (
-                <div key={`${district.postcode}-${index}`} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div>
-                    <Link 
-                      href={`/best-primary-schools/${encodeURIComponent(district.name)}`}
-                      className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
-                    >
-                      {district.name}
-                    </Link>
-                    <p className="text-sm text-gray-500">{district.postcode}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-semibold text-gray-900">{district.primarySchools}</p>
-                    <p className="text-sm text-gray-500">primary schools</p>
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">All London Districts (Alphabetical)</h2>
+            
+            {(() => {
+              // Group districts by first letter
+              const allDistricts = londonAreas.flatMap(area => area.districts).sort((a, b) => a.name.localeCompare(b.name));
+              const groupedDistricts = allDistricts.reduce((groups, district) => {
+                const firstLetter = district.name[0].toUpperCase();
+                if (!groups[firstLetter]) {
+                  groups[firstLetter] = [];
+                }
+                groups[firstLetter].push(district);
+                return groups;
+              }, {} as Record<string, typeof allDistricts>);
+
+              return Object.keys(groupedDistricts).sort().map(letter => (
+                <div key={letter} className="mb-6">
+                  {/* Letter Heading */}
+                  <h3 className="text-lg font-bold text-gray-800 mb-3 border-b border-gray-200 pb-2">
+                    {letter}
+                  </h3>
+                  
+                  {/* Districts for this letter */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {groupedDistricts[letter].map((district, index) => (
+                      <div key={`${district.postcode}-${index}`} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                          <Link 
+                            href={`/best-primary-schools/${encodeURIComponent(district.name)}`}
+                            className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+                          >
+                            {district.name}
+                          </Link>
+                          <p className="text-sm text-gray-500">{district.postcode}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-gray-900">{district.primarySchools}</p>
+                          <p className="text-sm text-gray-500">primary schools</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
+              ));
+            })()}
           </div>
 
           {/* Statistics Section */}

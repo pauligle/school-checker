@@ -5,9 +5,11 @@ import Link from 'next/link';
 import SchoolInspectionCard from './SchoolInspectionCard';
 import PrimaryResultsCard from './PrimaryResultsCard';
 import AdmissionsCard from './AdmissionsCard';
+import OfstedParentViewCard from './OfstedParentViewCard';
 
 // Utility function to create slug from school name
 function createSlug(name) {
+  if (!name) return '';
   return name
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, '')
@@ -27,11 +29,19 @@ const SchoolDetailsCard = ({
   const [primaryRanking, setPrimaryRanking] = useState(null);
   const [laRanking, setLaRanking] = useState(null);
   const [primaryResultsChecked, setPrimaryResultsChecked] = useState(false);
+
+  // Check if school has secondary education
+  const phase = selectedSchool.phaseofeducation__name_?.toLowerCase();
+  const lowAge = selectedSchool.statutorylowage;
+  const highAge = selectedSchool.statutoryhighage;
+  
+  const hasSecondaryEducation = 
+    (phase && (phase.includes('secondary') || phase.includes('all-through'))) ||
+    (lowAge && highAge && lowAge <= 11 && highAge >= 14);
   const [pupilData, setPupilData] = useState(null);
   const [pupilDataLoaded, setPupilDataLoaded] = useState(false);
-  const [hasAdmissionsData, setHasAdmissionsData] = useState(false);
-  const [admissionsDataChecked, setAdmissionsDataChecked] = useState(false);
   const [admissionsData, setAdmissionsData] = useState(null);
+  const [parentViewData, setParentViewData] = useState(null);
 
   // Calculate School Checker Inspection Rating (same logic as SchoolInspectionCard)
   const calculateSchoolCheckerRating = (inspection) => {
@@ -121,7 +131,7 @@ const SchoolDetailsCard = ({
     }
   };
 
-  // Reset primary results check when school changes
+  // Reset state when school changes
   useEffect(() => {
     setPrimaryResultsChecked(false);
     setHasPrimaryResults(false);
@@ -129,9 +139,8 @@ const SchoolDetailsCard = ({
     setLaRanking(null);
     setPupilData(null);
     setPupilDataLoaded(false);
-    setAdmissionsDataChecked(false);
-    setHasAdmissionsData(false);
     setAdmissionsData(null);
+    setParentViewData(null);
   }, [selectedSchool?.urn]);
 
   // Check if school has primary results data (only once per school)
@@ -167,33 +176,49 @@ const SchoolDetailsCard = ({
     checkPrimaryResults();
   }, [selectedSchool?.urn, primaryResultsChecked]);
 
-  // Check if school has admissions data (only once per school)
+  // Fetch admissions data for badge display (only once per school)
   useEffect(() => {
-    const checkAdmissionsData = async () => {
-      if (!selectedSchool?.urn || admissionsDataChecked) {
+    const fetchAdmissionsData = async () => {
+      if (!selectedSchool?.urn || admissionsData) {
         return;
       }
 
       try {
-        // Check if school has any admissions data by trying to fetch 2025 data
+        // Fetch admissions data to show status badge
         const response = await fetch(`/api/admissions?schoolName=${encodeURIComponent(selectedSchool.establishmentname)}&phase=${selectedSchool.phaseofeducation__name_ === 'All-through' ? 'Primary' : selectedSchool.phaseofeducation__name_}&year=202526`);
         if (response.ok) {
           const data = await response.json();
-          setHasAdmissionsData(true);
           setAdmissionsData(data);
-        } else {
-          setHasAdmissionsData(false);
         }
       } catch (error) {
-        console.error('Error checking admissions data:', error);
-        setHasAdmissionsData(false);
-      } finally {
-        setAdmissionsDataChecked(true);
+        console.error('Error fetching admissions data for badge:', error);
       }
     };
 
-    checkAdmissionsData();
-  }, [selectedSchool?.urn, admissionsDataChecked]);
+    fetchAdmissionsData();
+  }, [selectedSchool?.urn, admissionsData]);
+
+  // Fetch parent view data for badge display (only once per school)
+  useEffect(() => {
+    const fetchParentViewData = async () => {
+      if (!selectedSchool?.urn || parentViewData) {
+        return;
+      }
+
+      try {
+        // Fetch parent view data to show recommendation badge
+        const response = await fetch(`/api/parent-view?urn=${selectedSchool.urn}`);
+        if (response.ok) {
+          const data = await response.json();
+          setParentViewData(data);
+        }
+      } catch (error) {
+        console.error('Error fetching parent view data for badge:', error);
+      }
+    };
+
+    fetchParentViewData();
+  }, [selectedSchool?.urn, parentViewData]);
 
   // Fetch pupil data when pupils tab is accessed
   useEffect(() => {
@@ -238,7 +263,7 @@ const SchoolDetailsCard = ({
           <div className="flex-1 pr-4">
             <Link 
               href={`/school/${createSlug(selectedSchool.establishmentname)}-${selectedSchool.urn}`}
-              className="text-xl font-bold text-blue-600 hover:text-blue-800 hover:underline leading-tight"
+              className="text-xl font-bold text-blue-600 hover:text-blue-800 underline leading-tight"
             >
               {selectedSchool.establishmentname}
             </Link>
@@ -411,58 +436,88 @@ const SchoolDetailsCard = ({
               <span className="text-gray-400">+</span>
             </button>
           )}
-          {/* Only show Admissions tab if school has admissions data */}
-          {hasAdmissionsData && (
-            <button
-              onClick={() => setActiveTab('admissions')}
-              className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded transition-colors ${
-                activeTab === 'admissions'
-                  ? 'bg-blue-50 text-blue-600 border border-blue-200'
-                  : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
-              }`}
-            >
-              <div className="flex items-center space-x-2">
-                <span>🎯</span>
-                <span>Admissions</span>
-                {admissionsData && (
-                  <span className={`text-white text-xs px-2 py-1 rounded-full font-medium ${
-                    admissionsData.is_oversubscribed ? 'bg-red-600' : 'bg-green-600'
-                  }`}>
-                    {admissionsData.is_oversubscribed ? 'Oversubscribed' : 'Not Oversubscribed'}
-                  </span>
-                )}
-              </div>
-              <span className="text-gray-400">+</span>
-            </button>
+          {/* Admissions tab - always show, let the component handle loading/error states */}
+          <button
+            onClick={() => setActiveTab('admissions')}
+            className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded transition-colors ${
+              activeTab === 'admissions'
+                ? 'bg-blue-50 text-blue-600 border border-blue-200'
+                : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
+            }`}
+          >
+            <div className="flex items-center space-x-2">
+              <span>🎯</span>
+              <span>Admissions</span>
+              {admissionsData && (
+                <span className={`text-white text-xs px-2 py-1 rounded-full font-medium ${
+                  admissionsData.is_oversubscribed ? 'bg-red-600' : 'bg-green-600'
+                }`}>
+                  {admissionsData.is_oversubscribed ? 'Oversubscribed' : 'Not Oversubscribed'}
+                </span>
+              )}
+            </div>
+            <span className="text-gray-400">+</span>
+          </button>
+
+          {/* Parent View tab - always show, let the component handle loading/error states */}
+          <button
+            onClick={() => setActiveTab('parent-view')}
+            className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded transition-colors ${
+              activeTab === 'parent-view'
+                ? 'bg-blue-50 text-blue-600 border border-blue-200'
+                : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
+            }`}
+          >
+            <div className="flex items-center space-x-2">
+              <span>👨‍👩‍👧‍👦</span>
+              <span>Parent Reviews</span>
+              {parentViewData?.questions?.q14 && (
+                <span className={`text-white text-xs px-2 py-1 rounded-full font-medium ${
+                  parentViewData.questions.q14.responses.yes >= 80 ? 'bg-green-600' :
+                  parentViewData.questions.q14.responses.yes >= 60 ? 'bg-orange-500' :
+                  parentViewData.questions.q14.responses.yes >= 40 ? 'bg-yellow-500' :
+                  'bg-red-600'
+                }`}>
+                  {parentViewData.questions.q14.responses.yes}% Recommended
+                </span>
+              )}
+            </div>
+            <span className="text-gray-400">+</span>
+          </button>
+
+          {/* Only show GCSE and A-Level tabs for secondary schools */}
+          {hasSecondaryEducation && (
+            <>
+              <button
+                onClick={() => setActiveTab('gcse-results')}
+                className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded transition-colors ${
+                  activeTab === 'gcse-results'
+                    ? 'bg-blue-50 text-blue-600 border border-blue-200'
+                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
+                }`}
+              >
+                <div className="flex items-center space-x-2">
+                  <span>📈</span>
+                  <span>GCSE Results</span>
+                </div>
+                <span className="text-gray-400">+</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('alevel-results')}
+                className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded transition-colors ${
+                  activeTab === 'alevel-results'
+                    ? 'bg-blue-50 text-blue-600 border border-blue-200'
+                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
+                }`}
+              >
+                <div className="flex items-center space-x-2">
+                  <span>🎓</span>
+                  <span>A-Level Results</span>
+                </div>
+                <span className="text-gray-400">+</span>
+              </button>
+            </>
           )}
-          <button
-            onClick={() => setActiveTab('gcse-results')}
-            className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded transition-colors ${
-              activeTab === 'gcse-results'
-                ? 'bg-blue-50 text-blue-600 border border-blue-200'
-                : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
-            }`}
-          >
-            <div className="flex items-center space-x-2">
-              <span>📈</span>
-              <span>GCSE Results</span>
-            </div>
-            <span className="text-gray-400">+</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('alevel-results')}
-            className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded transition-colors ${
-              activeTab === 'alevel-results'
-                ? 'bg-blue-50 text-blue-600 border border-blue-200'
-                : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200'
-            }`}
-          >
-            <div className="flex items-center space-x-2">
-              <span>🎓</span>
-              <span>A-Level Results</span>
-            </div>
-            <span className="text-gray-400">+</span>
-          </button>
         </div>
 
         {/* Accordion Content */}
@@ -790,54 +845,59 @@ const SchoolDetailsCard = ({
             </div>
           )}
 
-          {/* Admissions Tab Content - Only show if school has admissions data */}
-          {hasAdmissionsData && (
-            <div className={`overflow-hidden transition-all duration-300 ${activeTab === 'admissions' ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'}`}>
+          {/* Admissions Tab Content - always show, let AdmissionsCard handle loading/error states */}
+          <div className={`overflow-hidden transition-all duration-300 ${activeTab === 'admissions' ? 'max-h-[1200px] opacity-100' : 'max-h-0 opacity-0'}`}>
+            <div className="pt-4">
+              <AdmissionsCard 
+                urn={selectedSchool.urn} 
+                schoolName={selectedSchool.establishmentname}
+                phase={selectedSchool.phaseofeducation__name_}
+                preloadedData={admissionsData ? { '202526': admissionsData } : null}
+              />
+            </div>
+          </div>
+
+          {/* Parent View Tab Content - always show, let OfstedParentViewCard handle loading/error states */}
+          <div className={`overflow-hidden transition-all duration-300 ${activeTab === 'parent-view' ? 'max-h-none opacity-100' : 'max-h-0 opacity-0'}`}>
+            <div className="pt-4">
+              <OfstedParentViewCard 
+                urn={selectedSchool.urn} 
+                schoolName={selectedSchool.establishmentname}
+              />
+            </div>
+          </div>
+
+          {/* GCSE Results Tab Content - Only for secondary schools */}
+          {hasSecondaryEducation && (
+            <div className={`overflow-hidden transition-all duration-300 ${activeTab === 'gcse-results' ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'}`}>
               <div className="pt-4">
-                <AdmissionsCard 
-                  urn={selectedSchool.urn} 
-                  schoolName={selectedSchool.establishmentname}
-                  phase={selectedSchool.phaseofeducation__name_}
-                  preloadedData={admissionsData ? { '202526': admissionsData } : null}
-                />
+                <div className="space-y-2">
+                  <div className="bg-blue-50 p-3 rounded-lg">
+                    <h3 className="text-sm font-bold text-blue-600 mb-2">GCSE Results</h3>
+                    <div className="text-sm text-gray-500">
+                      GCSE results data will be added here for secondary schools.
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
-          {/* GCSE Results Tab Content */}
-          <div className={`overflow-hidden transition-all duration-300 ${activeTab === 'gcse-results' ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'}`}>
-            <div className="pt-4">
-              <div className="space-y-2">
-                <div className="bg-blue-50 p-3 rounded-lg">
-                  <h3 className="text-sm font-bold text-blue-600 mb-2">GCSE Results</h3>
-                  <div className="text-sm text-gray-500">
-                    {!hasPrimaryResults ? (
-                      <div>
-                        <p className="mb-2">This school appears to be a secondary school or doesn't participate in Key Stage 2 assessments.</p>
-                        <p>GCSE results data will be added here for secondary schools.</p>
-                      </div>
-                    ) : (
-                      <p>GCSE results data will be added here.</p>
-                    )}
+          {/* A-Level Results Tab Content - Only for secondary schools */}
+          {hasSecondaryEducation && (
+            <div className={`overflow-hidden transition-all duration-300 ${activeTab === 'alevel-results' ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'}`}>
+              <div className="pt-4">
+                <div className="space-y-2">
+                  <div className="bg-blue-50 p-3 rounded-lg">
+                    <h3 className="text-sm font-bold text-blue-600 mb-2">A-Level Results</h3>
+                    <div className="text-sm text-gray-500">
+                      A-Level results data will be added here.
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* A-Level Results Tab Content */}
-          <div className={`overflow-hidden transition-all duration-300 ${activeTab === 'alevel-results' ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'}`}>
-            <div className="pt-4">
-              <div className="space-y-2">
-                <div className="bg-blue-50 p-3 rounded-lg">
-                  <h3 className="text-sm font-bold text-blue-600 mb-2">A-Level Results</h3>
-                  <div className="text-sm text-gray-500">
-                    A-Level results data will be added here.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

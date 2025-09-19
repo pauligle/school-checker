@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import ClientSchoolsMap from '@/components/ClientSchoolsMap';
 import PrimaryResultsCard from '@/components/PrimaryResultsCard';
 import AdmissionsCard from '@/components/AdmissionsCard';
+import OfstedParentViewCard from '@/components/OfstedParentViewCard';
 import StructuredData from '@/components/StructuredData';
 
 const supabase = createClient(
@@ -1260,6 +1261,20 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
               phase={school.phaseofeducation__name_}
               preloadedData={admissionsData}
             />
+          </div>
+
+          {/* Parent View Section */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 px-6 md:px-8 pt-6 md:pt-8">
+              Parent Reviews
+            </h2>
+            
+            <div className="px-6 md:px-8 pb-6 md:pb-8">
+              <OfstedParentViewCard 
+                urn={school.urn} 
+                schoolName={school.establishmentname}
+              />
+            </div>
           </div>
 
         </div>

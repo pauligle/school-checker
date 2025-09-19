@@ -21,15 +21,11 @@ function HomeContentInner() {
     <main className="fixed inset-0 w-full h-full">
         <SchoolsMap selectedSchool={schoolParam as any} />
       
-      {/* SEO-friendly school links for Google discovery */}
+      {/* SEO-friendly school links for Google discovery - Only real schools */}
       <div className="hidden">
         <h2>Popular Schools</h2>
         <ul>
           <li><Link href="/school/harris-academy-chobham-139703">Harris Academy Chobham</Link></li>
-          <li><Link href="/school/st-marys-primary-school-123456">St Mary's Primary School</Link></li>
-          <li><Link href="/school/westminster-school-789012">Westminster School</Link></li>
-          <li><Link href="/school/eton-college-345678">Eton College</Link></li>
-          <li><Link href="/school/harrow-school-901234">Harrow School</Link></li>
         </ul>
       </div>
     </main>

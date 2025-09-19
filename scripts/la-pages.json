@@ -47,5 +47,75 @@
     "url": "/local-authority/birmingham",
     "title": "Best Primary Schools in Birmingham",
     "description": "Find the best primary schools in Birmingham. Compare primary schools with Ofsted ratings, pupil numbers, and detailed reviews."
+  },
+  {
+    "laName": "Camden",
+    "slug": "camden",
+    "url": "/local-authority/camden",
+    "title": "Best Primary Schools in Camden",
+    "description": "Find the best primary schools in Camden. Compare primary schools with Ofsted ratings, pupil numbers, and detailed reviews."
+  },
+  {
+    "laName": "City of London",
+    "slug": "city-of-london",
+    "url": "/local-authority/city-of-london",
+    "title": "Best Primary Schools in City of London",
+    "description": "Find the best primary schools in City of London. Compare primary schools with Ofsted ratings, pupil numbers, and detailed reviews."
+  },
+  {
+    "laName": "Hackney",
+    "slug": "hackney",
+    "url": "/local-authority/hackney",
+    "title": "Best Primary Schools in Hackney",
+    "description": "Find the best primary schools in Hackney. Compare primary schools with Ofsted ratings, pupil numbers, and detailed reviews."
+  },
+  {
+    "laName": "Islington",
+    "slug": "islington",
+    "url": "/local-authority/islington",
+    "title": "Best Primary Schools in Islington",
+    "description": "Find the best primary schools in Islington. Compare primary schools with Ofsted ratings, pupil numbers, and detailed reviews."
+  },
+  {
+    "laName": "Kensington and Chelsea",
+    "slug": "kensington-and-chelsea",
+    "url": "/local-authority/kensington-and-chelsea",
+    "title": "Best Primary Schools in Kensington and Chelsea",
+    "description": "Find the best primary schools in Kensington and Chelsea. Compare primary schools with Ofsted ratings, pupil numbers, and detailed reviews."
+  },
+  {
+    "laName": "Lambeth",
+    "slug": "lambeth",
+    "url": "/local-authority/lambeth",
+    "title": "Best Primary Schools in Lambeth",
+    "description": "Find the best primary schools in Lambeth. Compare primary schools with Ofsted ratings, pupil numbers, and detailed reviews."
+  },
+  {
+    "laName": "Southwark",
+    "slug": "southwark",
+    "url": "/local-authority/southwark",
+    "title": "Best Primary Schools in Southwark",
+    "description": "Find the best primary schools in Southwark. Compare primary schools with Ofsted ratings, pupil numbers, and detailed reviews."
+  },
+  {
+    "laName": "Tower Hamlets",
+    "slug": "tower-hamlets",
+    "url": "/local-authority/tower-hamlets",
+    "title": "Best Primary Schools in Tower Hamlets",
+    "description": "Find the best primary schools in Tower Hamlets. Compare primary schools with Ofsted ratings, pupil numbers, and detailed reviews."
+  },
+  {
+    "laName": "Wandsworth",
+    "slug": "wandsworth",
+    "url": "/local-authority/wandsworth",
+    "title": "Best Primary Schools in Wandsworth",
+    "description": "Find the best primary schools in Wandsworth. Compare primary schools with Ofsted ratings, pupil numbers, and detailed reviews."
+  },
+  {
+    "laName": "Westminster",
+    "slug": "westminster",
+    "url": "/local-authority/westminster",
+    "title": "Best Primary Schools in Westminster",
+    "description": "Find the best primary schools in Westminster. Compare primary schools with Ofsted ratings, pupil numbers, and detailed reviews."
   }
 ]

@@ -1,15 +1,5 @@
 [
   {
-    "postcode": "E1",
-    "name": "Head district",
-    "area": "East London",
-    "areaPostcode": "E",
-    "description": "Head district in East London",
-    "totalSchools": 0,
-    "primarySchools": 0,
-    "secondarySchools": 0
-  },
-  {
     "postcode": "E2",
     "name": "Bethnal Green",
     "area": "East London",
@@ -190,16 +180,6 @@
     "secondarySchools": 0
   },
   {
-    "postcode": "EC1",
-    "name": "Head district",
-    "area": "Eastern Central London",
-    "areaPostcode": "EC",
-    "description": "Head district in Eastern Central London",
-    "totalSchools": 19,
-    "primarySchools": 12,
-    "secondarySchools": 0
-  },
-  {
     "postcode": "EC2",
     "name": "Bishopsgate",
     "area": "Eastern Central London",
@@ -228,16 +208,6 @@
     "totalSchools": 2,
     "primarySchools": 0,
     "secondarySchools": 0
-  },
-  {
-    "postcode": "N1",
-    "name": "Head district",
-    "area": "North London",
-    "areaPostcode": "N",
-    "description": "Head district in North London",
-    "totalSchools": 371,
-    "primarySchools": 198,
-    "secondarySchools": 39
   },
   {
     "postcode": "N2",
@@ -450,16 +420,6 @@
     "secondarySchools": 6
   },
   {
-    "postcode": "NW1",
-    "name": "Head district",
-    "area": "North West London",
-    "areaPostcode": "NW",
-    "description": "Head district in North West London",
-    "totalSchools": 120,
-    "primarySchools": 58,
-    "secondarySchools": 14
-  },
-  {
     "postcode": "NW2",
     "name": "Cricklewood",
     "area": "North West London",
@@ -558,16 +518,6 @@
     "totalSchools": 23,
     "primarySchools": 10,
     "secondarySchools": 2
-  },
-  {
-    "postcode": "SE1",
-    "name": "Head district",
-    "area": "South East London",
-    "areaPostcode": "SE",
-    "description": "Head district in South East London",
-    "totalSchools": 333,
-    "primarySchools": 177,
-    "secondarySchools": 45
   },
   {
     "postcode": "SE2",
@@ -840,16 +790,6 @@
     "secondarySchools": 4
   },
   {
-    "postcode": "SW1",
-    "name": "Head district",
-    "area": "South West London",
-    "areaPostcode": "SW",
-    "description": "Head district in South West London",
-    "totalSchools": 341,
-    "primarySchools": 157,
-    "secondarySchools": 39
-  },
-  {
     "postcode": "SW2",
     "name": "Brixton",
     "area": "South West London",
@@ -1040,16 +980,6 @@
     "secondarySchools": 4
   },
   {
-    "postcode": "W1",
-    "name": "Head district",
-    "area": "West London",
-    "areaPostcode": "W",
-    "description": "Head district in West London",
-    "totalSchools": 153,
-    "primarySchools": 55,
-    "secondarySchools": 12
-  },
-  {
     "postcode": "W2",
     "name": "Paddington",
     "area": "West London",
@@ -1178,16 +1108,6 @@
     "totalSchools": 25,
     "primarySchools": 5,
     "secondarySchools": 2
-  },
-  {
-    "postcode": "WC1",
-    "name": "Head district",
-    "area": "Western Central London",
-    "areaPostcode": "WC",
-    "description": "Head district in Western Central London",
-    "totalSchools": 22,
-    "primarySchools": 2,
-    "secondarySchools": 0
   },
   {
     "postcode": "WC2",

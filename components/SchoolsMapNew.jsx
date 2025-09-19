@@ -6,6 +6,7 @@ import { MapContainer, TileLayer, Marker, useMap, ZoomControl } from 'react-leaf
 import L from 'leaflet';
 import { createClient } from '@supabase/supabase-js';
 import SchoolDetailsCard from './SchoolDetailsCard';
+import MapLegend from './MapLegend';
 
 import 'leaflet/dist/leaflet.css';
 
@@ -194,6 +195,13 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
             if (mapRef.current && schoolData.lat && schoolData.lon) {
               console.log('Centering map on school:', schoolData.lat, schoolData.lon);
               mapRef.current.setView([schoolData.lat, schoolData.lon], 15);
+              
+              // Fetch schools in the area around the selected school
+              setTimeout(() => {
+                const bounds = mapRef.current.getBounds();
+                const zoom = mapRef.current.getZoom();
+                fetchSchools(bounds, zoom);
+              }, 500);
             } else {
               console.log('Map ref not ready or coordinates missing');
             }
@@ -246,7 +254,7 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
         
         // Center map on user location
         if (mapRef.current) {
-          mapRef.current.setView([latitude, longitude], 11); // Lower zoom to show more schools
+          mapRef.current.setView([latitude, longitude], 14); // Higher zoom for ~20 mile radius focus
           // Only trigger school fetching for home page (not city pages)
           if (!city) {
             setTimeout(() => {
@@ -562,8 +570,8 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
     const colors = {
       1: '#00C851', // Green - Outstanding
       2: '#FFC107', // Yellow - Good  
-      3: '#FF9800', // Orange - Requires Improvement
-      4: '#F44336', // Red - Inadequate
+      3: '#F44336', // Red - Requires Improvement
+      4: '#DC2626', // Dark Red - Inadequate
       unknown: '#9E9E9E' // Grey - Unknown
     };
     
@@ -765,6 +773,7 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
   // Effect to handle propSelectedSchool changes
   useEffect(() => {
     if (propSelectedSchool) {
+      // Always set selected school and open card when school is specified in URL
       setSelectedSchool(propSelectedSchool);
       setCardOpen(true);
     }
@@ -1019,7 +1028,7 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
           center={center || (city && CITY_COORDINATES[city] ? [CITY_COORDINATES[city].lat, CITY_COORDINATES[city].lng] : [52.5, -1.5])}
           zoom={zoom || (city && CITY_COORDINATES[city] ? CITY_COORDINATES[city].zoom : 6)}
           style={{ height: "100%", width: "100%" }}
-          className="z-0"
+          className={`z-0 ${!center && !zoom ? 'full-screen-map' : 'contained-map'}`}
           zoomControl={false}
           eventHandlers={{
             click: (e) => {
@@ -1153,6 +1162,9 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
             </a>
           </div>
         )}
+
+      {/* Map Legend - Show on all maps */}
+      <MapLegend position="bottom-right" />
       </div>
     </div>
   );

@@ -60,6 +60,9 @@ export default function RootLayout({
               <Link href="/schools-near-me" className="text-base hover:text-blue-600">
                 Schools Near Me
               </Link>
+              <Link href="/best-nurseries" className="text-base hover:text-blue-600">
+                Nurseries
+              </Link>
               <div className="relative group">
                 <button className="text-base hover:text-blue-600 flex items-center">
                   Primary
@@ -90,11 +93,11 @@ export default function RootLayout({
                   </div>
                 </div>
               </div>
-              <Link href="/blog" className="text-base hover:text-blue-600">
-                Blog
+              <Link href="/best-secondary-schools" className="text-base hover:text-blue-600">
+                Secondary
               </Link>
               <Link href="/schoolchecker-rating" className="text-base hover:text-blue-600">
-                Our Rating
+                Rating
               </Link>
               <Link href="/about" className="text-base hover:text-blue-600">
                 About
@@ -138,6 +141,13 @@ export default function RootLayout({
                 >
                   Schools Near Me
                 </Link>
+                <Link 
+                  href="/best-nurseries" 
+                  className="block text-base text-gray-700 hover:text-blue-600 py-2"
+                  onClick={closeMobileMenu}
+                >
+                  Nurseries
+                </Link>
                 <div className="space-y-2">
                   <div className="text-base font-medium text-gray-900 py-2">Primary</div>
                   <div className="pl-4 space-y-2">
@@ -162,18 +172,18 @@ export default function RootLayout({
                   </div>
                 </div>
                 <Link 
-                  href="/blog" 
+                  href="/best-secondary-schools" 
                   className="block text-base text-gray-700 hover:text-blue-600 py-2"
                   onClick={closeMobileMenu}
                 >
-                  Blog
+                  Secondary
                 </Link>
                 <Link 
                   href="/schoolchecker-rating" 
                   className="block text-base text-gray-700 hover:text-blue-600 py-2"
                   onClick={closeMobileMenu}
                 >
-                  Our Rating
+                  Rating
                 </Link>
                 <Link 
                   href="/about" 

@@ -54,12 +54,7 @@ interface AdmissionsCardProps {
 }
 
 export default function AdmissionsCard({ urn, schoolName, phase = 'Primary', year = '202526', preloadedData }: AdmissionsCardProps) {
-  const [admissionsData, setAdmissionsData] = useState<AdmissionsData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedYear, setSelectedYear] = useState('2025');
-
-  // Map year selection to time period
+  // Helper function to check if we have preloaded data for the default year
   const getTimePeriod = (year: string) => {
     const yearMap: { [key: string]: string } = {
       '2025': '202526',
@@ -70,8 +65,22 @@ export default function AdmissionsCard({ urn, schoolName, phase = 'Primary', yea
     return yearMap[year] || '202526';
   };
 
+  const hasPreloadedDataForDefaultYear = preloadedData && preloadedData[getTimePeriod('2025')];
+
+  const [admissionsData, setAdmissionsData] = useState<AdmissionsData | null>(
+    hasPreloadedDataForDefaultYear ? preloadedData[getTimePeriod('2025')] : null
+  );
+  const [loading, setLoading] = useState(!hasPreloadedDataForDefaultYear);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedYear, setSelectedYear] = useState('2025');
+
   useEffect(() => {
-    // If we have preloaded data, use it instead of fetching
+    // If we already have data from initialization, don't fetch
+    if (admissionsData) {
+      return;
+    }
+
+    // If we have preloaded data for other years, check if we can use it
     if (preloadedData) {
       const timePeriod = getTimePeriod(selectedYear);
       const data = preloadedData[timePeriod];
@@ -263,28 +272,28 @@ export default function AdmissionsCard({ urn, schoolName, phase = 'Primary', yea
       {/* On Time Applications Table */}
       <div className="mb-3">
         <h4 className="text-sm font-semibold text-gray-900 mb-1">On Time Applications</h4>
-        <div className="border border-gray-200 rounded overflow-hidden inline-block">
-          <table className="text-sm">
+        <div className="border border-gray-200 rounded overflow-hidden">
+          <table className="w-full text-sm">
             <tbody>
               <tr className="border-b border-gray-200">
-                <td className="py-1 px-2 text-gray-600 border-r border-gray-200">Total Applications ¹</td>
-                <td className="py-1 px-2 font-medium text-right">{admissionsData.total_applications}</td>
+                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">Total Applications ¹</td>
+                <td className="py-1 px-2 font-medium text-right w-1/4">{admissionsData.total_applications}</td>
               </tr>
               <tr className="border-b border-gray-200">
-                <td className="py-1 px-2 text-gray-600 border-r border-gray-200">As first preference</td>
-                <td className="py-1 px-2 font-medium text-right">{admissionsData.first_preference_applications}</td>
+                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">As first preference</td>
+                <td className="py-1 px-2 font-medium text-right w-1/4">{admissionsData.first_preference_applications}</td>
               </tr>
               <tr className="border-b border-gray-200">
-                <td className="py-1 px-2 text-gray-600 border-r border-gray-200">As second preference</td>
-                <td className="py-1 px-2 font-medium text-right">{admissionsData.second_preference_applications}</td>
+                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">As second preference</td>
+                <td className="py-1 px-2 font-medium text-right w-1/4">{admissionsData.second_preference_applications}</td>
               </tr>
               <tr className="border-b border-gray-200">
-                <td className="py-1 px-2 text-gray-600 border-r border-gray-200">As third preference</td>
-                <td className="py-1 px-2 font-medium text-right">{admissionsData.third_preference_applications}</td>
+                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">As third preference</td>
+                <td className="py-1 px-2 font-medium text-right w-1/4">{admissionsData.third_preference_applications}</td>
               </tr>
               <tr>
-                <td className="py-1 px-2 text-gray-600 border-r border-gray-200">From another local authority ²</td>
-                <td className="py-1 px-2 font-medium text-right">{admissionsData.applications_from_another_la}</td>
+                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">From another local authority ²</td>
+                <td className="py-1 px-2 font-medium text-right w-1/4">{admissionsData.applications_from_another_la}</td>
               </tr>
             </tbody>
           </table>
@@ -294,32 +303,32 @@ export default function AdmissionsCard({ urn, schoolName, phase = 'Primary', yea
       {/* Offers Made on National Offer Day Table */}
       <div className="mb-3">
         <h4 className="text-sm font-semibold text-gray-900 mb-1">Offers Made on National Offer Day</h4>
-        <div className="border border-gray-200 rounded overflow-hidden inline-block">
-          <table className="text-sm">
+        <div className="border border-gray-200 rounded overflow-hidden">
+          <table className="w-full text-sm">
             <tbody>
               <tr className="border-b border-gray-200">
-                <td className="py-1 px-2 text-gray-600 border-r border-gray-200">Total Offers</td>
-                <td className="py-1 px-2 font-medium text-right">{admissionsData.total_offers}</td>
+                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">Total Offers</td>
+                <td className="py-1 px-2 font-medium text-right w-1/4">{admissionsData.total_offers}</td>
               </tr>
               <tr className="border-b border-gray-200">
-                <td className="py-1 px-2 text-gray-600 border-r border-gray-200">To first preference</td>
-                <td className="py-1 px-2 font-medium text-right">{admissionsData.first_preference_offers}</td>
+                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">To first preference</td>
+                <td className="py-1 px-2 font-medium text-right w-1/4">{admissionsData.first_preference_offers}</td>
               </tr>
               <tr className="border-b border-gray-200">
-                <td className="py-1 px-2 text-gray-600 border-r border-gray-200">To second preference</td>
-                <td className="py-1 px-2 font-medium text-right">{admissionsData.second_preference_offers}</td>
+                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">To second preference</td>
+                <td className="py-1 px-2 font-medium text-right w-1/4">{admissionsData.second_preference_offers}</td>
               </tr>
               <tr className="border-b border-gray-200">
-                <td className="py-1 px-2 text-gray-600 border-r border-gray-200">To third preference</td>
-                <td className="py-1 px-2 font-medium text-right">{admissionsData.third_preference_offers}</td>
+                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">To third preference</td>
+                <td className="py-1 px-2 font-medium text-right w-1/4">{admissionsData.third_preference_offers}</td>
               </tr>
               <tr className="border-b border-gray-200">
-                <td className="py-1 px-2 text-gray-600 border-r border-gray-200">To any preference</td>
-                <td className="py-1 px-2 font-medium text-right">{admissionsData.total_preferred_offers}</td>
+                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">To any preference</td>
+                <td className="py-1 px-2 font-medium text-right w-1/4">{admissionsData.total_preferred_offers}</td>
               </tr>
               <tr>
-                <td className="py-1 px-2 text-gray-600 border-r border-gray-200">To another local authority ²</td>
-                <td className="py-1 px-2 font-medium text-right">{admissionsData.offers_to_another_la}</td>
+                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">To another local authority ²</td>
+                <td className="py-1 px-2 font-medium text-right w-1/4">{admissionsData.offers_to_another_la}</td>
               </tr>
             </tbody>
           </table>

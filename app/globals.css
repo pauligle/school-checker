@@ -1,13 +1,23 @@
 @import "tailwindcss";
 
-/* Custom positioning for Leaflet zoom controls to avoid navigation header overlap */
-.leaflet-control-zoom {
-  margin-top: 100px !important; /* Push zoom controls further below the fixed header */
+/* Custom positioning for Leaflet zoom controls */
+/* For full-screen maps (home page) - avoid navigation header overlap */
+.full-screen-map .leaflet-control-zoom {
+  margin-top: 100px !important;
+}
+
+/* For contained maps (schools-near-me page) - position at top */
+.contained-map .leaflet-control-zoom {
+  margin-top: 10px !important;
 }
 
 /* On mobile, adjust for smaller header */
 @media (max-width: 768px) {
-  .leaflet-control-zoom {
+  .full-screen-map .leaflet-control-zoom {
     margin-top: 90px !important;
+  }
+  
+  .contained-map .leaflet-control-zoom {
+    margin-top: 10px !important;
   }
 }
