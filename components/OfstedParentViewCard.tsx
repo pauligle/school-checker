@@ -252,22 +252,6 @@ export default function OfstedParentViewCard({ urn, schoolName }: OfstedParentVi
     });
   };
 
-  // All questions in order
-  const allQuestions = [
-    { key: 'q1', question: parentViewData.questions.q1 },
-    { key: 'q2', question: parentViewData.questions.q2 },
-    { key: 'q3', question: parentViewData.questions.q3 },
-    { key: 'q4', question: parentViewData.questions.q4 },
-    { key: 'q5', question: parentViewData.questions.q5 },
-    { key: 'q6', question: parentViewData.questions.q6 },
-    { key: 'q8', question: parentViewData.questions.q8 },
-    { key: 'q9', question: parentViewData.questions.q9 },
-    { key: 'q10', question: parentViewData.questions.q10 },
-    { key: 'q11', question: parentViewData.questions.q11 },
-    { key: 'q12', question: parentViewData.questions.q12 },
-    { key: 'q13', question: parentViewData.questions.q13 },
-    { key: 'q14', question: parentViewData.questions.q14 }
-  ];
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4">
@@ -341,7 +325,21 @@ export default function OfstedParentViewCard({ urn, schoolName }: OfstedParentVi
       {parentViewData && (
         <>
           <div className="space-y-2">
-            {allQuestions.map(({ key, question }) => (
+            {[
+              { key: 'q1', question: parentViewData.questions.q1 },
+              { key: 'q2', question: parentViewData.questions.q2 },
+              { key: 'q3', question: parentViewData.questions.q3 },
+              { key: 'q4', question: parentViewData.questions.q4 },
+              { key: 'q5', question: parentViewData.questions.q5 },
+              { key: 'q6', question: parentViewData.questions.q6 },
+              { key: 'q8', question: parentViewData.questions.q8 },
+              { key: 'q9', question: parentViewData.questions.q9 },
+              { key: 'q10', question: parentViewData.questions.q10 },
+              { key: 'q11', question: parentViewData.questions.q11 },
+              { key: 'q12', question: parentViewData.questions.q12 },
+              { key: 'q13', question: parentViewData.questions.q13 },
+              { key: 'q14', question: parentViewData.questions.q14 }
+            ].map(({ key, question }) => (
               <QuestionChart key={key} question={question} responses={question.responses} />
             ))}
           </div>
