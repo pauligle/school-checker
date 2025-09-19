@@ -62,9 +62,9 @@ const QuestionChart = ({ question, responses }: { question: ParentViewQuestion; 
           <div className="flex-1 bg-gray-200 rounded-full h-4 mx-2">
             <div 
               className="bg-green-500 h-4 rounded-full flex items-center justify-end pr-2" 
-              style={{ width: `${responses.yes}%` }}
+              style={{ width: `${responses.yes || 0}%` }}
             >
-              {responses.yes > 0 && <span className="text-white text-xs font-medium">{responses.yes}%</span>}
+              {(responses.yes || 0) > 0 && <span className="text-white text-xs font-medium">{responses.yes}%</span>}
             </div>
           </div>
         </div>
@@ -73,15 +73,15 @@ const QuestionChart = ({ question, responses }: { question: ParentViewQuestion; 
           <div className="flex-1 bg-gray-200 rounded-full h-4 mx-2">
             <div 
               className="bg-red-500 h-4 rounded-full flex items-center justify-end pr-2" 
-              style={{ width: `${responses.no}%` }}
+              style={{ width: `${responses.no || 0}%` }}
             >
-              {responses.no > 0 && <span className="text-white text-xs font-medium">{responses.no}%</span>}
+              {(responses.no || 0) > 0 && <span className="text-white text-xs font-medium">{responses.no}%</span>}
             </div>
           </div>
         </div>
       </div>
       <div className="text-xs text-gray-500 mt-2">
-        Figures based on {((responses.yes + responses.no) * 0.01 * 100).toFixed(0)} responses
+        Figures based on {(((responses.yes || 0) + (responses.no || 0)) * 0.01 * 100).toFixed(0)} responses
       </div>
     </div>
     );

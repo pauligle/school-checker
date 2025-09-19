@@ -471,7 +471,7 @@ const SchoolDetailsCard = ({
             <div className="flex items-center space-x-2">
               <span>👨‍👩‍👧‍👦</span>
               <span>Parent Reviews</span>
-              {parentViewData?.questions?.q14 && (
+              {parentViewData?.questions?.q14?.responses?.yes !== undefined && (
                 <span className={`text-white text-xs px-2 py-1 rounded-full font-medium ${
                   parentViewData.questions.q14.responses.yes >= 80 ? 'bg-green-600' :
                   parentViewData.questions.q14.responses.yes >= 60 ? 'bg-orange-500' :
