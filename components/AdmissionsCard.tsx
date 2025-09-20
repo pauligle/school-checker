@@ -75,12 +75,7 @@ export default function AdmissionsCard({ urn, schoolName, phase = 'Primary', yea
   const [selectedYear, setSelectedYear] = useState('2025');
 
   useEffect(() => {
-    // If we already have data from initialization, don't fetch
-    if (admissionsData) {
-      return;
-    }
-
-    // If we have preloaded data for other years, check if we can use it
+    // If we have preloaded data for the selected year, check if we can use it
     if (preloadedData) {
       const timePeriod = getTimePeriod(selectedYear);
       const data = preloadedData[timePeriod];
