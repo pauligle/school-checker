@@ -111,21 +111,21 @@ export default async function EnglandPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="bg-gray-900 text-white py-16">
+      <div className="bg-gray-900 text-white py-8">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-6xl">
             {/* Breadcrumbs */}
-            <nav className="mt-3 md:mt-0 mb-8">
+            <nav className="mt-3 md:mt-0 mb-4">
               <div className="flex items-center space-x-2 text-sm">
                 <Link href="/" className="text-gray-300 hover:text-white">Home</Link>
                 <span className="text-gray-400">/</span>
                 <span className="text-white font-medium">Best Primary Schools England</span>
               </div>
             </nav>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold mb-3">
               Best Primary Schools in England
             </h1>
-            <p className="text-xl text-gray-300 mb-6">
+            <p className="text-xl text-gray-300 mb-4">
               Comprehensive guide to the best primary schools across England. Find top-rated schools in your city with detailed rankings, Ofsted ratings, and school information.
             </p>
           </div>
