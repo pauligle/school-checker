@@ -271,7 +271,7 @@ export default function AdmissionsCard({ urn, schoolName, phase = 'Primary', yea
           <table className="w-full text-sm">
             <tbody>
               <tr className="border-b border-gray-200">
-                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">Total Applications ¹</td>
+                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">Total Applications</td>
                 <td className="py-1 px-2 font-medium text-right w-1/4">{admissionsData.total_applications}</td>
               </tr>
               <tr className="border-b border-gray-200">
@@ -287,7 +287,7 @@ export default function AdmissionsCard({ urn, schoolName, phase = 'Primary', yea
                 <td className="py-1 px-2 font-medium text-right w-1/4">{admissionsData.third_preference_applications}</td>
               </tr>
               <tr>
-                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">From another local authority ²</td>
+                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">From another local authority</td>
                 <td className="py-1 px-2 font-medium text-right w-1/4">{admissionsData.applications_from_another_la}</td>
               </tr>
             </tbody>
@@ -322,7 +322,7 @@ export default function AdmissionsCard({ urn, schoolName, phase = 'Primary', yea
                 <td className="py-1 px-2 font-medium text-right w-1/4">{admissionsData.total_preferred_offers}</td>
               </tr>
               <tr>
-                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">To another local authority ²</td>
+                <td className="py-1 px-2 text-gray-600 border-r border-gray-200 w-3/4">To another local authority</td>
                 <td className="py-1 px-2 font-medium text-right w-1/4">{admissionsData.offers_to_another_la}</td>
               </tr>
             </tbody>

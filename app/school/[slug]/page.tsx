@@ -381,12 +381,17 @@ async function getSchoolData(slug: string): Promise<{
           let currentRank = 1;
           for (let i = 0; i < schoolsWithRankings.length; i++) {
             if (schoolsWithRankings[i].urn === schoolData.urn) {
+              // Get the best school in this LA (first in the sorted list)
+              const bestSchool = schoolsWithRankings.length > 0 ? schoolsWithRankings[0] : null;
+              
               laRankingData = {
                 la_rank: currentRank,
                 total_la_schools: schoolsWithRankings.length,
                 la_name: schoolData.la__name_,
                 la_code: schoolData.la__code_,
-                year: 2024
+                year: 2024,
+                bestSchoolName: bestSchool?.establishmentname || null,
+                bestSchoolUrn: bestSchool?.urn || null
               };
               break;
             }
@@ -771,7 +776,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
             
             {/* LA Ranking Information */}
             {laRanking && (
-              <div className="mt-2">
+              <div className="mt-2 space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="text-xs md:text-sm font-medium text-gray-200">Local Ranking:</span>
                   <span className="text-xs md:text-sm text-white font-semibold">
@@ -796,6 +801,25 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                       return ` (top ${Math.round(percentile)}%)`;
                     })()}
                   </span>
+                </div>
+                
+                {/* Best School in LA */}
+                <div className="mt-2">
+                  <div className="border border-yellow-400/30 bg-yellow-400/10 rounded-lg px-3 py-2 inline-block">
+                    <div className="flex items-start gap-2">
+                      <span className="text-yellow-600 text-sm">⭐</span>
+                      <div className="text-xs md:text-sm">
+                        <span className="text-gray-200 font-medium">Best School in KS2 Results in {laRanking.la_name}: </span>
+                        <Link
+                          href={`/school/${createLaSlug(laRanking.bestSchoolName || 'Best School')}-${laRanking.bestSchoolUrn || ''}`}
+                          className="text-blue-300 hover:text-blue-100 underline hover:no-underline font-medium"
+                        >
+                          {laRanking.bestSchoolName || 'Loading...'}
+                        </Link>
+                        <span className="text-gray-300"> (2024)</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -935,8 +959,8 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
 
           {/* Pupils Data Section */}
           <div className="bg-white rounded-lg shadow-sm p-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-              <span className="w-1 h-8 bg-green-600 rounded"></span>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
+              <span className="w-1 h-6 bg-green-600 rounded"></span>
               Pupils Data
             </h2>
             
@@ -1102,8 +1126,8 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
           {/* Ofsted Inspections Section */}
           {inspection && (
             <div className="bg-white rounded-lg shadow-sm p-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-                <span className="w-1 h-8 bg-yellow-600 rounded"></span>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
+                <span className="w-1 h-6 bg-yellow-600 rounded"></span>
                 Ofsted Inspections
               </h2>
               
@@ -1240,8 +1264,8 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
 
           {/* Primary Results Section */}
           <div className="bg-white rounded-lg shadow-sm p-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-              <span className="w-1 h-8 bg-red-600 rounded"></span>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
+              <span className="w-1 h-6 bg-red-600 rounded"></span>
               Primary Results
             </h2>
             <PrimaryResultsCard schoolData={school} />
@@ -1249,8 +1273,8 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
 
           {/* Admissions Section */}
           <div className="bg-white rounded-lg shadow-sm p-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-              <span className="w-1 h-8 bg-blue-600 rounded"></span>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
+              <span className="w-1 h-6 bg-blue-600 rounded"></span>
               Admissions
             </h2>
             
