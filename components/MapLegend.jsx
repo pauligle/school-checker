@@ -22,21 +22,21 @@ const MapLegend = ({ position = 'bottom-right', className = '' }) => {
 
   return (
     <div className={`absolute ${positionClasses[position]} z-[1300] ${className}`}>
-      <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-3">
-        <h4 className="text-xs font-semibold text-gray-900 mb-2">Ofsted Ratings</h4>
-        <div className="space-y-1">
+      <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-1 sm:p-3 max-w-[120px] sm:max-w-none">
+        <h4 className="text-[10px] sm:text-xs font-semibold text-gray-900 mb-1 sm:mb-2">Ofsted Ratings</h4>
+        <div className="space-y-0.5 sm:space-y-1">
           {legendItems.map((item, index) => (
-            <div key={index} className="flex items-center space-x-2">
+            <div key={index} className="flex items-center space-x-1 sm:space-x-2">
               <div 
-                className="w-3 h-3 rounded-full flex-shrink-0" 
+                className="w-2 h-2 sm:w-3 sm:h-3 rounded-full flex-shrink-0" 
                 style={{ backgroundColor: item.color }}
               ></div>
-              <span className="text-xs text-gray-700 leading-tight">{item.label}</span>
+              <span className="text-[9px] sm:text-xs text-gray-700 leading-tight">{item.label}</span>
             </div>
           ))}
         </div>
-        <div className="mt-2 pt-2 border-t border-gray-100">
-          <p className="text-xs text-gray-500 leading-tight">
+        <div className="mt-1 sm:mt-2 pt-1 sm:pt-2 border-t border-gray-100">
+          <p className="text-[8px] sm:text-xs text-gray-500 leading-tight">
             Based on latest Ofsted inspection
           </p>
         </div>
