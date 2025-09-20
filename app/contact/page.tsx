@@ -51,7 +51,7 @@ export default function ContactPage() {
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Contact Us</h1>
           <div className="bg-white rounded-lg shadow-sm p-8">
-            <p className="text-xl text-gray-600 mb-4">Email: info@schoolchecker.com</p>
+            <p className="text-xl text-gray-600 mb-4">Email: info@schoolchecker.io</p>
             <p className="text-lg text-gray-700">We'd love to hear your feedback and suggestions.</p>
           </div>
         </div>
