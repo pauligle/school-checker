@@ -1277,6 +1277,91 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
             </div>
           </div>
 
+          {/* All-Through School Sections - Only show for All-through schools */}
+          {school.phaseofeducation__name_ === 'All-through' && (
+            <>
+              {/* GCSE Results Section */}
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 px-6 md:px-8 pt-6 md:pt-8 flex items-center gap-3">
+                  <span className="w-1 h-6 bg-purple-600 rounded"></span>
+                  GCSE Results
+                </h2>
+                
+                <div className="px-6 md:px-8 pb-6 md:pb-8">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+                    <div className="flex items-center justify-center mb-4">
+                      <span className="text-4xl">📊</span>
+                    </div>
+                    <h3 className="text-lg font-semibold text-blue-900 mb-2">GCSE Results Coming Soon</h3>
+                    <p className="text-blue-800">
+                      Comprehensive GCSE performance data and subject-specific results will be available here soon.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Catchment Area Section */}
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 px-6 md:px-8 pt-6 md:pt-8 flex items-center gap-3">
+                  <span className="w-1 h-6 bg-green-600 rounded"></span>
+                  Catchment Area
+                </h2>
+                
+                <div className="px-6 md:px-8 pb-6 md:pb-8">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+                    <div className="flex items-center justify-center mb-4">
+                      <span className="text-4xl">🗺️</span>
+                    </div>
+                    <h3 className="text-lg font-semibold text-blue-900 mb-2">Catchment Area Coming Soon</h3>
+                    <p className="text-blue-800">
+                      Interactive catchment area maps and admission criteria will be available here soon.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* A Levels Results Section */}
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 px-6 md:px-8 pt-6 md:pt-8 flex items-center gap-3">
+                  <span className="w-1 h-6 bg-orange-600 rounded"></span>
+                  A Levels Results
+                </h2>
+                
+                <div className="px-6 md:px-8 pb-6 md:pb-8">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+                    <div className="flex items-center justify-center mb-4">
+                      <span className="text-4xl">🎓</span>
+                    </div>
+                    <h3 className="text-lg font-semibold text-blue-900 mb-2">A Levels Results Coming Soon</h3>
+                    <p className="text-blue-800">
+                      Detailed A Level performance data and university progression statistics will be available here soon.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Subjects Section */}
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 px-6 md:px-8 pt-6 md:pt-8 flex items-center gap-3">
+                  <span className="w-1 h-6 bg-indigo-600 rounded"></span>
+                  Subjects
+                </h2>
+                
+                <div className="px-6 md:px-8 pb-6 md:pb-8">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+                    <div className="flex items-center justify-center mb-4">
+                      <span className="text-4xl">📚</span>
+                    </div>
+                    <h3 className="text-lg font-semibold text-blue-900 mb-2">Subjects Coming Soon</h3>
+                    <p className="text-blue-800">
+                      Complete list of subjects offered, including GCSE and A Level options, will be available here soon.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
         </div>
       </div>
     </div>
