@@ -952,7 +952,7 @@ export default function SchoolsMap({ city = null, center = null, zoom = null, se
                 : 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
             }`}
           >
-            <span className="md:hidden">Primaries</span>
+            <span className="md:hidden">Primary</span>
             <span className="hidden md:inline">Primary Schools</span>
           </button>
           <button
