@@ -1,6 +1,13 @@
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
+import { createClient } from '@supabase/supabase-js';
 import HomepageStructuredData from '@/components/HomepageStructuredData';
 import HomeContent from '@/components/HomeContent';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export const metadata: Metadata = {
   title: 'SchoolChecker.io - Find & Compare UK Schools with Ofsted Ratings',
@@ -49,7 +56,37 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+// Helper function to create school slug (same logic as used in sitemap and school pages)
+function createSchoolSlug(schoolName: string, urn: string): string {
+  const nameSlug = schoolName
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single
+    .trim();
+  return `${nameSlug}-${urn}`;
+}
+
+export default async function Home({ searchParams }: { searchParams: { school?: string } }) {
+  // If there's a school query parameter, redirect to the canonical school page
+  if (searchParams?.school) {
+    try {
+      const { data: schoolData } = await supabase
+        .from('schools')
+        .select('urn, establishmentname')
+        .eq('urn', searchParams.school)
+        .single();
+
+      if (schoolData) {
+        const slug = createSchoolSlug(schoolData.establishmentname, schoolData.urn);
+        redirect(`/school/${slug}`);
+      }
+    } catch (error) {
+      console.error('Error fetching school for redirect:', error);
+      // If error, just continue to normal home page
+    }
+  }
+
   return (
     <>
       {/* Structured Data */}
