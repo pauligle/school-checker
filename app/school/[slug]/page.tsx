@@ -827,6 +827,31 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
         </div>
       </div>
 
+      {/* Table of Contents */}
+      <div className="bg-white border-b border-gray-200 py-6">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="max-w-6xl">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Page Contents</h2>
+            <div className="flex flex-col gap-2 text-sm">
+              <a href="#school-details" className="text-blue-600 hover:text-blue-800 underline transition-colors">School Details</a>
+              <a href="#pupils-data" className="text-blue-600 hover:text-blue-800 underline transition-colors">Pupils Data</a>
+              <a href="#ofsted-inspections" className="text-blue-600 hover:text-blue-800 underline transition-colors">Ofsted Inspections</a>
+              <a href="#primary-results" className="text-blue-600 hover:text-blue-800 underline transition-colors">Primary Results</a>
+              <a href="#admissions" className="text-blue-600 hover:text-blue-800 underline transition-colors">Admissions</a>
+              <a href="#parent-reviews" className="text-blue-600 hover:text-blue-800 underline transition-colors">Parent Reviews</a>
+              {school.phaseofeducation__name_ === 'All-through' && (
+                <>
+                  <a href="#gcse-results" className="text-blue-600 hover:text-blue-800 underline transition-colors">GCSE Results</a>
+                  <a href="#catchment-area" className="text-blue-600 hover:text-blue-800 underline transition-colors">Catchment Area</a>
+                  <a href="#a-levels-results" className="text-blue-600 hover:text-blue-800 underline transition-colors">A Levels Results</a>
+                  <a href="#subjects" className="text-blue-600 hover:text-blue-800 underline transition-colors">Subjects</a>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* School Location Map */}
       <div className="bg-gray-50 py-6 md:py-12">
         <div className="container mx-auto px-4 md:px-6">
@@ -855,7 +880,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
       <div className="container mx-auto px-4 md:px-6 py-4 md:py-8">
         <div className="max-w-7xl space-y-8">
           {/* School Details Section */}
-          <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
+          <div id="school-details" className="bg-white rounded-lg shadow-sm p-4 md:p-6">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
               <span className="w-1 h-6 bg-blue-600 rounded"></span>
               School Details
@@ -958,7 +983,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
           </div>
 
           {/* Pupils Data Section */}
-          <div className="bg-white rounded-lg shadow-sm p-8">
+          <div id="pupils-data" className="bg-white rounded-lg shadow-sm p-8">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
               <span className="w-1 h-6 bg-green-600 rounded"></span>
               Pupils Data
@@ -1125,7 +1150,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
 
           {/* Ofsted Inspections Section */}
           {inspection && (
-            <div className="bg-white rounded-lg shadow-sm p-8">
+            <div id="ofsted-inspections" className="bg-white rounded-lg shadow-sm p-8">
               <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
                 <span className="w-1 h-6 bg-yellow-600 rounded"></span>
                 Ofsted Inspections
@@ -1263,7 +1288,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
           )}
 
           {/* Primary Results Section */}
-          <div className="bg-white rounded-lg shadow-sm p-8">
+          <div id="primary-results" className="bg-white rounded-lg shadow-sm p-8">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
               <span className="w-1 h-6 bg-red-600 rounded"></span>
               Primary Results
@@ -1272,7 +1297,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
           </div>
 
           {/* Admissions Section */}
-          <div className="bg-white rounded-lg shadow-sm p-8">
+          <div id="admissions" className="bg-white rounded-lg shadow-sm p-8">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
               <span className="w-1 h-6 bg-blue-600 rounded"></span>
               Admissions
@@ -1288,7 +1313,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
           </div>
 
           {/* Parent View Section */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+          <div id="parent-reviews" className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 px-6 md:px-8 pt-6 md:pt-8">
               Parent Reviews
             </h2>
@@ -1305,7 +1330,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
           {school.phaseofeducation__name_ === 'All-through' && (
             <>
               {/* GCSE Results Section */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+              <div id="gcse-results" className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
                 <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 px-6 md:px-8 pt-6 md:pt-8 flex items-center gap-3">
                   <span className="w-1 h-6 bg-purple-600 rounded"></span>
                   GCSE Results
@@ -1325,7 +1350,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
               </div>
 
               {/* Catchment Area Section */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+              <div id="catchment-area" className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
                 <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 px-6 md:px-8 pt-6 md:pt-8 flex items-center gap-3">
                   <span className="w-1 h-6 bg-green-600 rounded"></span>
                   Catchment Area
@@ -1345,7 +1370,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
               </div>
 
               {/* A Levels Results Section */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+              <div id="a-levels-results" className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
                 <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 px-6 md:px-8 pt-6 md:pt-8 flex items-center gap-3">
                   <span className="w-1 h-6 bg-orange-600 rounded"></span>
                   A Levels Results
@@ -1365,7 +1390,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
               </div>
 
               {/* Subjects Section */}
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+              <div id="subjects" className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
                 <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 px-6 md:px-8 pt-6 md:pt-8 flex items-center gap-3">
                   <span className="w-1 h-6 bg-indigo-600 rounded"></span>
                   Subjects

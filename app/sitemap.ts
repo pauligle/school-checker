@@ -7,7 +7,7 @@ const supabase = createClient(
 )
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Static pages
+  // Static pages - Only clean URLs without query parameters are included in sitemap
   const staticPages = [
     {
       url: 'https://schoolchecker.io',
@@ -18,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: 'https://schoolchecker.io/schools-near-me',
       lastModified: new Date(),
-      changeFrequency: 'daily' as const,
+      changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
     {
@@ -272,7 +272,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       return {
         url: `https://schoolchecker.io/school/${slug}`,
         lastModified: new Date(),
-        changeFrequency: 'monthly' as const,
+        changeFrequency: 'yearly' as const,
         priority: 0.7,
       }
     }) || []

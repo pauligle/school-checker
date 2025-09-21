@@ -194,14 +194,6 @@ export default async function BestPrimarySchoolsLeedsPage() {
             <h1 className="text-3xl md:text-6xl font-bold mb-4 md:mb-6 leading-tight">Best Primary Schools in Leeds</h1>
             <div className="flex flex-wrap items-center gap-3 md:gap-6 text-gray-300 text-sm md:text-lg">
               <span className="flex items-center gap-2">
-                <span className="text-gray-400">📍</span>
-                LS Postcode Area (LS1-LS29)
-              </span>
-              <span className="flex items-center gap-2">
-                <span className="text-gray-400">🏛️</span>
-                Leeds & Surrounding Areas
-              </span>
-              <span className="flex items-center gap-2">
                 <span className="text-gray-400">🎓</span>
                 Primary & All-through Schools
               </span>
@@ -209,27 +201,6 @@ export default async function BestPrimarySchoolsLeedsPage() {
                 <span className="text-gray-400">📊</span>
                 {locationData.totalSchools} Schools Listed
               </span>
-            </div>
-            <div className="mt-4 md:mt-8 space-y-3 md:space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm md:text-lg font-medium text-gray-200">Coverage Area:</span>
-                  <span className="px-2 md:px-3 py-1 text-xs md:text-sm font-medium rounded bg-blue-100 text-blue-800">
-                    Leeds Metropolitan Area
-                  </span>
-                </div>
-              </div>
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm md:text-lg font-medium text-gray-200">School Types:</span>
-                  <span className="px-2 md:px-3 py-1 text-xs md:text-sm font-medium rounded bg-green-100 text-green-800">
-                    Primary Schools
-                  </span>
-                  <span className="px-2 md:px-3 py-1 text-xs md:text-sm font-medium rounded bg-purple-100 text-purple-800">
-                    All-through Schools
-                  </span>
-                </div>
-              </div>
             </div>
           </div>
         </div>

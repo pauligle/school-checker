@@ -403,11 +403,32 @@ function createSlug(schoolName: string, urn: string): string {
   return `${nameSlug}-${urn}`
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ filter?: string }> }): Promise<Metadata> {
   const { slug } = await params
+  const { filter } = await searchParams
   const laName = slugToLAName(slug)
   const locationData = await getLocationData(laName)
   
+  // Add noindex for pages with filter parameters
+  const robotsConfig = filter ? {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  } : {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  };
+
   return {
     title: `Best Primary Schools in ${laName} | SchoolChecker.io`,
     description: `Find the best primary schools in ${laName}. Compare ${locationData.totalSchools} primary schools with Ofsted ratings, pupil numbers, and detailed reviews.`,
@@ -428,10 +449,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     alternates: {
       canonical: `https://schoolchecker.io/local-authority/${slug}`,
     },
-    robots: {
-      index: true,
-      follow: true,
-    },
+    robots: robotsConfig,
   }
 }
 
@@ -489,10 +507,6 @@ export default async function LocalAuthorityPage({ params }: { params: Promise<{
             <h1 className="text-2xl md:text-4xl font-bold mb-3 md:mb-4 leading-tight">Best Primary Schools in {laName}</h1>
             <div className="flex flex-wrap items-center gap-2 md:gap-4 text-gray-300 text-xs md:text-sm">
               <span className="flex items-center gap-2">
-                <span className="text-gray-400">🏛️</span>
-                {laName} Local Authority
-              </span>
-              <span className="flex items-center gap-2">
                 <span className="text-gray-400">🎓</span>
                 Primary & All-through Schools
               </span>
@@ -500,43 +514,24 @@ export default async function LocalAuthorityPage({ params }: { params: Promise<{
                 <span className="text-gray-400">📊</span>
                 {schools.length} Schools Listed
               </span>
-              {topRankedSchool && (
-                <span className="flex items-center gap-2">
-                  <span className="text-gray-400">⭐</span>
+            </div>
+            {topRankedSchool && (
+              <div className="mt-3 md:mt-4">
+                <div className="inline-flex items-center gap-2 border border-yellow-400/30 bg-yellow-400/10 rounded-lg px-3 py-2 backdrop-blur-sm text-xs md:text-sm">
+                  <span className="text-yellow-400">⭐</span>
                   <span>
                     Best School in KS2 Results in {laName}: 
                     <Link 
                       href={`/school/${topRankedSchool.urn}`} 
-                      className="ml-1 text-blue-300 hover:text-blue-100 hover:underline"
+                      className="ml-1 text-yellow-200 hover:text-white underline font-medium"
                     >
                       {topRankedSchool.establishmentname}
                     </Link>
-                    <span className="text-gray-400 ml-1">(2024)</span>
-                  </span>
-                </span>
-              )}
-            </div>
-            <div className="mt-3 md:mt-4 space-y-2 md:space-y-3">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs md:text-sm font-medium text-gray-200">Coverage Area:</span>
-                  <span className="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800">
-                    {laName} Local Authority
+                    <span className="text-gray-300 ml-1">(2024)</span>
                   </span>
                 </div>
               </div>
-              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs md:text-sm font-medium text-gray-200">School Types:</span>
-                  <span className="px-2 py-1 text-xs font-medium rounded bg-green-100 text-green-800">
-                    Primary Schools
-                  </span>
-                  <span className="px-2 py-1 text-xs font-medium rounded bg-purple-100 text-purple-800">
-                    All-through Schools
-                  </span>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

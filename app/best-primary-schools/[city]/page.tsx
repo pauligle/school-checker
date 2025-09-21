@@ -662,8 +662,9 @@ async function getLocalRankings(schools: SchoolData[], city: string): Promise<{ 
   return localRankingsMap
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ city: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: { params: Promise<{ city: string }>; searchParams: Promise<{ filter?: string }> }): Promise<Metadata> {
   const { city: cityParam } = await params
+  const { filter } = await searchParams
   const city = decodeURIComponent(cityParam)
   const cityDisplayName = capitalizeCityName(city)
   const locationData = await getLocationData(city)
@@ -717,21 +718,31 @@ export async function generateMetadata({ params }: { params: Promise<{ city: str
     ? `primary schools ${cityDisplayName}, ${cityDisplayName} primary schools, best schools ${cityDisplayName}, ${londonAreaType} schools, school rankings ${cityDisplayName}, Ofsted ratings ${cityDisplayName}, ${cityDisplayName} education, London primary schools, school comparison ${cityDisplayName}`
     : `primary schools ${cityDisplayName}, best schools ${cityDisplayName}, school rankings ${cityDisplayName}, Ofsted ratings ${cityDisplayName}, ${cityDisplayName} schools, school comparison ${cityDisplayName}, education ${cityDisplayName}`
   
+  // Add noindex for pages with filter parameters
+  const robotsConfig = filter ? {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  } : {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  };
+
   return {
     title: enhancedTitle,
     description: enhancedDescription,
     keywords: enhancedKeywords,
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
-      },
-    },
+    robots: robotsConfig,
     openGraph: {
       title: enhancedTitle,
       description: enhancedDescription,
@@ -1246,14 +1257,6 @@ export default async function CityPage({
             
             <div className="flex flex-wrap items-center gap-2 md:gap-4 text-gray-300 text-xs md:text-sm">
               <span className="flex items-center gap-2">
-                <span className="text-gray-400">📍</span>
-                {isLocalAuthority ? `${cityDisplayName} Local Authority` : `${cityDisplayName} Area`}
-              </span>
-              <span className="flex items-center gap-2">
-                <span className="text-gray-400">🏛️</span>
-                {isLocalAuthority ? `${cityDisplayName} Local Authority` : `${cityDisplayName} & Surrounding Areas`}
-              </span>
-              <span className="flex items-center gap-2">
                 <span className="text-gray-400">🎓</span>
                 Primary & All-through Schools
               </span>
@@ -1261,58 +1264,41 @@ export default async function CityPage({
                 <span className="text-gray-400">📊</span>
                 {schools.length} Schools Listed
               </span>
-              {topRankedSchool && (
-                <span className="flex items-center gap-2 border border-yellow-400/30 bg-yellow-400/10 rounded-lg px-3 py-2 backdrop-blur-sm">
-                  <span className="text-yellow-400">⭐</span>
-                  <span>
-                    Best School in KS2 Results in {cityDisplayName}: 
-                    <Link 
-                      href={`/school/${topRankedSchool.urn}`} 
-                      className="ml-1 text-yellow-200 hover:text-white underline font-medium"
-                    >
-                      {topRankedSchool.establishmentname}
-                    </Link>
-                    <span className="text-gray-300 ml-1">(2024)</span>
-                  </span>
-                </span>
-              )}
-              {topNonReligiousSchool && (
-                <span className="flex items-center gap-2 border border-yellow-400/30 bg-yellow-400/10 rounded-lg px-3 py-2 backdrop-blur-sm">
-                  <span className="text-yellow-400">⭐</span>
-                  <span>
-                    Best Non-Religious School in KS2 Results in {cityDisplayName} (#{localRankings[topNonReligiousSchool.urn]?.la_rank}): 
-                    <Link 
-                      href={`/school/${topNonReligiousSchool.urn}`} 
-                      className="ml-1 text-yellow-200 hover:text-white underline font-medium"
-                    >
-                      {topNonReligiousSchool.establishmentname}
-                    </Link>
-                    <span className="text-gray-300 ml-1">(2024)</span>
-                  </span>
-                </span>
-              )}
             </div>
-            <div className="mt-3 md:mt-4 space-y-2 md:space-y-3">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs md:text-sm font-medium text-gray-200">Coverage Area:</span>
-                  <span className="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800">
-                    {isLocalAuthority ? `${cityDisplayName} Local Authority` : `${cityDisplayName} Metropolitan Area`}
-                  </span>
-                </div>
+            {(topRankedSchool || topNonReligiousSchool) && (
+              <div className="mt-3 md:mt-4 space-y-2">
+                {topRankedSchool && (
+                  <div className="inline-flex items-center gap-2 border border-yellow-400/30 bg-yellow-400/10 rounded-lg px-3 py-2 backdrop-blur-sm text-xs md:text-sm">
+                    <span className="text-yellow-400">⭐</span>
+                    <span>
+                      Best School in KS2 Results in {cityDisplayName}: 
+                      <Link 
+                        href={`/school/${topRankedSchool.urn}`} 
+                        className="ml-1 text-yellow-200 hover:text-white underline font-medium"
+                      >
+                        {topRankedSchool.establishmentname}
+                      </Link>
+                      <span className="text-gray-300 ml-1">(2024)</span>
+                    </span>
+                  </div>
+                )}
+                {topNonReligiousSchool && (
+                  <div className="inline-flex items-center gap-2 border border-yellow-400/30 bg-yellow-400/10 rounded-lg px-3 py-2 backdrop-blur-sm text-xs md:text-sm">
+                    <span className="text-yellow-400">⭐</span>
+                    <span>
+                      Best Non-Religious School in KS2 Results in {cityDisplayName} (#{localRankings[topNonReligiousSchool.urn]?.la_rank}): 
+                      <Link 
+                        href={`/school/${topNonReligiousSchool.urn}`} 
+                        className="ml-1 text-yellow-200 hover:text-white underline font-medium"
+                      >
+                        {topNonReligiousSchool.establishmentname}
+                      </Link>
+                      <span className="text-gray-300 ml-1">(2024)</span>
+                    </span>
+                  </div>
+                )}
               </div>
-              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs md:text-sm font-medium text-gray-200">School Types:</span>
-                  <span className="px-2 py-1 text-xs font-medium rounded bg-green-100 text-green-800">
-                    Primary Schools
-                  </span>
-                  <span className="px-2 py-1 text-xs font-medium rounded bg-purple-100 text-purple-800">
-                    All-through Schools
-                  </span>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
