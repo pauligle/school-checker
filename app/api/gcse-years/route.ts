@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
 
     // Convert Set to array and format
     const yearsArray = Array.from(years)
-      .sort((a, b) => b - a) // Sort descending (newest first)
+      .sort((a: number, b: number) => b - a) // Sort descending (newest first)
       .map(year => ({
         year,
         hasData: true,
