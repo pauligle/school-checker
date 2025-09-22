@@ -1,11 +1,8 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
-import ClientSchoolsMap from '@/components/ClientSchoolsMap';
-import PrimaryResultsCard from '@/components/PrimaryResultsCard';
-import AdmissionsCard from '@/components/AdmissionsCard';
-import OfstedParentViewCard from '@/components/OfstedParentViewCard';
 import StructuredData from '@/components/StructuredData';
+import SchoolPageClientWrapper from '@/components/SchoolPageClientWrapper';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -283,12 +280,18 @@ async function getSchoolData(slug: string): Promise<{
   ranking: any | null;
   laRanking: any | null;
   admissionsData: { [year: string]: any } | null;
+  gcseData: any | null;
+  gcseMultiYearData: any | null;
+  parentViewData: any | null;
 }> {
   try {
+    console.log('🔍 getSchoolData called with slug:', slug);
     // Extract URN from slug (format: school-name-urn)
     const urn = slug.split('-').pop();
+    console.log('🔍 Extracted URN:', urn);
     if (!urn || isNaN(Number(urn))) {
-      return { school: null, inspection: null, ranking: null, laRanking: null, admissionsData: null };
+      console.log('❌ Invalid URN:', urn);
+      return { school: null, inspection: null, ranking: null, laRanking: null, admissionsData: null, gcseData: null, gcseMultiYearData: null, parentViewData: null };
     }
 
     // Get school data
@@ -299,7 +302,7 @@ async function getSchoolData(slug: string): Promise<{
       .single();
 
     if (schoolError || !schoolData) {
-      return { school: null, inspection: null, ranking: null, laRanking: null, admissionsData: null };
+      return { school: null, inspection: null, ranking: null, laRanking: null, admissionsData: null, gcseData: null, gcseMultiYearData: null, parentViewData: null };
     }
 
     // Get latest inspection data
@@ -488,16 +491,281 @@ async function getSchoolData(slug: string): Promise<{
       console.error('Error fetching admissions data:', error);
     }
 
+    // Get GCSE data for secondary schools
+    let gcseData = null;
+    if (schoolData.phaseofeducation__name_ === '16 plus' || 
+        schoolData.phaseofeducation__name_ === 'Secondary' || 
+        schoolData.phaseofeducation__name_ === 'All-through') {
+      try {
+        // Fetch GCSE results for the school
+        const { data: gcseResults, error: gcseError } = await supabase
+          .from('gcse_results')
+          .select('*')
+          .eq('urn', urn)
+          .eq('academic_year', '2023-24')
+          .single();
+
+        if (!gcseError && gcseResults) {
+          // Fetch rankings for the school
+          const { data: rankings } = await supabase
+            .from('gcse_rankings')
+            .select('*')
+            .eq('urn', urn)
+            .eq('academic_year', '2023-24')
+            .single();
+
+          // Fetch LA averages
+          const { data: laAverages } = await supabase
+            .from('gcse_la_averages')
+            .select('*')
+            .eq('la_code', schoolData.lea_code)
+            .eq('academic_year', '2023-24')
+            .single();
+
+          // Fetch England averages
+          const { data: englandAverages } = await supabase
+            .from('gcse_england_averages')
+            .select('*')
+            .eq('academic_year', '2023-24')
+            .single();
+
+          gcseData = {
+            school: gcseResults,
+            rankings: rankings || null,
+            laAverages: laAverages || null,
+            englandAverages: englandAverages || null,
+            academicYear: '2023-24'
+          };
+        }
+      } catch (error) {
+        console.error('Error fetching GCSE data:', error);
+      }
+    }
+
+    // Get multi-year GCSE data for secondary schools
+    let gcseMultiYearData = null;
+    if (schoolData.phaseofeducation__name_ === '16 plus' || 
+        schoolData.phaseofeducation__name_ === 'Secondary' || 
+        schoolData.phaseofeducation__name_ === 'All-through') {
+      try {
+        // Fetch available years
+        const { data: yearsData } = await supabase
+          .from('gcse_results_multi_year')
+          .select('academic_year')
+          .eq('urn', urn)
+          .order('academic_year', { ascending: false });
+
+        if (yearsData && yearsData.length > 0) {
+          const uniqueYears = [...new Set(yearsData.map(item => item.academic_year))];
+          const yearsWithNotes = uniqueYears.map(year => ({
+            year,
+            hasData: true,
+            covidNote: year === 2020 || year === 2021 ? 
+              'Results for this year were significantly impacted by the COVID-19 pandemic. Exams were cancelled and grades were awarded through teacher assessment.' : 
+              null
+          }));
+
+          gcseMultiYearData = {
+            years: yearsWithNotes,
+            defaultYear: Math.max(...uniqueYears)
+          };
+        }
+      } catch (error) {
+        console.error('Error fetching multi-year GCSE data:', error);
+      }
+    }
+
+    // Get Parent View data
+    let parentViewData = null;
+    try {
+      // Fetch available years for Parent View
+      const { data: parentViewYears } = await supabase
+        .from('parent_view_data')
+        .select('data_date')
+        .eq('urn', urn)
+        .order('data_date', { ascending: false });
+
+      if (parentViewYears && parentViewYears.length > 0) {
+        const availableYears = parentViewYears.map(year => ({ dataDate: year.data_date }));
+        const selectedYear = availableYears[0].dataDate;
+
+        // Fetch Parent View data for the most recent year
+        const { data: parentViewResults } = await supabase
+          .from('parent_view_data')
+          .select('*')
+          .eq('urn', urn)
+          .eq('data_date', selectedYear)
+          .single();
+
+        if (parentViewResults) {
+          // Transform the data into the same format as the API
+          const transformedData = {
+            urn: parentViewResults.urn,
+            schoolName: parentViewResults.school_name,
+            localAuthority: parentViewResults.local_authority,
+            ofstedRegion: parentViewResults.ofsted_region,
+            ofstedPhase: parentViewResults.ofsted_phase,
+            submissions: parentViewResults.submissions,
+            responseRate: parentViewResults.response_rate,
+            dataDate: parentViewResults.data_date,
+            
+            questions: {
+              q1: {
+                question: "My child is happy at this school",
+                responses: {
+                  stronglyAgree: parentViewResults.q1_strongly_agree,
+                  agree: parentViewResults.q1_agree,
+                  disagree: parentViewResults.q1_disagree,
+                  stronglyDisagree: parentViewResults.q1_strongly_disagree,
+                  dontKnow: parentViewResults.q1_dont_know
+                }
+              },
+              q2: {
+                question: "My child feels safe at this school",
+                responses: {
+                  stronglyAgree: parentViewResults.q2_strongly_agree,
+                  agree: parentViewResults.q2_agree,
+                  disagree: parentViewResults.q2_disagree,
+                  stronglyDisagree: parentViewResults.q2_strongly_disagree,
+                  dontKnow: parentViewResults.q2_dont_know
+                }
+              },
+              q3: {
+                question: "The school makes sure its pupils are well behaved",
+                responses: {
+                  stronglyAgree: parentViewResults.q3_strongly_agree,
+                  agree: parentViewResults.q3_agree,
+                  disagree: parentViewResults.q3_disagree,
+                  stronglyDisagree: parentViewResults.q3_strongly_disagree,
+                  dontKnow: parentViewResults.q3_dont_know
+                }
+              },
+              q4: {
+                question: "My child has been bullied and the school dealt with the bullying effectively",
+                responses: {
+                  stronglyAgree: parentViewResults.q4_strongly_agree,
+                  agree: parentViewResults.q4_agree,
+                  disagree: parentViewResults.q4_disagree,
+                  stronglyDisagree: parentViewResults.q4_strongly_disagree,
+                  dontKnow: parentViewResults.q4_dont_know,
+                  notApplicable: parentViewResults.q4_not_applicable
+                }
+              },
+              q5: {
+                question: "The school makes me aware of what my child will learn during the year",
+                responses: {
+                  stronglyAgree: parentViewResults.q5_strongly_agree,
+                  agree: parentViewResults.q5_agree,
+                  disagree: parentViewResults.q5_disagree,
+                  stronglyDisagree: parentViewResults.q5_strongly_disagree,
+                  dontKnow: parentViewResults.q5_dont_know
+                }
+              },
+              q6: {
+                question: "When I have raised concerns with the school they have been dealt with properly",
+                responses: {
+                  stronglyAgree: parentViewResults.q6_strongly_agree,
+                  agree: parentViewResults.q6_agree,
+                  disagree: parentViewResults.q6_disagree,
+                  stronglyDisagree: parentViewResults.q6_strongly_disagree,
+                  dontKnow: parentViewResults.q6_dont_know,
+                  notApplicable: parentViewResults.q6_not_applicable
+                }
+              },
+              q8: {
+                question: "The school has high expectations for my child",
+                responses: {
+                  stronglyAgree: parentViewResults.q8_strongly_agree,
+                  agree: parentViewResults.q8_agree,
+                  disagree: parentViewResults.q8_disagree,
+                  stronglyDisagree: parentViewResults.q8_strongly_disagree,
+                  dontKnow: parentViewResults.q8_dont_know
+                }
+              },
+              q9: {
+                question: "My child does well at this school",
+                responses: {
+                  stronglyAgree: parentViewResults.q9_strongly_agree,
+                  agree: parentViewResults.q9_agree,
+                  disagree: parentViewResults.q9_disagree,
+                  stronglyDisagree: parentViewResults.q9_strongly_disagree,
+                  dontKnow: parentViewResults.q9_dont_know
+                }
+              },
+              q10: {
+                question: "The school lets me know how my child is doing",
+                responses: {
+                  stronglyAgree: parentViewResults.q10_strongly_agree,
+                  agree: parentViewResults.q10_agree,
+                  disagree: parentViewResults.q10_disagree,
+                  stronglyDisagree: parentViewResults.q10_strongly_disagree,
+                  dontKnow: parentViewResults.q10_dont_know
+                }
+              },
+              q11: {
+                question: "There is a good range of subjects available to my child at this school",
+                responses: {
+                  stronglyAgree: parentViewResults.q11_strongly_agree,
+                  agree: parentViewResults.q11_agree,
+                  disagree: parentViewResults.q11_disagree,
+                  stronglyDisagree: parentViewResults.q11_strongly_disagree,
+                  dontKnow: parentViewResults.q11_dont_know
+                }
+              },
+              q12: {
+                question: "My child can take part in clubs and activities at this school",
+                responses: {
+                  stronglyAgree: parentViewResults.q12_strongly_agree,
+                  agree: parentViewResults.q12_agree,
+                  disagree: parentViewResults.q12_disagree,
+                  stronglyDisagree: parentViewResults.q12_strongly_disagree,
+                  dontKnow: parentViewResults.q12_dont_know
+                }
+              },
+              q13: {
+                question: "The school supports my child's wider personal development",
+                responses: {
+                  stronglyAgree: parentViewResults.q13_strongly_agree,
+                  agree: parentViewResults.q13_agree,
+                  disagree: parentViewResults.q13_disagree,
+                  stronglyDisagree: parentViewResults.q13_strongly_disagree,
+                  dontKnow: parentViewResults.q13_dont_know
+                }
+              },
+              q14: {
+                question: "I would recommend this school to another parent",
+                responses: {
+                  yes: parentViewResults.q14_yes,
+                  no: parentViewResults.q14_no
+                }
+              }
+            }
+          };
+
+          parentViewData = {
+            parentViewData: transformedData,
+            availableYears: availableYears,
+            selectedYear: selectedYear
+          };
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching Parent View data:', error);
+    }
+
     return {
       school: schoolData as SchoolData,
       inspection: inspectionData as InspectionData,
       ranking: rankingData,
       laRanking: laRankingData,
-      admissionsData: Object.keys(admissionsData).length > 0 ? admissionsData : null
+      admissionsData: Object.keys(admissionsData).length > 0 ? admissionsData : null,
+      gcseData: gcseData,
+      gcseMultiYearData: gcseMultiYearData,
+      parentViewData: parentViewData
     };
   } catch (error) {
     console.error('Error fetching school data:', error);
-    return { school: null, inspection: null, ranking: null, laRanking: null, admissionsData: null };
+    return { school: null, inspection: null, ranking: null, laRanking: null, admissionsData: null, gcseData: null, gcseMultiYearData: null, parentViewData: null };
   }
 }
 
@@ -570,7 +838,7 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
   const { slug } = await params;
   
   try {
-    const { school, inspection, ranking, laRanking, admissionsData } = await getSchoolData(slug);
+    const { school, inspection, ranking, laRanking, admissionsData, gcseData, gcseMultiYearData, parentViewData } = await getSchoolData(slug);
 
     // Get city from postcode for breadcrumbs
     const city = school?.postcode ? getCityFromPostcode(school.postcode) : null;
@@ -801,8 +1069,8 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                       return ` (top ${Math.round(percentile)}%)`;
                     })()}
                   </span>
-                </div>
-                
+      </div>
+
                 {/* Best School in LA */}
                 <div className="mt-2">
                   <div className="border border-yellow-400/30 bg-yellow-400/10 rounded-lg px-3 py-2 inline-block">
@@ -817,15 +1085,15 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                           {laRanking.bestSchoolName || 'Loading...'}
                         </Link>
                         <span className="text-gray-300"> (2024)</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
+            </div>
+            </div>
           </div>
         </div>
       </div>
+            )}
+              </div>
+            </div>
+          </div>
 
       {/* Table of Contents */}
       <div className="bg-white border-b border-gray-200 py-6">
@@ -847,572 +1115,19 @@ export default async function SchoolPage({ params }: { params: Promise<{ slug: s
                   <a href="#subjects" className="text-blue-600 hover:text-blue-800 underline transition-colors">Subjects</a>
                 </>
               )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* School Location Map */}
-      <div className="bg-gray-50 py-6 md:py-12">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-7xl">
-            <div className="flex items-center justify-between mb-3 md:mb-6">
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900">School Location</h2>
-              <a
-                href={`/?school=${school.urn}`}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-lg text-sm md:text-base"
-              >
-                <span>🗺️</span>
-                View on Main Map
-              </a>
-            </div>
-            <div className="h-64 md:h-96 w-full rounded-lg overflow-hidden shadow-lg">
-              <ClientSchoolsMap
-                center={[school.lat, school.lon]}
-                zoom={15}
-                selectedSchool={school.urn}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 md:px-6 py-4 md:py-8">
-        <div className="max-w-7xl space-y-8">
-          {/* School Details Section */}
-          <div id="school-details" className="bg-white rounded-lg shadow-sm p-4 md:p-6">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
-              <span className="w-1 h-6 bg-blue-600 rounded"></span>
-              School Details
-            </h2>
-            
-            {/* School Details Table - Exact same as map card but larger */}
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-              <div className="bg-gray-200 px-4 md:px-6 py-3 md:py-4 border-b border-gray-200">
-                <h3 className="text-base md:text-lg font-semibold text-gray-800">School Details</h3>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm md:text-base min-w-[500px]">
-                  <tbody>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Phase</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">{school.phaseofeducation__name_ || 'N/A'}</td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Type</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">{school.typeofestablishment__name_ || 'N/A'}</td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Age Range</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">{school.statutorylowage}-{school.statutoryhighage}</td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Gender</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">{school.gender__name_ || 'Mixed'}</td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Coeducational Sixth Form</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">Yes</td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Has Nursery</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">Yes</td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Religious Character</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">{school.religiouscharacter__name_ || 'Does not apply'}</td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Principal</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">{school.headtitle__name_ || ''} {school.headfirstname || ''} {school.headlastname || ''}</td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Address</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">{school.street}, {school.town}, {school.postcode}</td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Phone Number</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">{school.telephonenum || 'N/A'}</td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Website</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">
-                        {school.schoolwebsite ? (
-                          <a 
-                            href={school.schoolwebsite.startsWith('http') ? school.schoolwebsite : `https://${school.schoolwebsite}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-800 underline break-all"
-                          >
-                            {school.schoolwebsite}
-                          </a>
-                        ) : (
-                          'N/A'
-                        )}
-                      </td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Academy Sponsor</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">
-                        {school.trusts__code_ && school.trusts__name_ ? (
-                          <a 
-                            href={`https://www.compare-school-performance.service.gov.uk/multi-academy-trust/${school.trusts__code_}/${school.trusts__name_.toLowerCase().replace(/\s+/g, '-')}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-800 underline"
-                          >
-                            {school.trusts__name_}
-                          </a>
-                        ) : (
-                          'N/A'
-                        )}
-                      </td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Local Authority</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">{school.la__name_ || 'N/A'}</td>
-                    </tr>
-                    <tr className="border-b border-gray-100 last:border-b-0">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Unique Reference Number</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">{school.urn || 'N/A'}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+            </div>
             </div>
           </div>
 
-          {/* Pupils Data Section */}
-          <div id="pupils-data" className="bg-white rounded-lg shadow-sm p-8">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
-              <span className="w-1 h-6 bg-green-600 rounded"></span>
-              Pupils Data
-            </h2>
-            
-            {/* Pupil Summary Table - Exact same as map card but larger */}
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb-8">
-              <div className="bg-gray-200 px-4 md:px-6 py-3 md:py-4 border-b border-gray-200">
-                <h3 className="text-base md:text-lg font-semibold text-gray-800">Pupil Summary</h3>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm md:text-base min-w-[500px]">
-                  <tbody>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Total Pupils</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">
-                        {formatNumber(school.pupils_202425 || school.numberofpupils)}
-                        {school.schoolcapacity && (school.pupils_202425 || school.numberofpupils) && (
-                          <span className="text-gray-500 ml-1">
-                            ({Math.round(((school.pupils_202425 || school.numberofpupils) / school.schoolcapacity) * 100)}% capacity)
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Age Range</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">{school.statutorylowage}-{school.statutoryhighage}</td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Gender</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">{school.gender__name_ || 'Mixed'}</td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Boy/Girl Ratio</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">
-                        {school.boys_202425 && school.girls_202425 && (school.pupils_202425 || school.numberofpupils) ? (
-                          <>
-                            <div>{((school.girls_202425 / (school.pupils_202425 || school.numberofpupils)) * 100).toFixed(1)}% Girls</div>
-                            <div>{((school.boys_202425 / (school.pupils_202425 || school.numberofpupils)) * 100).toFixed(1)}% Boys</div>
-                          </>
-                        ) : (
-                          'N/A'
-                        )}
-                      </td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Eligible for Free School Meals</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">
-                        {school.fsm_202425 || 0} pupils ({school.fsm_percentage_202425?.toFixed(1) || 0}%)
-                      </td>
-                    </tr>
-                    <tr className="border-b border-gray-100">
-                      <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">First Language is Not English</td>
-                      <td className="py-2 pl-1 pr-4 text-gray-800">
-                        {school.english_first_language_202425 && (school.pupils_202425 || school.numberofpupils) ? (
-                          <>
-                            {(school.pupils_202425 || school.numberofpupils) - school.english_first_language_202425} pupils
-                            <span className="text-gray-500 ml-1">
-                              ({(((school.pupils_202425 || school.numberofpupils) - school.english_first_language_202425) / (school.pupils_202425 || school.numberofpupils) * 100).toFixed(1)}%)
-                            </span>
-                          </>
-                        ) : (
-                          'N/A'
-                        )}
-                      </td>
-                    </tr>
-                    {school.young_carers_202425 > 0 && (
-                      <tr className="border-b border-gray-100">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Young Carers</td>
-                        <td className="py-2 pl-1 pr-4 text-gray-800">
-                          {school.young_carers_202425} ({school.young_carers_percentage_202425?.toFixed(1) || 0}%)
-                        </td>
-                      </tr>
-                    )}
-                    {school.pupil_to_all_teacher_ratio_2024 && (
-                      <tr className="border-b border-gray-100">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Pupils per Teacher</td>
-                        <td className="py-2 pl-1 pr-4 text-gray-800">{school.pupil_to_all_teacher_ratio_2024}</td>
-                      </tr>
-                    )}
-                    {((school.sen_with_statements_202425 && school.sen_with_statements_202425 !== '') || (school.sen_without_statements_202425 && school.sen_without_statements_202425 !== '')) && (
-                      <tr className="border-b border-gray-100 last:border-b-0">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">Pupils with SEN Support</td>
-                        <td className="py-2 pl-1 pr-4 text-gray-800">
-                          {(() => {
-                            const senWithStatements = parseInt(school.sen_with_statements_202425) || 0;
-                            const senWithoutStatements = parseInt(school.sen_without_statements_202425) || 0;
-                            const totalSen = senWithStatements + senWithoutStatements;
-                            const totalPupils = school.pupils_202425 || school.numberofpupils || 1;
-                            const percentage = (totalSen / totalPupils * 100).toFixed(1);
-                            return `${totalSen} pupils (${percentage}%)`;
-                          })()}
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+      {/* Client Components */}
+      <SchoolPageClientWrapper 
+        school={school}
+        gcseData={gcseData}
+        gcseMultiYearData={gcseMultiYearData}
+        parentViewData={parentViewData}
+      />
 
-            {/* Pupil Ethnicities Table - Exact same as map card but larger */}
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-              <div className="bg-gray-200 px-4 md:px-6 py-3 md:py-4 border-b border-gray-200">
-                <h3 className="text-base md:text-lg font-semibold text-gray-800">Pupil Ethnicities</h3>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm md:text-base min-w-[500px]">
-                  <tbody>
-                    {(() => {
-                      // Create ethnicity mapping from school data
-                      const ethnicityMapping = {
-                        'White, British': school.white_british_percentage_202425,
-                        'White, Irish': school.white_irish_percentage_202425,
-                        'White, Other': school.white_other_percentage_202425,
-                        'Asian, Indian': school.asian_indian_percentage_202425,
-                        'Asian, Pakistani': school.asian_pakistani_percentage_202425,
-                        'Asian, Bangladeshi': school.asian_bangladeshi_percentage_202425,
-                        'Asian, Other': school.asian_other_percentage_202425,
-                        'Black, African': school.black_african_percentage_202425,
-                        'Black, Caribbean': school.black_caribbean_percentage_202425,
-                        'Black, Other': school.black_other_percentage_202425,
-                        'Mixed, White & Black Caribbean': school.mixed_white_black_caribbean_percentage_202425,
-                        'Mixed, White & Black African': school.mixed_white_black_african_percentage_202425,
-                        'Mixed, White & Asian': school.mixed_white_asian_percentage_202425,
-                        'Mixed, Other': school.mixed_other_percentage_202425,
-                        'Chinese': school.chinese_percentage_202425,
-                        'Gypsy/Roma': school.gypsy_roma_percentage_202425,
-                        'Traveller of Irish Heritage': school.traveller_irish_heritage_percentage_202425,
-                        'Other': school.other_percentage_202425,
-                        'Unclassified': school.unclassified_percentage_202425
-                      };
-                      
-                      // Convert to array and filter out ethnicities with 0 or no data
-                      const ethnicities = Object.entries(ethnicityMapping)
-                        .map(([name, percentage]) => ({
-                          name,
-                          percentage: percentage || 0
-                        }))
-                        .filter(eth => eth.percentage > 0)
-                        .sort((a, b) => b.percentage - a.percentage);
-                      
-                      return ethnicities.map((ethnicity, index) => (
-                        <tr key={index} className="border-b border-gray-100 last:border-b-0">
-                          <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-1/3">{ethnicity.name}</td>
-                          <td className="py-2 pl-1 pr-4 text-gray-800">
-                            <div className="flex items-center space-x-2">
-                              <div className="w-16 bg-gray-200 rounded-full h-2">
-                                <div 
-                                  className="bg-blue-500 h-2 rounded-full transition-all duration-300" 
-                                  style={{ width: `${Math.min(ethnicity.percentage, 100)}%` }}
-                                ></div>
-                              </div>
-                              <span className="text-sm font-medium min-w-[3rem]">{ethnicity.percentage.toFixed(1)}%</span>
-                            </div>
-                          </td>
-                        </tr>
-                      ));
-                    })()}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          {/* Ofsted Inspections Section */}
-          {inspection && (
-            <div id="ofsted-inspections" className="bg-white rounded-lg shadow-sm p-8">
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
-                <span className="w-1 h-6 bg-yellow-600 rounded"></span>
-                Ofsted Inspections
-              </h2>
-              
-              {/* Latest Inspection Table - Exact same as map card but larger */}
-              <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb-8">
-                <div className="bg-gray-200 px-4 md:px-6 py-3 md:py-4 border-b border-gray-200">
-                  <h3 className="text-base md:text-lg font-semibold text-gray-800">Latest Inspection</h3>
-                </div>
-                <div className="overflow-visible">
-                  <table className="w-full text-sm md:text-base">
-                    <tbody>
-                      <tr className="border-b border-gray-100">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-2/5">Ofsted Overall Rating:</td>
-                        <td className="py-2 pl-1 pr-4 text-gray-800">
-                          <div className="flex items-center space-x-2">
-                            <span className={`px-3 py-1 text-sm font-medium rounded ${getRatingColor(getOfstedRatingText(inspection.outcome))}`}>
-                              {getOfstedRatingText(inspection.outcome)}
-                            </span>
-                            {getOfstedRatingText(inspection.outcome) === 'Not Available' && (
-                              <a 
-                                href="/schoolchecker-rating" 
-                                className="text-blue-600 hover:text-blue-800 text-xs underline ml-2"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                Why?
-                              </a>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                      {(() => {
-                        const ofstedRating = getOfstedRatingText(inspection.outcome);
-                        // Only show SchoolChecker.io rating if Ofsted rating is "Not Available"
-                        if (ofstedRating === 'Not Available') {
-                          const schoolcheckerRating = calculateSchoolCheckerRating(inspection);
-                          if (schoolcheckerRating) {
-                            const ratingInfo = getRatingInfo(schoolcheckerRating.rating);
-                            return (
-                              <tr className="border-b border-gray-100">
-                                <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-2/5">Schoolchecker.io Rating:</td>
-                                <td className="py-2 pl-1 pr-4 text-gray-800">
-                                  <div className="flex flex-wrap items-center gap-2">
-                                    <span className={`px-3 py-1 text-sm font-medium rounded ${ratingInfo.color}`}>
-                                      {ratingInfo.text}
-                                    </span>
-                                    <span className="text-xs text-gray-500">
-                                      ({schoolcheckerRating.isCalculated ? 'calculated' : 'official'})
-                                    </span>
-                                    <a 
-                                      href="/schoolchecker-rating" 
-                                      className="text-blue-600 hover:text-blue-800 text-xs underline"
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                    >
-                                      How?
-                                    </a>
-                                  </div>
-                                </td>
-                              </tr>
-                            );
-                          }
-                        }
-                        return null;
-                      })()}
-                      <tr className="border-b border-gray-100">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-2/5">Inspection Date:</td>
-                        <td className="py-2 pl-1 pr-4 text-gray-800">{new Date(inspection.inspection_date).toLocaleDateString()}</td>
-                      </tr>
-                      <tr className="border-b border-gray-100">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-2/5">All Inspections:</td>
-                        <td className="py-2 pl-1 pr-4 text-gray-800">
-                          <a 
-                            href={`https://reports.ofsted.gov.uk/provider/28/${school.urn}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:text-blue-800 underline"
-                          >
-                            View on Ofsted Website
-                          </a>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Category Judgements Table - Exact same as map card but larger */}
-              <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mb-8">
-                <div className="bg-gray-200 px-4 md:px-6 py-3 md:py-4 border-b border-gray-200">
-                  <h3 className="text-base md:text-lg font-semibold text-gray-800">Category Judgements</h3>
-                </div>
-                <div className="overflow-visible">
-                  <table className="w-full text-sm md:text-base">
-                    <tbody>
-                      <tr className="border-b border-gray-100">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-2/5">The quality of education</td>
-                        <td className="py-2 pl-1 pr-4 text-gray-800">
-                          <span className={`px-3 py-1 text-sm font-medium rounded ${getRatingColor(getOfstedRatingText(inspection.quality_of_education))}`}>
-                            {getOfstedRatingText(inspection.quality_of_education)}
-                          </span>
-                        </td>
-                      </tr>
-                      <tr className="border-b border-gray-100">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-2/5">Behaviour and attitudes</td>
-                        <td className="py-2 pl-1 pr-4 text-gray-800">
-                          <span className={`px-3 py-1 text-sm font-medium rounded ${getRatingColor(getOfstedRatingText(inspection.behaviour_and_attitudes))}`}>
-                            {getOfstedRatingText(inspection.behaviour_and_attitudes)}
-                          </span>
-                        </td>
-                      </tr>
-                      <tr className="border-b border-gray-100">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-2/5">Personal development</td>
-                        <td className="py-2 pl-1 pr-4 text-gray-800">
-                          <span className={`px-3 py-1 text-sm font-medium rounded ${getRatingColor(getOfstedRatingText(inspection.personal_development))}`}>
-                            {getOfstedRatingText(inspection.personal_development)}
-                          </span>
-                        </td>
-                      </tr>
-                      <tr className="border-b border-gray-100">
-                        <td className="py-2 px-4 pr-1 text-gray-800 border-r border-gray-200 font-medium w-2/5">Leadership and management</td>
-                        <td className="py-2 pl-1 pr-4 text-gray-800">
-                          <span className={`px-3 py-1 text-sm font-medium rounded ${getRatingColor(getOfstedRatingText(inspection.effectiveness_of_leadership))}`}>
-                            {getOfstedRatingText(inspection.effectiveness_of_leadership)}
-                          </span>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Primary Results Section */}
-          <div id="primary-results" className="bg-white rounded-lg shadow-sm p-8">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
-              <span className="w-1 h-6 bg-red-600 rounded"></span>
-              Primary Results
-            </h2>
-            <PrimaryResultsCard schoolData={school} />
-          </div>
-
-          {/* Admissions Section */}
-          <div id="admissions" className="bg-white rounded-lg shadow-sm p-8">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-6 flex items-center gap-2">
-              <span className="w-1 h-6 bg-blue-600 rounded"></span>
-              Admissions
-            </h2>
-            
-            
-            <AdmissionsCard 
-              urn={school.urn} 
-              schoolName={school.establishmentname}
-              phase={school.phaseofeducation__name_}
-              preloadedData={admissionsData}
-            />
-          </div>
-
-          {/* Parent View Section */}
-          <div id="parent-reviews" className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 px-6 md:px-8 pt-6 md:pt-8">
-              Parent Reviews
-            </h2>
-            
-            <div className="px-6 md:px-8 pb-6 md:pb-8">
-              <OfstedParentViewCard 
-                urn={school.urn} 
-                schoolName={school.establishmentname}
-              />
-            </div>
-          </div>
-
-          {/* All-Through School Sections - Only show for All-through schools */}
-          {school.phaseofeducation__name_ === 'All-through' && (
-            <>
-              {/* GCSE Results Section */}
-              <div id="gcse-results" className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
-                <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 px-6 md:px-8 pt-6 md:pt-8 flex items-center gap-3">
-                  <span className="w-1 h-6 bg-purple-600 rounded"></span>
-                  GCSE Results
-                </h2>
-                
-                <div className="px-6 md:px-8 pb-6 md:pb-8">
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
-                    <div className="flex items-center justify-center mb-4">
-                      <span className="text-4xl">📊</span>
-                    </div>
-                    <h3 className="text-lg font-semibold text-blue-900 mb-2">GCSE Results Coming Soon</h3>
-                    <p className="text-blue-800">
-                      Comprehensive GCSE performance data and subject-specific results will be available here soon.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Catchment Area Section */}
-              <div id="catchment-area" className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
-                <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 px-6 md:px-8 pt-6 md:pt-8 flex items-center gap-3">
-                  <span className="w-1 h-6 bg-green-600 rounded"></span>
-                  Catchment Area
-                </h2>
-                
-                <div className="px-6 md:px-8 pb-6 md:pb-8">
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
-                    <div className="flex items-center justify-center mb-4">
-                      <span className="text-4xl">🗺️</span>
-                    </div>
-                    <h3 className="text-lg font-semibold text-blue-900 mb-2">Catchment Area Coming Soon</h3>
-                    <p className="text-blue-800">
-                      Interactive catchment area maps and admission criteria will be available here soon.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* A Levels Results Section */}
-              <div id="a-levels-results" className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
-                <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 px-6 md:px-8 pt-6 md:pt-8 flex items-center gap-3">
-                  <span className="w-1 h-6 bg-orange-600 rounded"></span>
-                  A Levels Results
-                </h2>
-                
-                <div className="px-6 md:px-8 pb-6 md:pb-8">
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
-                    <div className="flex items-center justify-center mb-4">
-                      <span className="text-4xl">🎓</span>
-                    </div>
-                    <h3 className="text-lg font-semibold text-blue-900 mb-2">A Levels Results Coming Soon</h3>
-                    <p className="text-blue-800">
-                      Detailed A Level performance data and university progression statistics will be available here soon.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Subjects Section */}
-              <div id="subjects" className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
-                <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 px-6 md:px-8 pt-6 md:pt-8 flex items-center gap-3">
-                  <span className="w-1 h-6 bg-indigo-600 rounded"></span>
-                  Subjects
-                </h2>
-                
-                <div className="px-6 md:px-8 pb-6 md:pb-8">
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
-                    <div className="flex items-center justify-center mb-4">
-                      <span className="text-4xl">📚</span>
-                    </div>
-                    <h3 className="text-lg font-semibold text-blue-900 mb-2">Subjects Coming Soon</h3>
-                    <p className="text-blue-800">
-                      Complete list of subjects offered, including GCSE and A Level options, will be available here soon.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-
-        </div>
-      </div>
     </div>
   );
   } catch (error) {

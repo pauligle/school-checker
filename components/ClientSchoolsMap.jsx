@@ -1,12 +1,6 @@
 'use client'
 
-import dynamic from 'next/dynamic'
-
-// Dynamically import the map component to avoid SSR issues
-const SchoolsMapNew = dynamic(() => import('./SchoolsMapNew'), {
-  ssr: false,
-  loading: () => <div className="h-screen flex items-center justify-center bg-gray-100">Loading map...</div>
-})
+import SchoolsMapNew from './SchoolsMapNew'
 
 export default function ClientSchoolsMap({ city = null, center = null, zoom = null, selectedSchool = null }) {
   return <SchoolsMapNew city={city} center={center} zoom={zoom} selectedSchool={selectedSchool} />

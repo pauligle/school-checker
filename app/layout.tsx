@@ -256,6 +256,7 @@ export default function RootLayout({
                   <li><Link href="/blog" className="text-gray-300 hover:text-white transition-colors">Blog</Link></li>
                   <li><Link href="/schoolchecker-rating" className="text-gray-300 hover:text-white transition-colors">Schoolchecker Rating Calculation</Link></li>
                   <li><Link href="/how-school-rankings-work" className="text-gray-300 hover:text-white transition-colors">Primary School KS2 Rankings</Link></li>
+                  <li><Link href="/understanding-gcse-ks4-results" className="text-gray-300 hover:text-white transition-colors">Understanding GCSE KS4 Results</Link></li>
                   <li><Link href="/privacy" className="text-gray-300 hover:text-white transition-colors">Privacy Policy</Link></li>
                   <li><Link href="/terms" className="text-gray-300 hover:text-white transition-colors">Terms of Service</Link></li>
                   <li><Link href="/help" className="text-gray-300 hover:text-white transition-colors">Help Center</Link></li>

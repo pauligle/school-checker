@@ -9,9 +9,10 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export async function generateMetadata({ searchParams }: { searchParams: { school?: string; filter?: string } }): Promise<Metadata> {
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ school?: string; filter?: string }> }): Promise<Metadata> {
   // Check if there are any query parameters
-  const hasQueryParams = searchParams?.school || searchParams?.filter;
+  const params = await searchParams;
+  const hasQueryParams = params?.school || params?.filter;
   
   const baseMetadata = {
     title: 'SchoolChecker.io - Find & Compare UK Schools with Ofsted Ratings',
@@ -91,14 +92,15 @@ function createSchoolSlug(schoolName: string, urn: string): string {
   return `${nameSlug}-${urn}`;
 }
 
-export default async function Home({ searchParams }: { searchParams: { school?: string; filter?: string } }) {
+export default async function Home({ searchParams }: { searchParams: Promise<{ school?: string; filter?: string }> }) {
   // If there's a school query parameter, redirect to the canonical school page
-  if (searchParams?.school) {
+  const params = await searchParams;
+  if (params?.school) {
     try {
       const { data: schoolData } = await supabase
         .from('schools')
         .select('urn, establishmentname')
-        .eq('urn', searchParams.school)
+        .eq('urn', params.school)
         .single();
 
       if (schoolData) {

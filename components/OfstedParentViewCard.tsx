@@ -47,6 +47,11 @@ interface ParentViewData {
 interface OfstedParentViewCardProps {
   urn: string;
   schoolName?: string;
+  preloadedData?: {
+    parentViewData: ParentViewData | null;
+    availableYears: any[];
+    selectedYear: string;
+  } | null;
 }
 
 // Component for individual question bar chart
@@ -128,15 +133,26 @@ const QuestionChart = ({ question, responses }: { question: ParentViewQuestion; 
   );
 };
 
-export default function OfstedParentViewCard({ urn, schoolName }: OfstedParentViewCardProps) {
+export default function OfstedParentViewCard({ urn, schoolName, preloadedData }: OfstedParentViewCardProps) {
   const [parentViewData, setParentViewData] = useState<ParentViewData | null>(null);
   const [availableYears, setAvailableYears] = useState<any[]>([]);
   const [selectedYear, setSelectedYear] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch available years when component mounts
+  // Initialize with preloaded data or fetch available years when component mounts
   useEffect(() => {
+    // If preloaded data is available, use it immediately
+    if (preloadedData) {
+      setParentViewData(preloadedData.parentViewData);
+      setAvailableYears(preloadedData.availableYears);
+      setSelectedYear(preloadedData.selectedYear);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
+    // Otherwise, fetch data client-side (fallback)
     async function fetchAvailableYears() {
       try {
         setLoading(true);
@@ -167,10 +183,13 @@ export default function OfstedParentViewCard({ urn, schoolName }: OfstedParentVi
     if (urn) {
       fetchAvailableYears();
     }
-  }, [urn]);
+  }, [urn, preloadedData]);
 
-  // Fetch data for selected year
+  // Fetch data for selected year (only if not using preloaded data)
   useEffect(() => {
+    // Skip if we have preloaded data
+    if (preloadedData) return;
+    
     async function fetchParentViewData() {
       if (!selectedYear) return;
       
@@ -201,7 +220,7 @@ export default function OfstedParentViewCard({ urn, schoolName }: OfstedParentVi
     }
 
     fetchParentViewData();
-  }, [urn, selectedYear]);
+  }, [urn, selectedYear, preloadedData]);
 
   if (loading) {
     return (
