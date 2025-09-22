@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'URN is required' }, { status: 400 });
     }
 
-    let years = new Set();
+    let years = new Set<number>();
 
     // Check multi-year table
     const { data: multiYearData, error: multiYearError } = await supabase
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
 
     // Convert Set to array and format
     const yearsArray = Array.from(years)
-      .sort((a: number, b: number) => b - a) // Sort descending (newest first)
+      .sort((a, b) => b - a) // Sort descending (newest first)
       .map(year => ({
         year,
         hasData: true,
